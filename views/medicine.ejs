@@ -1,0 +1,94 @@
+<%- include('partials/header', { title: 'Medicines Directory' }) %>
+<%- include('partials/navbar') %>
+
+<main class="page-container">
+    <h1 class="title">Medicines Directory</h1>
+
+    <!-- SEARCH & FILTER BAR -->
+    <div class="search-section card">
+        <form action="/medicine-ui" method="GET" class="search-form">
+            <input type="text" name="search" placeholder="Search medicines by target disease (e.g., Asthma, Diabetes)..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+            <button type="submit" class="btn-primary">Search</button>
+            <% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+                <a href="/medicine-ui" class="btn-danger-outline">Clear</a>
+            <% } %>
+        </form>
+    </div>
+
+    <div class="medicine-layout">
+        <!-- LEFT COLUMN: MEDICINE CARDS -->
+        <div class="medicine-list-section">
+            <h2>💊 Catalog</h2>
+            
+            <% if (!medicines || medicines.length === 0) { %>
+                <div class="empty-state">
+                    <span class="empty-icon">💊</span>
+                    <h3>No Medicines Found</h3>
+                    <p>No medicines match your search criteria. Try another keyword or check back later.</p>
+                </div>
+            <% } else { %>
+                <div class="medicine-grid">
+                    <% medicines.forEach(med => { %>
+                        <% 
+                           const isRecommended = userDisease && med.disease.toLowerCase().includes(userDisease.toLowerCase());
+                        %>
+                        <div class="card medicine-card <%= isRecommended ? 'highlight-card' : '' %>">
+                            <% if (isRecommended) { %>
+                                <span class="badge recommendation-badge">✨ Matches Your Profile (<%= userDisease %>)</span>
+                            <% } %>
+                            <h3><%= med.name %></h3>
+                            <p class="med-desc"><%= med.description %></p>
+                            <p class="med-target"><b>Targets:</b> <%= med.disease %></p>
+                            <p class="med-prescription">
+                                <b>Prescription:</b> 
+                                <span class="prescription-status <%= med.requiresPrescription ? 'required' : 'optional' %>">
+                                    <%= med.requiresPrescription ? 'Required 📋' : 'Not Required 🟢' %>
+                                </span>
+                            </p>
+                            <div class="card-actions" style="margin-top: 15px;">
+                                <button onclick="alert('Order placed successfully for <%= med.name.replace(/\'/g, `\\'`) %>! It will be delivered to your address.')" class="btn-success" style="width: 100%; padding: 8px 12px; font-size: 0.85rem;">
+                                    🛒 Order Medicine
+                                </button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- RIGHT COLUMN: DOCTOR ONLY - ADD MEDICINE -->
+        <% if (user && user.role === 'doctor') { %>
+            <div class="medicine-form-section">
+                <h2>➕ Add New Medicine</h2>
+                <form action="/api/medicine" method="POST" class="form-card">
+                    <div class="form-group">
+                        <label for="name">Medicine Name</label>
+                        <input type="text" name="name" id="name" required placeholder="e.g., Albuterol Inhaler">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="disease">Target Disease/Indication</label>
+                        <input type="text" name="disease" id="disease" required placeholder="e.g., Asthma">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requiresPrescription">Requires Prescription?</label>
+                        <select name="requiresPrescription" id="requiresPrescription" required>
+                            <option value="true" selected>Yes, requires prescription</option>
+                            <option value="false">No, over the counter (OTC)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Usage Description</label>
+                        <textarea name="description" id="description" required placeholder="Describe usage, dosage, and side effects..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary-block">Add to Catalog</button>
+                </form>
+            </div>
+        <% } %>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,54 @@
+<%- include('partials/header', { title: 'Dashboard' }) %>
+<%- include('partials/navbar') %>
+
+<main class="page-container">
+    <div class="dashboard-header" style="text-align: center; margin-bottom: 40px; margin-top: 20px;">
+        <h1 class="title" style="margin-left: auto; margin-right: auto; max-width: 600px;">Empathezee Dashboard</h1>
+        <h2 style="margin-top: 15px;">Welcome, <%= user?.username %> 👋</h2>
+        <p class="section-desc" style="margin-top: 5px;">You are logged in as a <b><%= user?.role %></b>.</p>
+    </div>
+
+    <div class="container">
+
+        <!-- COMMUNITIES -->
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h3>👥 Communities</h3>
+                <p>View disease-based communities & support groups.</p>
+            </div>
+            <a href="/communities" class="btn-primary">Open Directory</a>
+        </div>
+
+        <!-- APPOINTMENTS -->
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h3>📅 Appointments</h3>
+                <p>Book & manage doctor appointments.</p>
+            </div>
+            <a href="/appointments-ui" class="btn-primary">Book Appointment</a>
+        </div>
+
+        <!-- MEDICINES -->
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h3>💊 Medicines</h3>
+                <p>Search disease-based medicine catalogs.</p>
+            </div>
+            <a href="/medicine-ui" class="btn-primary">Open Medicines</a>
+        </div>
+
+        <!-- DOCTOR PANEL (Optional for doctor users) -->
+        <% if (user?.role === "doctor") { %>
+        <div class="card dashboard-card" style="border-color: var(--blue);">
+            <div class="card-body">
+                <h3>👨‍⚕️ Doctor Panel</h3>
+                <p>Verify and review medical posts in the queue.</p>
+            </div>
+            <a href="/doctor/dashboard" class="btn-primary">Open Queue</a>
+        </div>
+        <% } %>
+
+    </div>
+</main>
+
+<%- include('partials/footer') %>

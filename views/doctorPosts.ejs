@@ -1,0 +1,48 @@
+<%- include('partials/header', { title: 'Doctor Moderation Panel' }) %>
+<%- include('partials/navbar') %>
+
+<main class="page-container">
+    <h1 class="title">Medical Post Moderation</h1>
+
+    <div class="container">
+        <h2>📋 Pending Verification Queue</h2>
+        <p class="section-desc">Review medical queries and advice to tag them as Safe, Misleading/Fake, or Suspicious.</p>
+
+        <% if (!posts || posts.length === 0) { %>
+            <div class="empty-state">
+                <span class="empty-icon">✅</span>
+                <h3>Inbox Zero!</h3>
+                <p>No medical posts are currently pending review. Thank you for keeping the community safe!</p>
+            </div>
+        <% } else { %>
+            <div class="moderation-list">
+                <% posts.forEach(post => { %>
+                    <div class="card moderation-card">
+                        <div class="post-details">
+                            <h3><%= post.title %></h3>
+                            <p class="post-content">"<%= post.content %>"</p>
+                            <p class="post-meta">
+                                <b>Author:</b> <%= post.author?.username || 'Anonymous' %> (<%= post.author?.email || 'N/A' %>) 
+                                &nbsp;|&nbsp; <b>Target Disease:</b> <%= post.disease %>
+                            </p>
+                        </div>
+                        
+                        <!-- VERIFY FORM -->
+                        <form action="/api/doctor-posts/review/<%= post._id %>" method="POST" class="moderation-form">
+                            <div class="form-group" style="margin-bottom: 12px; width: 100%;">
+                                <input type="text" name="comment" placeholder="Add professional verification notes (optional)..." style="width: 100%;">
+                            </div>
+                            <div class="moderation-actions">
+                                <button name="status" value="SAFE" class="btn-success">✔ Approve (Safe)</button>
+                                <button name="status" value="FAKE" class="btn-danger">❌ Reject (Fake)</button>
+                                <button name="status" value="SUSPICIOUS" class="btn-warning">⚠ Tag Suspicious</button>
+                            </div>
+                        </form>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

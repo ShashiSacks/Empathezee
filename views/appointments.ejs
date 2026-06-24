@@ -1,0 +1,136 @@
+<%- include('partials/header', { title: 'Manage Appointments' }) %>
+<%- include('partials/navbar') %>
+
+<main class="page-container">
+    <h1 class="title">Your Appointments</h1>
+
+    <div class="appointment-layout">
+        <!-- LEFT COLUMN: EXISTING APPOINTMENTS -->
+        <div class="appointment-list-section">
+            <h2>📅 Booked Appointments</h2>
+
+            <% if (!appointments || appointments.length === 0) { %>
+                <div class="empty-state">
+                    <span class="empty-icon">📅</span>
+                    <h3>No Appointments</h3>
+                    <p>You have not booked any doctor appointments yet. Use the form on the right to schedule one.</p>
+                </div>
+            <% } else { %>
+                <div class="appointment-grid">
+                    <% appointments.forEach(app => { %>
+                        <div class="card appointment-card">
+                            <div class="card-header">
+                                <span class="badge status-<%= app.status.toLowerCase() %>"><%= app.status %></span>
+                            </div>
+                            <h3>Dr. <%= app.doctor?.username %></h3>
+                            <p class="app-detail"><b>Specialization:</b> <%= app.doctor?.disease || 'General Medicine' %></p>
+                            <p class="app-detail"><b>Date:</b> <%= app.date %></p>
+                            <p class="app-detail"><b>Time:</b> <%= app.time %></p>
+                            <p class="app-detail"><b>Contact:</b> <%= app.doctor?.email %></p>
+
+                            <div class="appointment-card-actions" style="margin-top: 15px;">
+                                <form action="/api/appointments/<%= app._id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
+                                    <button type="submit" class="btn-danger-outline" style="width: 100%;">Cancel Appointment</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- RIGHT COLUMN: BOOK AN APPOINTMENT -->
+        <div class="appointment-form-section">
+            <h2>🩺 Book New Appointment</h2>
+            <form action="/api/appointments" method="POST" class="form-card">
+                
+                <!-- Specialization Dropdown -->
+                <div class="form-group">
+                    <label for="specializationFilter">Filter by Specialization</label>
+                    <select id="specializationFilter">
+                        <option value="">-- All Specializations --</option>
+                        <% 
+                            const specs = new Set();
+                            if (doctors && doctors.length > 0) {
+                                doctors.forEach(doc => {
+                                    if (doc.disease) specs.add(doc.disease.trim());
+                                });
+                            }
+                            specs.forEach(spec => {
+                        %>
+                            <option value="<%= spec.toLowerCase() %>"><%= spec %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="doctorId">Select Specialist (Doctor)</label>
+                    <select name="doctorId" id="doctorId" required>
+                        <option value="" disabled selected>-- Choose a Doctor --</option>
+                        <% if (doctors && doctors.length > 0) { %>
+                            <% doctors.forEach(doc => { %>
+                                <option value="<%= doc._id %>" data-specialization="<%= doc.disease || '' %>">Dr. <%= doc.username %> (<%= doc.disease || 'General' %>) - <%= doc.city || 'Kadapa' %></option>
+                            <% }) %>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Choose Date</label>
+                    <input type="date" name="date" id="date" required min="<%= new Date().toISOString().split('T')[0] %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Select Time</label>
+                    <select name="time" id="time" required>
+                        <option value="" disabled selected>-- Select Time Slot --</option>
+                        <option value="09:00 AM">09:00 AM</option>
+                        <option value="10:00 AM">10:00 AM</option>
+                        <option value="11:00 AM">11:00 AM</option>
+                        <option value="12:00 PM">12:00 PM</option>
+                        <option value="02:00 PM">02:00 PM</option>
+                        <option value="03:00 PM">03:00 PM</option>
+                        <option value="04:00 PM">04:00 PM</option>
+                        <option value="05:00 PM">05:00 PM</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary-block">Book Appointment</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const specFilter = document.getElementById("specializationFilter");
+        const doctorSelect = document.getElementById("doctorId");
+        
+        // Cache all option elements initially (skip the first placeholder option)
+        const allDoctorOptions = Array.from(doctorSelect.options).slice(1).map(opt => ({
+            value: opt.value,
+            text: opt.text,
+            specialization: opt.getAttribute("data-specialization") ? opt.getAttribute("data-specialization").toLowerCase() : ""
+        }));
+
+        specFilter.addEventListener("change", function() {
+            const selectedSpec = this.value.toLowerCase();
+            
+            // Reset select and add placeholder back
+            doctorSelect.innerHTML = '<option value="" disabled selected>-- Choose a Doctor --</option>';
+            
+            // Re-populate options based on matching specialization
+            allDoctorOptions.forEach(doc => {
+                if (!selectedSpec || doc.specialization.includes(selectedSpec)) {
+                    const opt = document.createElement("option");
+                    opt.value = doc.value;
+                    opt.text = doc.text;
+                    opt.setAttribute("data-specialization", doc.specialization);
+                    doctorSelect.appendChild(opt);
+                }
+            });
+        });
+    });
+</script>
+
+<%- include('partials/footer') %>

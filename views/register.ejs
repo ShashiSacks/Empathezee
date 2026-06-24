@@ -1,0 +1,53 @@
+<%- include('partials/header', { title: 'Register', bodyClass: 'auth-page' }) %>
+
+<div class="auth-container">
+
+    <!-- LEFT SIDE (FORM) -->
+    <div class="auth-left">
+
+        <h1 class="title">Register</h1>
+
+        <form action="/api/auth/register" method="POST">
+
+            <input type="text" name="username" placeholder="Username" required />
+
+            <input type="email" name="email" placeholder="Email" required />
+
+            <input type="password" name="password" placeholder="Password" required />
+
+            <input type="number" name="age" placeholder="Age" min="0" max="120" />
+
+            <label>Gender</label>
+            <select name="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Rather not to say</option>
+            </select>
+
+            <input type="text" name="disease" placeholder="Disease" />
+
+            <input type="text" name="city" placeholder="City" />
+
+            <button type="submit">Create Account</button>
+
+        </form>
+
+        <p>
+            Already have an account?
+            <a href="/login">Login here</a>
+        </p>
+
+        <p>
+            Registering as a doctor?
+            <a href="/doctor/register">Doctor registration</a>
+        </p>
+
+    </div>
+
+    <!-- RIGHT SIDE IMAGE -->
+    <div class="auth-right"></div>
+
+</div>
+
+<%- include('partials/footer') %>

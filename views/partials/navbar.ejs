@@ -1,0 +1,72 @@
+<nav class="main-navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">🤝 Empathezee</a>
+        <div class="nav-links">
+            <% if (user) { %>
+                <% if (user.role === 'doctor') { %>
+                    <a href="/medicine-ui">Medicines Panel</a>
+                <% } else { %>
+                    <a href="/communities">Communities</a>
+                    <a href="/appointments-ui">Appointments</a>
+                    <a href="/medicine-ui">Medicines</a>
+                    <a href="/profile">Profile</a>
+                <% } %>
+            <% } else { %>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+                <a href="/doctor/login">Doctor Login</a>
+            <% } %>
+            
+            <!-- Custom Language Dropdown (in place of Dashboard link) -->
+            <div class="lang-selector-container notranslate">
+                <span class="lang-icon">🌐</span>
+                <select id="language-selector" onchange="changeLanguage(this.value)" class="lang-select">
+                    <!-- Default -->
+                    <option value="en">English</option>
+                    
+                    <!-- Regional / Indian Languages -->
+                    <option value="te">Telugu (తెలుగు)</option>
+                    <option value="hi">Hindi (हिन्दी)</option>
+                    <option value="ur">Urdu (اردو)</option>
+                    <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                    <option value="ta">Tamil (தமிழ்)</option>
+                    <option value="ml">Malayalam (മലയാളം)</option>
+                    <option value="mr">Marathi (मराठी)</option>
+                    <option value="bn">Bengali (বাংলা)</option>
+                    <option value="gu">Gujarati (ગુજરાતી)</option>
+                    <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+                    <option value="or">Odia (ଓଡ଼ିଆ)</option>
+                    
+                    <!-- Major International Languages -->
+                    <option value="ar">Arabic (العربية)</option>
+                    <option value="zh-CN">Chinese (Simplified) (简体中文)</option>
+                    <option value="zh-TW">Chinese (Traditional) (繁體中文)</option>
+                    <option value="nl">Dutch (Nederlands)</option>
+                    <option value="fr">French (Français)</option>
+                    <option value="de">German (Deutsch)</option>
+                    <option value="el">Greek (Ελληνικά)</option>
+                    <option value="id">Indonesian (Bahasa Indonesia)</option>
+                    <option value="it">Italiano</option>
+                    <option value="ja">Japanese (日本語)</option>
+                    <option value="ko">Korean (한국어)</option>
+                    <option value="fa">Persian (فارसी)</option>
+                    <option value="pl">Polski</option>
+                    <option value="pt">Português</option>
+                    <option value="ru">Русский</option>
+                    <option value="es">Español</option>
+                    <option value="sv">Svenska</option>
+                    <option value="th">Thai (ไทย)</option>
+                    <option value="tr">Turkish (Türkçe)</option>
+                    <option value="uk">Ukranian (Українська)</option>
+                    <option value="vi">Vietnamese (Tiếng Việt)</option>
+                </select>
+            </div>
+
+
+            <% if (user) { %>
+                <a href="/api/auth/logout" class="nav-logout-btn">Logout</a>
+            <% } %>
+        </div>
+    </div>
+</nav>
+

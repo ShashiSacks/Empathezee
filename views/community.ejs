@@ -1,0 +1,216 @@
+<%- include('partials/header', { title: community.name }) %>
+<%- include('partials/navbar') %>
+
+<main class="page-container">
+    <h1 class="title"><%= community.name %></h1>
+
+    <div class="card" style="margin-bottom: 25px;">
+        <p><b>Disease:</b> <%= community.disease %></p>
+        <p><%= community.description %></p>
+        <a href="/communities" class="btn-danger-outline" style="display: inline-block; margin-top: 10px;">⬅ Back to Communities</a>
+    </div>
+
+    <!-- CREATE POST -->
+    <h2>Create Post</h2>
+
+    <form action="/api/posts" method="POST" class="form-card" style="margin-bottom: 30px;">
+
+        <input type="hidden" name="community" value="<%= community._id %>">
+
+        <div class="form-group">
+            <label for="post-title">Post Title</label>
+            <input type="text" name="title" id="post-title" placeholder="What is on your mind?" required>
+        </div>
+
+        <div class="form-group">
+            <label for="post-content">Post Content</label>
+            <textarea name="content" id="post-content" placeholder="Share your experience, query, or advice..." required style="min-height: 100px;"></textarea>
+        </div>
+
+        <input type="hidden" name="disease" value="<%= community.disease %>">
+
+        <button type="submit" class="btn-primary">Post Message</button>
+
+    </form>
+
+    <!-- POSTS -->
+    <h2>Posts Discussion Feed</h2>
+
+    <div id="posts-container" style="margin-top: 15px;">
+
+        <% if (!posts || posts.length === 0) { %>
+            <div class="empty-state">
+                <span class="empty-icon">💬</span>
+                <h3>No Posts Yet</h3>
+                <p>No messages have been posted in this community yet. Be the first to share your experience!</p>
+            </div>
+        <% } else { %>
+            <% posts.forEach(post => { %>
+
+                <div class="card" data-id="<%= post._id %>" style="margin-bottom: 20px;">
+
+                    <h3><%= post.title %></h3>
+
+                    <p><%= post.content %></p>
+
+                    <div style="display: flex; gap: 15px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+                        <span><b>Author:</b> <%= post.author?.username || 'Anonymous' %></span>
+                        <span><b>Status:</b> 
+                            <span class="status status-<%= post.status.toLowerCase() %>" style="font-weight: 700;">
+                                <%= post.status %>
+                            </span>
+                        </span>
+                        <% if (post.aiReason) { %>
+                            <span style="font-style: italic;"><b>AI Verdict Note:</b> <%= post.aiReason %></span>
+                        <% } %>
+                    </div>
+
+                    <!-- LIKE BUTTON -->
+                    <form action="/api/posts/like/<%= post._id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem;">
+                            👍 Like (<span class="like-count"><%= post.likes.length %></span>)
+                        </button>
+                    </form>
+
+                    &nbsp;|&nbsp;
+
+                    <!-- COMMENT FORM -->
+                    <form action="/api/comments" method="POST" style="display:inline;">
+
+                        <input type="hidden" name="postId" value="<%= post._id %>">
+
+                        <input type="text" name="content" placeholder="Comment..." required style="padding: 6px 10px; font-size: 0.85rem; max-width: 250px;">
+
+                        <button type="submit" class="btn-success" style="padding: 6px 12px; font-size: 0.85rem;">Send</button>
+
+                    </form>
+
+                    <!-- COMMENTS -->
+                    <div class="comments" style="margin-top:15px; padding-top: 15px;">
+
+                        <% if (post.comments && post.comments.length > 0) { %>
+
+                            <% post.comments.forEach(c => { %>
+
+                                <p style="margin: 6px 0; border-bottom: 1px solid #f0f0f0; padding-bottom: 4px;">
+                                    <b><%= c.author?.username || 'Anonymous' %>:</b>
+                                    <%= c.content %>
+                                </p>
+
+                            <% }) %>
+
+                        <% } else { %>
+
+                            <p class="no-comments" style="font-style: italic; font-size: 0.85rem;">No comments yet</p>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+            <% }) %>
+        <% } %>
+
+    </div>
+
+    <!-- SOCKET REAL-TIME -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const socket = io();
+        const container = document.getElementById("posts-container");
+
+        // NEW POST
+        socket.on("new-post", (post) => {
+            // Remove empty state if it was there
+            const emptyState = container.querySelector(".empty-state");
+            if (emptyState) {
+                emptyState.remove();
+            }
+
+            const div = document.createElement("div");
+            div.classList.add("card");
+            div.style.marginBottom = "20px";
+            div.setAttribute("data-id", post._id);
+
+            div.innerHTML = `
+                <h3>${post.title}</h3>
+                <p>${post.content}</p>
+                <div style="display: flex; gap: 15px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+                    <span><b>Author:</b> ${post.author?.username || "User"}</span>
+                    <span><b>Status:</b> <span class="status status-${post.status.toLowerCase()}" style="font-weight: 700;">${post.status}</span></span>
+                </div>
+
+                <form action="/api/posts/like/${post._id}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem;">
+                        👍 Like (<span class="like-count">0</span>)
+                    </button>
+                </form>
+
+                &nbsp;|&nbsp;
+
+                <form action="/api/comments" method="POST" style="display:inline;">
+                    <input type="hidden" name="postId" value="${post._id}">
+                    <input type="text" name="content" placeholder="Comment..." required style="padding: 6px 10px; font-size: 0.85rem; max-width: 250px;">
+                    <button type="submit" class="btn-success" style="padding: 6px 12px; font-size: 0.85rem;">Send</button>
+                </form>
+
+                <div class="comments" style="margin-top:15px; padding-top: 15px;">
+                    <p class="no-comments" style="font-style: italic; font-size: 0.85rem;">No comments yet</p>
+                </div>
+            `;
+
+            container.prepend(div);
+        });
+
+        // LIKE UPDATE
+        socket.on("post-liked", (data) => {
+            const post = document.querySelector(`[data-id="${data.postId}"]`);
+            if (post) {
+                post.querySelector(".like-count").innerText = data.likes;
+            }
+        });
+
+        // UNLIKE UPDATE
+        socket.on("post-unliked", (data) => {
+            const post = document.querySelector(`[data-id="${data.postId}"]`);
+            if (post) {
+                post.querySelector(".like-count").innerText = data.likes;
+            }
+        });
+
+        // NEW COMMENT
+        socket.on("new-comment", (comment) => {
+            const post = document.querySelector(`[data-id="${comment.post}"]`);
+
+            if (post) {
+                const box = post.querySelector(".comments");
+                const noComments = box.querySelector(".no-comments");
+                if (noComments) {
+                    noComments.remove();
+                }
+
+                const p = document.createElement("p");
+                p.style.margin = "6px 0";
+                p.style.borderBottom = "1px solid #f0f0f0";
+                p.style.paddingBottom = "4px";
+                p.innerHTML = `<b>${comment.author.username}:</b> ${comment.content}`;
+
+                box.appendChild(p);
+            }
+        });
+
+        // DELETE COMMENT
+        socket.on("delete-comment", (data) => {
+            const post = document.querySelector(`[data-id="${data.commentId}"]`);
+            if (post) {
+                post.remove();
+            }
+        });
+
+    </script>
+
+</main>
+
+<%- include('partials/footer') %>

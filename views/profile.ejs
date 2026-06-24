@@ -1,0 +1,89 @@
+<%- include('partials/header', { title: 'Your Profile' }) %>
+<%- include('partials/navbar') %>
+
+<main class="page-container">
+    <h1 class="title">User Profile</h1>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 40px;">
+        <!-- Left Column: Current Profile Details -->
+        <div class="card" style="margin: 0; display: flex; flex-direction: column; justify-content: center; text-align: left;">
+            <h2 style="text-align: center;">👤 <%= user.username %></h2>
+            <div class="profile-details" style="display: flex; flex-direction: column; gap: 15px; margin-top: 25px;">
+                <p style="text-align: left;"><b>Email:</b> <%= user.email %></p>
+                <p style="text-align: left;"><b>Age:</b> <%= user.age || "Not set" %></p>
+                <p style="text-align: left; text-transform: capitalize;"><b>Gender:</b> <%= user.gender || "Not set" %></p>
+                <p style="text-align: left;"><b>City:</b> <%= user.city || "Not set" %></p>
+                <p style="text-align: left;"><b>Target Disease:</b> <%= user.disease || "Not set" %></p>
+            </div>
+        </div>
+
+        <!-- Right Column: Edit Profile Details Form -->
+        <div class="card" style="margin: 0; text-align: left;">
+            <h2 style="text-align: center;">✏️ Edit Details</h2>
+            <form action="/api/users/profile" method="POST" style="margin-top: 20px; display: flex; flex-direction: column; background: transparent; border: none; box-shadow: none; padding: 0;">
+                <div class="form-group">
+                    <label for="username" style="font-weight: 600;">Username</label>
+                    <input type="text" name="username" id="username" value="<%= user.username %>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" style="font-weight: 600;">Email Address</label>
+                    <input type="email" name="email" id="email" value="<%= user.email %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="age" style="font-weight: 600;">Age</label>
+                    <input type="number" name="age" id="age" value="<%= user.age %>" placeholder="e.g., 21">
+                </div>
+
+                <div class="form-group">
+                    <label for="gender" style="font-weight: 600;">Gender</label>
+                    <select name="gender" id="gender">
+                        <option value="male" <%= user.gender === 'male' ? 'selected' : '' %>>Male</option>
+                        <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Female</option>
+                        <option value="other" <%= user.gender === 'other' ? 'selected' : '' %>>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="city" style="font-weight: 600;">City</label>
+                    <input type="text" name="city" id="city" value="<%= user.city %>" placeholder="e.g., Kadapa">
+                </div>
+
+                <div class="form-group">
+                    <label for="disease" style="font-weight: 600;">Target Disease / Indication</label>
+                    <input type="text" name="disease" id="disease" value="<%= user.disease %>" placeholder="e.g., Asthma">
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>👥 Joined Communities</h2>
+
+    <% if (!user.communities || user.communities.length === 0) { %>
+        <div class="empty-state">
+            <span class="empty-icon">👥</span>
+            <h3>No Communities Joined</h3>
+            <p>You have not joined any medical support communities yet. Head over to the communities directory to find one.</p>
+        </div>
+    <% } else { %>
+        <div class="appointment-grid" style="margin-top: 15px;">
+            <% user.communities.forEach(c => { %>
+                <div class="card">
+                    <h3><%= c.name %></h3>
+                    <p class="community-disease"><b>Disease:</b> <%= c.disease %></p>
+                    <a href="/community/<%= c._id %>" class="btn-primary" style="display: inline-block; margin-top: 10px;">Enter Group</a>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+
+    <!-- Centered Back to Dashboard Link -->
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="/dashboard" class="btn-danger-outline" style="display: inline-block;">⬅ Back to Dashboard</a>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
