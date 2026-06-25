@@ -6,7 +6,7 @@ const getDoctorAppointments = async (req, res) => {
         const appointments = await Appointment.find({
             doctor: req.user.id
         })
-        .populate("patient", "name email")
+        .populate("patient", "username email")
         .sort({ createdAt: -1 });
 
         res.status(200).json(appointments);
@@ -28,6 +28,10 @@ const acceptAppointment = async (req, res) => {
 
         appointment.status = "CONFIRMED";
         await appointment.save();
+
+        if (req.accepts('html')) {
+            return res.redirect("/doctor/dashboard");
+        }
 
         res.status(200).json({
             message: "Appointment accepted",
@@ -51,6 +55,10 @@ const rejectAppointment = async (req, res) => {
         appointment.status = "CANCELLED";
         await appointment.save();
 
+        if (req.accepts('html')) {
+            return res.redirect("/doctor/dashboard");
+        }
+
         res.status(200).json({
             message: "Appointment rejected",
             appointment
@@ -66,3 +74,4 @@ module.exports = {
     acceptAppointment,
     rejectAppointment
 };
+

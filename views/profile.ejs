@@ -12,7 +12,16 @@
                 <p style="text-align: left;"><b>Email:</b> <%= user.email %></p>
                 <p style="text-align: left;"><b>Age:</b> <%= user.age || "Not set" %></p>
                 <p style="text-align: left; text-transform: capitalize;"><b>Gender:</b> <%= user.gender || "Not set" %></p>
-                <p style="text-align: left;"><b>City:</b> <%= user.city || "Not set" %></p>
+                <p style="text-align: left;"><b>Location:</b>
+                    <%
+                        var locationParts = [];
+                        if (user.city) locationParts.push(user.city);
+                        if (user.district) locationParts.push(user.district);
+                        if (user.state) locationParts.push(user.state);
+                        if (user.country) locationParts.push(user.country);
+                    %>
+                    <%= locationParts.length > 0 ? locationParts.join(', ') : 'Not set' %>
+                </p>
                 <p style="text-align: left;"><b>Target Disease:</b> <%= user.disease || "Not set" %></p>
             </div>
         </div>
@@ -46,13 +55,39 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="city" style="font-weight: 600;">City</label>
-                    <input type="text" name="city" id="city" value="<%= user.city %>" placeholder="e.g., Kadapa">
-                </div>
-
-                <div class="form-group">
                     <label for="disease" style="font-weight: 600;">Target Disease / Indication</label>
                     <input type="text" name="disease" id="disease" value="<%= user.disease %>" placeholder="e.g., Asthma">
+                </div>
+
+                <!-- Location Picker in Profile Edit -->
+                <div class="location-picker">
+                    <div class="form-group">
+                        <label for="profile-country" style="font-weight: 600;">Country</label>
+                        <select name="country" id="profile-country">
+                            <option value="">Select Country</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="profile-state-group" style="display: none;">
+                        <label for="profile-state" style="font-weight: 600;">State</label>
+                        <select name="state" id="profile-state">
+                            <option value="">Select State</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="profile-district-group" style="display: none;">
+                        <label for="profile-district" style="font-weight: 600;">District</label>
+                        <select name="district" id="profile-district">
+                            <option value="">Select District</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="profile-city-group" style="display: none;">
+                        <label for="profile-city" style="font-weight: 600;">City / Place</label>
+                        <select name="city" id="profile-city">
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Save Changes</button>
@@ -85,5 +120,136 @@
         <a href="/dashboard" class="btn-danger-outline" style="display: inline-block;">⬅ Back to Dashboard</a>
     </div>
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var countryEl = document.getElementById('profile-country');
+    var stateEl = document.getElementById('profile-state');
+    var districtEl = document.getElementById('profile-district');
+    var cityEl = document.getElementById('profile-city');
+
+    var stateGroup = document.getElementById('profile-state-group');
+    var districtGroup = document.getElementById('profile-district-group');
+    var cityGroup = document.getElementById('profile-city-group');
+
+    // Current user values
+    var currentCountry = '<%= user.country || "" %>';
+    var currentState = '<%= user.state || "" %>';
+    var currentDistrict = '<%= user.district || "" %>';
+    var currentCity = '<%= user.city || "" %>';
+
+    // Populate countries
+    var countries = LOCATION_DATA.getCountries();
+    countries.forEach(function(c) {
+        var opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (c === currentCountry) opt.selected = true;
+        countryEl.appendChild(opt);
+    });
+
+    // If user already has a country, populate states
+    if (currentCountry && LOCATION_DATA.hasDetailedData(currentCountry)) {
+        var states = LOCATION_DATA.getStates(currentCountry);
+        states.forEach(function(s) {
+            var opt = document.createElement('option');
+            opt.value = s;
+            opt.textContent = s;
+            if (s === currentState) opt.selected = true;
+            stateEl.appendChild(opt);
+        });
+        stateGroup.style.display = 'flex';
+
+        // If user has a state, populate districts
+        if (currentState) {
+            var districts = LOCATION_DATA.getDistricts(currentState);
+            districts.forEach(function(d) {
+                var opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                if (d === currentDistrict) opt.selected = true;
+                districtEl.appendChild(opt);
+            });
+            districtGroup.style.display = 'flex';
+
+            // If user has a district, populate cities
+            if (currentDistrict) {
+                var cities = LOCATION_DATA.getCities(currentDistrict);
+                cities.forEach(function(c) {
+                    var opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    if (c === currentCity) opt.selected = true;
+                    cityEl.appendChild(opt);
+                });
+                cityGroup.style.display = 'flex';
+            }
+        }
+    }
+
+    // Country change
+    countryEl.addEventListener('change', function() {
+        var country = this.value;
+        stateEl.innerHTML = '<option value="">Select State</option>';
+        districtEl.innerHTML = '<option value="">Select District</option>';
+        cityEl.innerHTML = '<option value="">Select City</option>';
+        districtGroup.style.display = 'none';
+        cityGroup.style.display = 'none';
+
+        if (LOCATION_DATA.hasDetailedData(country)) {
+            var states = LOCATION_DATA.getStates(country);
+            states.forEach(function(s) {
+                var opt = document.createElement('option');
+                opt.value = s;
+                opt.textContent = s;
+                stateEl.appendChild(opt);
+            });
+            stateGroup.style.display = 'flex';
+        } else {
+            stateGroup.style.display = 'none';
+        }
+    });
+
+    // State change
+    stateEl.addEventListener('change', function() {
+        var state = this.value;
+        districtEl.innerHTML = '<option value="">Select District</option>';
+        cityEl.innerHTML = '<option value="">Select City</option>';
+        cityGroup.style.display = 'none';
+
+        if (state) {
+            var districts = LOCATION_DATA.getDistricts(state);
+            districts.forEach(function(d) {
+                var opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                districtEl.appendChild(opt);
+            });
+            districtGroup.style.display = 'flex';
+        } else {
+            districtGroup.style.display = 'none';
+        }
+    });
+
+    // District change
+    districtEl.addEventListener('change', function() {
+        var district = this.value;
+        cityEl.innerHTML = '<option value="">Select City</option>';
+
+        if (district) {
+            var cities = LOCATION_DATA.getCities(district);
+            cities.forEach(function(c) {
+                var opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = c;
+                cityEl.appendChild(opt);
+            });
+            cityGroup.style.display = 'flex';
+        } else {
+            cityGroup.style.display = 'none';
+        }
+    });
+});
+</script>
 
 <%- include('partials/footer') %>

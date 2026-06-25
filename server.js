@@ -12,7 +12,7 @@ const io = new Server(server);
 
 // middleware
 const sessionMiddleware = require("./middleware/sessionMiddleware");
-const { protectUser, protectDoctor } = require("./middleware/sessionMiddleware");
+const { protectUser, protectDoctor, protect } = require("./middleware/sessionMiddleware");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
@@ -67,6 +67,7 @@ const medicineRoutes = require("./routes/medicineRoutes");
 const doctorPostRoutes = require("./routes/doctorPostRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const communityRoutes = require("./routes/communityRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 
 // API routes
 app.use("/api/auth", authRoutes);
@@ -81,6 +82,58 @@ app.use("/api/medicine", medicineRoutes);
 app.use("/api/doctor-posts", doctorPostRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/communities", communityRoutes);
+app.use("/", chatRoutes);
+
+// Platform Analytics Dashboard Route
+app.get("/analytics", protect, async (req, res) => {
+    try {
+        const totalPosts = await Post.countDocuments();
+        const safePosts = await Post.countDocuments({ status: "SAFE" });
+        const fakePosts = await Post.countDocuments({ status: "FAKE" });
+        const pendingPosts = await Post.countDocuments({ status: "PENDING" });
+        const suspiciousPosts = await Post.countDocuments({ status: "SUSPICIOUS" });
+        const totalUsers = await User.countDocuments();
+
+        const diseaseStats = await Post.aggregate([
+            {
+                $group: {
+                    _id: "$disease",
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { count: -1 }
+            }
+        ]);
+
+        const posts = await Post.find();
+        let verifiedCount = 0;
+        let rejectedCount = 0;
+
+        posts.forEach(post => {
+            post.doctorVerification.forEach(v => {
+                if (v.verdict === "VERIFIED") verifiedCount++;
+                if (v.verdict === "NOT_VERIFIED") rejectedCount++;
+            });
+        });
+
+        res.render("analytics", {
+            totalPosts,
+            totalUsers,
+            safePosts,
+            fakePosts,
+            pendingPosts,
+            suspiciousPosts,
+            doctorVerified: verifiedCount,
+            doctorRejected: rejectedCount,
+            diseaseStats,
+            title: "Platform Security & Health Analytics"
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading analytics page");
+    }
+});
 
 // attach socket.io
 app.set("io", io);
@@ -96,10 +149,43 @@ io.on("connection", (socket) => {
 
     console.log("user connected:", user?.username || socket.id);
 
+    // Join room event
+    socket.on("join-room", (roomId) => {
+        socket.join(roomId);
+        console.log(`User ${user?.username || socket.id} joined room: ${roomId}`);
+    });
+
+    // Send real-time chat message
+    socket.on("send-message", async (data) => {
+        try {
+            const { roomId, content, recipientId, appointmentId, communityId } = data;
+            if (!content || !roomId || !user) return;
+
+            const Message = require("./models/Message");
+            const newMsg = await Message.create({
+                sender: user.id,
+                recipient: recipientId || null,
+                appointment: appointmentId || null,
+                community: communityId || null,
+                content: content.trim()
+            });
+
+            const populatedMsg = await Message.findById(newMsg._id)
+                .populate("sender", "username role");
+
+            // broadcast message to other clients in room
+            io.to(roomId).emit("new-message", populatedMsg);
+
+        } catch (error) {
+            console.error("Socket message error:", error);
+        }
+    });
+
     socket.on("disconnect", () => {
         console.log("user disconnected:", socket.id);
     });
 });
+
 
 
 // ======================
@@ -212,7 +298,11 @@ app.get("/doctor/dashboard", protectDoctor, async (req, res) => {
             .populate("author", "username email")
             .sort({ createdAt: -1 });
 
-        res.render("doctorPosts", { posts });
+        const appointments = await Appointment.find({ doctor: req.user.id })
+            .populate("patient", "username email")
+            .sort({ date: 1, time: 1 });
+
+        res.render("doctorDashboard", { posts, appointments });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading doctor dashboard");

@@ -1,0 +1,194 @@
+<%- include('partials/header', { title: title }) %>
+<%- include('partials/navbar') %>
+
+<main class="page-container" style="max-width: 800px; margin-top: 20px; margin-bottom: 20px;">
+    
+    <div class="card chat-container" style="padding: 0; align-items: stretch; border-radius: var(--radius-lg); overflow: hidden; height: 75vh; max-height: 700px; display: flex; flex-direction: column;">
+        
+        <!-- Chat Header -->
+        <div class="chat-header" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line);">
+            <div>
+                <h2 style="color: white; margin: 0; text-align: left; font-size: 1.25rem;">
+                    💬 Live Consultation
+                </h2>
+                <p style="margin: 3px 0 0; color: rgba(255, 255, 255, 0.85); font-size: 0.85rem; text-align: left;">
+                    <% if (user.role === 'doctor') { %>
+                        Patient: <b><%= otherUser.username %></b>
+                    <% } else { %>
+                        Dr. <b><%= otherUser.username %></b> (<%= otherUser.disease || 'General Specialist' %>)
+                    <% } %>
+                </p>
+            </div>
+            <div>
+                <a href="<%= user.role === 'doctor' ? '/doctor/dashboard' : '/appointments-ui' %>" class="btn-danger-outline" style="background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.35); font-size: 0.8rem; padding: 6px 12px; margin: 0; border-radius: 6px; text-decoration: none;">
+                    Exit Consultation
+                </a>
+            </div>
+        </div>
+
+        <!-- Chat Area (Messages) -->
+        <div id="chat-messages" style="flex: 1; padding: 24px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 12px;">
+            <% if (messages && messages.length > 0) { %>
+                <% messages.forEach(msg => { %>
+                    <% const isMe = msg.sender._id.toString() === user.id.toString(); %>
+                    <div class="message-bubble-wrapper" style="display: flex; justify-content: <%= isMe ? 'flex-end' : 'flex-start' %>;">
+                        <div class="message-bubble" style="max-width: 70%; padding: 12px 16px; border-radius: 12px; font-size: 0.95rem; line-height: 1.4; 
+                            background: <%= isMe ? 'var(--blue)' : 'white' %>; 
+                            color: <%= isMe ? 'white' : 'var(--text)' %>; 
+                            box-shadow: var(--shadow-soft); 
+                            border: <%= isMe ? 'none' : '1px solid var(--line)' %>;
+                            border-top-right-radius: <%= isMe ? '2px' : '12px' %>;
+                            border-top-left-radius: <%= isMe ? '12px' : '2px' %>;">
+                            
+                            <div style="font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; color: <%= isMe ? 'rgba(255, 255, 255, 0.8)' : 'var(--text-muted)' %>;">
+                                <%= msg.sender.username %>
+                            </div>
+                            
+                            <div style="word-break: break-word;"><%= msg.content %></div>
+                            
+                            <div style="font-size: 0.65rem; text-align: right; margin-top: 4px; color: <%= isMe ? 'rgba(255, 255, 255, 0.7)' : 'var(--text-muted)' %>;">
+                                <%= new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div id="no-chat-prompt" class="empty-state" style="padding: 30px; margin: auto; max-width: 400px; background: transparent; border: none; box-shadow: none;">
+                    <span class="empty-icon">🤝</span>
+                    <h3>Consultation Started</h3>
+                    <p style="font-size: 0.88rem;">Send a message below to start your real-time secure session.</p>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Chat Input Form -->
+        <div class="chat-input-panel" style="padding: 16px; background: white; border-top: 1px solid var(--line); display: flex; gap: 12px;">
+            <input 
+                type="text" 
+                id="message-text" 
+                placeholder="Type your medical query or advice here..." 
+                style="flex: 1; font-size: 0.95rem; border-radius: var(--radius); padding: 12px 16px; border: 1px solid #cbd5e1;"
+                onkeypress="handleKeyPress(event)"
+                autocomplete="off"
+            />
+            <button 
+                id="send-btn" 
+                class="btn-primary" 
+                style="min-width: 100px; padding: 12px 20px; margin: 0; font-size: 0.95rem;" 
+                onclick="sendMessage()"
+            >
+                Send 🚀
+            </button>
+        </div>
+
+    </div>
+
+</main>
+
+<!-- SOCKET REAL-TIME SCRIPTS -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const appointmentId = "<%= appointment._id %>";
+    const roomId = "appointment_" + appointmentId;
+    const recipientId = "<%= otherUser._id %>";
+    const currentUserId = "<%= user.id %>";
+    const currentUsername = "<%= user.username %>";
+
+    const chatMessagesContainer = document.getElementById("chat-messages");
+    const messageInput = document.getElementById("message-text");
+
+    // Scroll chat window to bottom
+    function scrollToBottom() {
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    }
+
+    // Initialize: Join Socket Room
+    socket.emit("join-room", roomId);
+    scrollToBottom();
+
+    // Send Message function
+    function sendMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+
+        // Emit message payload to server via Socket
+        socket.emit("send-message", {
+            roomId: roomId,
+            content: text,
+            recipientId: recipientId,
+            appointmentId: appointmentId
+        });
+
+        messageInput.value = "";
+        messageInput.focus();
+    }
+
+    // Send on Enter Key
+    function handleKeyPress(e) {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    }
+
+    // Receive message
+    socket.on("new-message", (msg) => {
+        // Remove empty state prompt if visible
+        const prompt = document.getElementById("no-chat-prompt");
+        if (prompt) prompt.remove();
+
+        const isMe = msg.sender._id.toString() === currentUserId.toString();
+        const wrapper = document.createElement("div");
+        wrapper.style.display = "flex";
+        wrapper.style.justifyContent = isMe ? "flex-end" : "flex-start";
+
+        const bubble = document.createElement("div");
+        bubble.style.maxWidth = "70%";
+        bubble.style.padding = "12px 16px";
+        bubble.style.borderRadius = "12px";
+        bubble.style.fontSize = "0.95rem";
+        bubble.style.lineHeight = "1.4";
+        bubble.style.boxShadow = "var(--shadow-soft)";
+        bubble.style.wordBreak = "break-word";
+        
+        if (isMe) {
+            bubble.style.background = "var(--blue)";
+            bubble.style.color = "white";
+            bubble.style.border = "none";
+            bubble.style.borderTopRightRadius = "2px";
+            bubble.style.borderTopLeftRadius = "12px";
+        } else {
+            bubble.style.background = "white";
+            bubble.style.color = "var(--text)";
+            bubble.style.border = "1px solid var(--line)";
+            bubble.style.borderTopRightRadius = "12px";
+            bubble.style.borderTopLeftRadius = "2px";
+        }
+
+        const senderColor = isMe ? "rgba(255, 255, 255, 0.8)" : "var(--text-muted)";
+        const timeColor = isMe ? "rgba(255, 255, 255, 0.7)" : "var(--text-muted)";
+        
+        const timestampStr = new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        bubble.innerHTML = `
+            <div style="font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; color: ${senderColor};">
+                ${msg.sender.username}
+            </div>
+            <div>${escapeHTML(msg.content)}</div>
+            <div style="font-size: 0.65rem; text-align: right; margin-top: 4px; color: ${timeColor};">
+                ${timestampStr}
+            </div>
+        `;
+
+        wrapper.appendChild(bubble);
+        chatMessagesContainer.appendChild(wrapper);
+        scrollToBottom();
+    });
+
+    // Sanitization helper
+    function escapeHTML(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+</script>
+
+<%- include('partials/footer') %>

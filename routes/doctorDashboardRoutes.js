@@ -14,8 +14,10 @@ router.get("/appointments", protect, getDoctorAppointments)
 
 // Accept appointment
 router.put("/accept/:id", protect, acceptAppointment)
+router.post("/accept/:id", protect, acceptAppointment)
 
 // Reject appointment
 router.put("/reject/:id", protect, rejectAppointment)
+router.post("/reject/:id", protect, rejectAppointment)
 
 module.exports = router

@@ -18,7 +18,7 @@ const getProfile = async (req, res) => {
 // Update Profile
 const updateProfile = async (req, res, next) => {
     try {
-        const { username, email, age, gender, disease, bio, city } = req.body;
+        const { username, email, age, gender, disease, bio, city, country, state, district } = req.body;
 
         let normalizedGender = undefined;
         if (typeof gender === "string") {
@@ -37,7 +37,7 @@ const updateProfile = async (req, res, next) => {
             updateData.age = age === "" ? null : parseInt(age, 10);
         }
         
-        // Handle optional gender, disease, bio, city fields
+        // Handle optional gender, disease, bio, location fields
         if (gender !== undefined) {
             updateData.gender = normalizedGender || null;
         }
@@ -46,6 +46,15 @@ const updateProfile = async (req, res, next) => {
         }
         if (bio !== undefined) {
             updateData.bio = bio.trim();
+        }
+        if (country !== undefined) {
+            updateData.country = country.trim();
+        }
+        if (state !== undefined) {
+            updateData.state = state.trim();
+        }
+        if (district !== undefined) {
+            updateData.district = district.trim();
         }
         if (city !== undefined) {
             updateData.city = city.trim();

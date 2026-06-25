@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 const registerUser = async (req, res, role, redirectPath) => {
     try {
-        const { username, email, password, age, gender, disease, bio, city } = req.body;
+        const { username, email, password, age, gender, disease, bio, city, country, state, district } = req.body;
 
         if (!username || !email || !password) {
             return res.status(400).send("Username, email, and password are required.");
@@ -38,6 +38,9 @@ const registerUser = async (req, res, role, redirectPath) => {
             gender: normalizedGender,
             disease: disease ? disease.trim() : "",
             bio: bio ? bio.trim() : "",
+            country: country ? country.trim() : "",
+            state: state ? state.trim() : "",
+            district: district ? district.trim() : "",
             city: city ? city.trim() : ""
         });
 
