@@ -33,6 +33,8 @@ app.use(sessionMiddleware);
 app.use((req, res, next) => {
     res.locals.user = req.session?.user || null;
     res.locals.currentPath = req.path;
+    res.locals.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
+    res.locals.googleClientId = process.env.GOOGLE_CLIENT_ID || "";
     next();
 });
 

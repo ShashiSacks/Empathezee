@@ -705,7 +705,7 @@ a:hover {
 }
 
 /* Card action links */
-.card a {
+.card > a.btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -728,7 +728,7 @@ a:hover {
     width: 100%;
 }
 
-.card a:hover {
+.card > a.btn-primary:hover {
     background: var(--primary-mid);
     text-decoration: none;
     transform: translateY(-1px);

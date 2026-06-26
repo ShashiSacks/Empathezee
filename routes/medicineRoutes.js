@@ -4,7 +4,9 @@ const router = express.Router();
 const {
     getMedicines,
     getMedicinesByDisease,
-    addMedicine
+    addMedicine,
+    orderMedicine,
+    confirmPayment
 } = require("../controllers/medicineController");
 
 const { protect } = require("../middleware/sessionMiddleware");
@@ -17,5 +19,11 @@ router.post("/", protect, addMedicine);
 
 // Get medicines by disease
 router.get("/by-disease/:disease", protect, getMedicinesByDisease);
+
+// Book medicine order
+router.post("/order", protect, orderMedicine);
+
+// Confirm Stripe payment
+router.post("/confirm-payment", protect, confirmPayment);
 
 module.exports = router;

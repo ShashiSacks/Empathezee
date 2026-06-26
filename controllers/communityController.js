@@ -5,7 +5,7 @@ const User = require("../models/User");
 // CREATE COMMUNITY
 const createCommunity = async (req, res, next) => {
     try {
-        const { name, description, disease, type, meetingTime, meetingDate, meetingPlace, paymentType, price } = req.body;
+        const { name, description, disease, type, meetingTime, meetingDate, meetingPlace, paymentType, price, location } = req.body;
 
         const existing = await Community.findOne({ name: { $regex: new RegExp(`^${name.trim()}$`, "i") } });
 
@@ -28,7 +28,8 @@ const createCommunity = async (req, res, next) => {
             meetingDate: meetingDate || "",
             meetingPlace: meetingPlace || "",
             paymentType: paymentType || "free",
-            price: price ? parseFloat(price) : 0
+            price: price ? parseFloat(price) : 0,
+            location: location ? location.trim() : ""
         });
 
         if (req.accepts('html')) {

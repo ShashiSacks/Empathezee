@@ -104,12 +104,16 @@
             <p>You have not joined any medical support communities yet. Head over to the communities directory to find one.</p>
         </div>
     <% } else { %>
-        <div class="appointment-grid" style="margin-top: 15px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; margin-top: 20px; max-width: 100%;">
             <% user.communities.forEach(c => { %>
-                <div class="card">
-                    <h3><%= c.name %></h3>
-                    <p class="community-disease"><b>Disease:</b> <%= c.disease %></p>
-                    <a href="/community/<%= c._id %>" class="btn-primary" style="display: inline-block; margin-top: 10px;">Enter Group</a>
+                <div class="card" style="width: 100%; max-width: 340px; margin: 0; text-align: center; display: flex; flex-direction: column; justify-content: space-between; padding: 28px; box-shadow: var(--shadow-sm); border-radius: var(--radius-lg); border: 1px solid var(--line); background: var(--surface);">
+                    <div>
+                        <h3 style="margin-top: 0; font-size: 1.25rem; color: var(--primary);"><%= c.name %></h3>
+                        <p class="community-disease" style="margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem;"><b>Target Disease:</b> <span style="background: rgba(79, 70, 229, 0.05); padding: 2px 6px; border-radius: 4px; font-weight: 600;"><%= c.disease %></span></p>
+                    </div>
+                    <div style="margin-top: 24px;">
+                        <a href="/community/<%= c._id %>" class="btn-primary" style="display: block; text-align: center; text-decoration: none; font-size: 0.88rem; padding: 10px 16px; margin: 0;">Enter Group</a>
+                    </div>
                 </div>
             <% }) %>
         </div>

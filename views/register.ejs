@@ -76,6 +76,54 @@
                 Registering as a doctor?
                 <a href="/doctor/register">Doctor registration</a>
             </p>
+
+            <!-- Google Login Button -->
+            <div style="margin-top: 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+                <div style="width: 100%; display: flex; align-items: center; margin-bottom: 15px; color: var(--text-muted); font-size: 0.8rem;">
+                    <div style="flex: 1; height: 1px; background: var(--line);"></div>
+                    <span style="padding: 0 10px; font-weight: 550; text-transform: uppercase;">or</span>
+                    <div style="flex: 1; height: 1px; background: var(--line);"></div>
+                </div>
+                <script src="https://accounts.google.com/gsi/client" async defer></script>
+                <div id="g_id_onload"
+                     data-client_id="<%= googleClientId %>"
+                     data-context="signup"
+                     data-ux_mode="popup"
+                     data-callback="handleCredentialResponse"
+                     data-auto_select="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-shape="rectangular"
+                     data-theme="outline"
+                     data-text="signup_with"
+                     data-size="large"
+                     data-logo_alignment="left"
+                     style="width: 100%;">
+                </div>
+            </div>
+
+            <script>
+            async function handleCredentialResponse(response) {
+                try {
+                    const res = await fetch("/api/auth/google", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ credential: response.credential })
+                    });
+                    if (res.ok) {
+                        window.location.href = "/dashboard";
+                    } else {
+                        const err = await res.text();
+                        alert("Google Registration failed: " + err);
+                    }
+                } catch (err) {
+                    console.error("Google register fetch error:", err);
+                }
+            }
+            </script>
         </div>
     </div>
 

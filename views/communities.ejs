@@ -27,7 +27,10 @@
                             <% } %>
                             <h3 style="text-align: left; font-size: 1.25rem;"><%= c.name %></h3>
                             <p class="community-desc" style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 12px;"><%= c.description %></p>
-                            <p class="community-disease" style="font-size: 0.9rem; margin-bottom: 12px;"><b>Target Disease:</b> <span style="background: rgba(79, 70, 229, 0.05); padding: 2px 6px; border-radius: 4px; font-weight: 600;"><%= c.disease %></span></p>
+                            <p class="community-disease" style="font-size: 0.9rem; margin-bottom: 8px;"><b>Target Disease:</b> <span style="background: rgba(79, 70, 229, 0.05); padding: 2px 6px; border-radius: 4px; font-weight: 600;"><%= c.disease %></span></p>
+                            <% if (c.location) { %>
+                                <p class="community-location" style="font-size: 0.9rem; margin-bottom: 12px;"><b>Location:</b> 📍 <span style="font-weight: 600;"><%= c.location %></span></p>
+                            <% } %>
 
                             <!-- Meetup specifications (Online / In-person) -->
                             <div class="community-event-details" style="margin-bottom: 20px; padding: 12px; background: rgba(79, 70, 229, 0.03); border-radius: var(--radius); border: 1px solid rgba(79, 70, 229, 0.06); font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px;">
@@ -82,6 +85,11 @@
                 <div class="form-group">
                     <label for="disease">Target Disease</label>
                     <input type="text" name="disease" id="disease" required placeholder="e.g. Aids">
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location / City <span class="optional-tag">(optional)</span></label>
+                    <input type="text" name="location" id="location" placeholder="e.g. Kadapa, Bangalore, Global">
                 </div>
 
                 <div class="form-group">
