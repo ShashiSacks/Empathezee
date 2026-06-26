@@ -2,127 +2,50 @@
 <%- include('partials/navbar') %>
 <script src="https://js.stripe.com/v3/"></script>
 
-<main class="page-container">
-    <h1 class="title">Medicines Directory</h1>
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
 
-    <!-- GOOGLE PROGRAMMABLE SEARCH ENGINE (INTERACTIVE AJAX PANEL) -->
-    <div class="google-cse-section card" style="margin-bottom: 30px; padding: 28px; box-shadow: var(--shadow-sm); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); text-align: left;">
-        <h2 style="margin-top: 0; margin-bottom: 8px; color: var(--primary); font-size: 1.4rem; text-align: left;">🔍 Trusted Google Medical Search</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.9rem; line-height: 1.5; text-align: left;">Search verified databases (Mayo Clinic, WebMD, NIH, Wikipedia) for instant medical definitions and drug guides.</p>
-        
+<main class="page-container" style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
+    <div style="text-align: center; margin-bottom: 36px; margin-top: 20px;">
+        <h1 class="title" style="font-size: 2.2rem; margin-bottom: 8px; font-family: 'Outfit', sans-serif; font-weight: 800; letter-spacing: -1px; color: var(--primary);">💊 Medicine Search</h1>
+        <p style="color: var(--text-secondary); font-size: 1rem; max-width: 550px; margin: 0 auto; line-height: 1.6;">Search verified medical databases (Mayo Clinic, WebMD, NIH, Wikipedia) for instant drug guides, dosages, and book orders.</p>
+    </div>
+
+    <!-- GOOGLE PROGRAMMABLE SEARCH ENGINE (INTERACTIVE HERO PANEL) -->
+    <div class="google-cse-section card" style="margin-bottom: 40px; padding: 32px; box-shadow: var(--shadow-md); border-radius: var(--radius-lg); background: var(--surface); border: 1.5px solid var(--line); text-align: left;">
         <form id="google-search-form" class="search-form" style="display: flex; gap: 12px; margin-bottom: 0;">
-            <select id="searchType" style="max-width: 220px; font-size: 0.9rem;">
-                <option value="disease" selected>Search Disease Info</option>
-                <option value="medicine">Search Drug / Medicine Info</option>
+            <select id="searchType" style="max-width: 220px; font-size: 0.9rem; background: var(--bg-warm); border: 1px solid var(--line); font-weight: 600; border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text);">
+                <option value="medicine" selected>Search Drug / Medicine Info</option>
+                <option value="disease">Search Disease Info</option>
             </select>
-            <input type="text" id="googleQuery" placeholder="Enter query (e.g. cold, fever, asthma, ibuprofen)..." required style="flex: 1; font-size: 0.9rem; padding: 11px 14px;" />
-            <button type="submit" class="btn-primary" style="padding: 11px 24px;">Search</button>
+            <input type="text" id="googleQuery" placeholder="Enter query (e.g. cold, fever, asthma, ibuprofen)..." required style="flex: 1; font-size: 0.95rem; padding: 12px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); outline: none; transition: border-color 0.2s; color: var(--text);" value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" />
+            <button type="submit" class="btn-primary" style="padding: 12px 28px; font-weight: 600; font-size: 0.95rem; border-radius: var(--radius-sm); border: none; cursor: pointer;">Search</button>
         </form>
 
         <!-- Loading state -->
-        <div id="google-search-status" style="display: none; text-align: center; margin-top: 24px; width: 100%;">
-            <div class="spinner" style="margin: 15px auto; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite;"></div>
-            <p style="color: var(--text-secondary); font-size: 0.88rem;">Querying Google medical index...</p>
-        </div>
-
-        <!-- Results state -->
-        <div id="google-results" style="display: none; margin-top: 24px;">
-            <h3 style="text-align: left; margin-bottom: 16px; color: var(--primary); font-size: 1.15rem;">Top Search Results</h3>
-            <div id="google-results-list" style="display: flex; flex-direction: column; gap: 16px;">
-                <!-- Result items loaded dynamically -->
-            </div>
-        </div>
-
-        <!-- Empty state -->
-        <div id="google-empty" style="display: none; margin-top: 24px; text-align: center; padding: 20px; border: 1.5px dashed var(--line); border-radius: var(--radius);">
-            <p style="color: var(--text-secondary); margin: 0;">No results found. Try a different medical term.</p>
+        <div id="google-search-status" style="display: none; text-align: center; margin-top: 32px; width: 100%;">
+            <div class="spinner" style="margin: 15px auto; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; width: 36px; height: 36px; animation: spin 1s linear infinite;"></div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;">Querying Google medical index...</p>
         </div>
     </div>
 
-    <!-- SEARCH & FILTER BAR -->
-    <div class="search-section card">
-        <form action="/medicine-ui" method="GET" class="search-form">
-            <input type="text" name="search" placeholder="Search medicines by target disease (e.g., Asthma, Diabetes)..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
-            <button type="submit" class="btn-primary">Search</button>
-            <% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
-                <a href="/medicine-ui" class="btn-danger-outline">Clear</a>
-            <% } %>
-        </form>
+    <!-- MIDDLE: SEARCH RESULTS SECTION -->
+    <div id="google-results" style="display: none; margin-bottom: 40px;">
+        <h3 style="text-align: left; margin-bottom: 20px; color: var(--primary); font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; border-bottom: 2px solid var(--line); padding-bottom: 8px;">Top Medical Results</h3>
+        <div id="google-results-list" style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Result items loaded dynamically -->
+        </div>
     </div>
 
-    <div class="medicine-layout <%= user && user.role === 'doctor' ? '' : 'full-width-layout' %>">
-        <!-- LEFT COLUMN: MEDICINE CARDS -->
-        <div class="medicine-list-section">
-            <h2>💊 Catalog</h2>
-            
-            <% if (!medicines || medicines.length === 0) { %>
-                <div class="empty-state">
-                    <span class="empty-icon">💊</span>
-                    <h3>No Medicines Found</h3>
-                    <p>No medicines match your search criteria. Try another keyword or check back later.</p>
-                </div>
-            <% } else { %>
-                <div class="medicine-grid">
-                    <% medicines.forEach(med => { %>
-                        <% 
-                           const isRecommended = userDisease && med.disease.toLowerCase().includes(userDisease.toLowerCase());
-                        %>
-                        <div class="card medicine-card <%= isRecommended ? 'highlight-card' : '' %>">
-                            <% if (isRecommended) { %>
-                                <span class="badge recommendation-badge">✨ Matches Your Profile (<%= userDisease %>)</span>
-                            <% } %>
-                            <h3><%= med.name %></h3>
-                            <p class="med-desc"><%= med.description %></p>
-                            <p class="med-target"><b>Targets:</b> <%= med.disease %></p>
-                            <p class="med-prescription">
-                                <b>Prescription:</b> 
-                                <span class="prescription-status <%= med.requiresPrescription ? 'required' : 'optional' %>">
-                                    <%= med.requiresPrescription ? 'Required 📋' : 'Not Required 🟢' %>
-                                </span>
-                            </p>
-                            <div class="card-actions" style="margin-top: auto; padding-top: 15px;">
-                                <button onclick="openCheckoutModal('<%= med.name.replace(/\'/g, `\\\\\'`) %>')" class="btn-success" style="width: 100%; padding: 8px 12px; font-size: 0.85rem;">
-                                    🛒 Order Medicine
-                                </button>
-                            </div>
-                        </div>
-                    <% }) %>
-                </div>
-            <% } %>
-        </div>
-
-        <!-- RIGHT COLUMN: DOCTOR ONLY - ADD MEDICINE -->
-        <% if (user && user.role === 'doctor') { %>
-            <div class="medicine-form-section">
-                <h2>➕ Add New Medicine</h2>
-                <form action="/api/medicine" method="POST" class="form-card">
-                    <div class="form-group">
-                        <label for="name">Medicine Name</label>
-                        <input type="text" name="name" id="name" required placeholder="e.g., Albuterol Inhaler">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="disease">Target Disease/Indication</label>
-                        <input type="text" name="disease" id="disease" required placeholder="e.g., Asthma">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="requiresPrescription">Requires Prescription?</label>
-                        <select name="requiresPrescription" id="requiresPrescription" required>
-                            <option value="true" selected>Yes, requires prescription</option>
-                            <option value="false">No, over the counter (OTC)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Usage Description</label>
-                        <textarea name="description" id="description" required placeholder="Describe usage, dosage, and side effects..."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn-primary-block">Add to Catalog</button>
-                </form>
-            </div>
-        <% } %>
+    <!-- Empty state -->
+    <div id="google-empty" style="display: none; margin-bottom: 40px; text-align: center; padding: 40px 20px; border: 2px dashed var(--line); border-radius: var(--radius-lg); background: var(--surface);">
+        <span style="font-size: 2.5rem; display: block; margin-bottom: 12px;">🔍</span>
+        <h3 style="color: var(--text); font-size: 1.15rem; margin-bottom: 6px; font-weight: 700;">No Results Found</h3>
+        <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">We couldn't find any trusted medical resources for that term. Try another query.</p>
     </div>
 </main>
 
@@ -136,11 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const resultsList = document.getElementById("google-results-list");
     const emptyDiv = document.getElementById("google-empty");
 
-    form.addEventListener("submit", async function(e) {
-        e.preventDefault();
-        const query = queryInput.value.trim();
-        const type = searchType.value;
-
+    async function performSearch(query, type) {
         if (!query) return;
 
         // Reset UI state
@@ -158,19 +77,32 @@ document.addEventListener("DOMContentLoaded", function() {
             statusDiv.style.display = "none";
 
             if (data.results && data.results.length > 0) {
-                // Show top 3-5 results
                 const topResults = data.results.slice(0, 5);
                 topResults.forEach(item => {
                     const card = document.createElement("div");
                     card.className = "search-result-item-card";
-                    card.style.padding = "18px 22px";
-                    card.style.border = "1px solid var(--line)";
-                    card.style.borderRadius = "var(--radius)";
-                    card.style.background = "var(--surface-alt)";
+                    card.style.padding = "24px";
+                    card.style.border = "1.5px solid var(--line)";
+                    card.style.borderRadius = "var(--radius-lg)";
+                    card.style.background = "var(--surface)";
                     card.style.display = "flex";
                     card.style.flexDirection = "column";
-                    card.style.gap = "8px";
-                    card.style.boxShadow = "var(--shadow-xs)";
+                    card.style.gap = "12px";
+                    card.style.boxShadow = "var(--shadow-sm)";
+                    card.style.transition = "transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease)";
+                    card.style.textAlign = "left";
+
+                    // Hover effects
+                    card.addEventListener("mouseover", function() {
+                        card.style.transform = "translateY(-3px)";
+                        card.style.boxShadow = "var(--shadow-md)";
+                        card.style.borderColor = "var(--accent)";
+                    });
+                    card.addEventListener("mouseout", function() {
+                        card.style.transform = "none";
+                        card.style.boxShadow = "var(--shadow-sm)";
+                        card.style.borderColor = "var(--line)";
+                    });
 
                     let sourceName = "Verified Source";
                     if (item.link.includes("mayoclinic.org")) sourceName = "Mayo Clinic";
@@ -178,21 +110,23 @@ document.addEventListener("DOMContentLoaded", function() {
                     else if (item.link.includes("nih.gov")) sourceName = "NIH";
                     else if (item.link.includes("wikipedia.org")) sourceName = "Wikipedia";
 
-                    // Clean the name to pass to checkout pre-fill
                     const cleanName = item.title.split('-')[0].split('|')[0].split(':')[0].trim();
 
                     card.innerHTML = `
-                        <h4 style="margin: 0; font-size: 1.05rem; font-family: 'Outfit', sans-serif; text-align: left;">
-                            <a href="${item.link}" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 700;">${item.title}</a>
-                        </h4>
-                        <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; text-align: left;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                            <h4 style="margin: 0; font-size: 1.15rem; font-family: 'Outfit', sans-serif; text-align: left; line-height: 1.4;">
+                                <a href="${item.link}" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 700; transition: color 0.15s;">${item.title}</a>
+                            </h4>
+                            <span style="background: var(--bg-warm); color: var(--text-secondary); font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); white-space: nowrap;">${sourceName}</span>
+                        </div>
+                        <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; text-align: left;">
                             <b>Usage:</b> ${item.snippet}
                         </p>
-                        <a href="${item.link}" target="_blank" style="color: var(--accent); font-size: 0.82rem; font-weight: 600; text-decoration: underline; align-self: flex-start; text-align: left; margin-top: 4px;">
-                            🔗 View source on ${sourceName}
-                        </a>
-                        <div style="margin-top: 12px; display: flex; gap: 10px;">
-                            <button onclick="openCheckoutModal('${cleanName.replace(/'/g, "\\'")}')" class="btn-success" style="padding: 6px 14px; font-size: 0.8rem; border-radius: var(--radius-sm);">
+                        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line-light); padding-top: 16px;">
+                            <a href="${item.link}" target="_blank" style="color: var(--accent); font-size: 0.85rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                🔗 View source on ${sourceName}
+                            </a>
+                            <button onclick="openCheckoutModal('${cleanName.replace(/'/g, "\\'")}')" class="btn-success" style="padding: 8px 18px; font-size: 0.85rem; font-weight: 600; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow-xs); border: none; cursor: pointer;">
                                 🛒 Book & Pay
                             </button>
                         </div>
@@ -208,8 +142,20 @@ document.addEventListener("DOMContentLoaded", function() {
             statusDiv.style.display = "none";
             alert("Error querying Google search. Please try again later.");
         }
+    }
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        performSearch(queryInput.value.trim(), searchType.value);
     });
+
+    // Auto-trigger search if query parameter exists
+    const initialQuery = "<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>";
+    if (initialQuery.trim()) {
+        performSearch(initialQuery.trim(), "medicine");
+    }
 });
+
 
 // Checkout Modal Actions
 const userCity = "<%= user?.city || '' %>";

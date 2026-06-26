@@ -353,25 +353,13 @@ app.get("/medicine-ui", protectUser, async (req, res) => {
         const user = await User.findById(req.user.id);
         const userDisease = user?.disease || "";
 
-        let filter = {};
-        if (searchQuery.trim() !== "") {
-            filter = {
-                $or: [
-                    { name: { $regex: searchQuery.trim(), $options: "i" } },
-                    { disease: { $regex: searchQuery.trim(), $options: "i" } },
-                    { description: { $regex: searchQuery.trim(), $options: "i" } }
-                ]
-            };
-        }
-
-        let medicines = await Medicine.find(filter).sort({ name: 1 });
-
-        res.render("medicine", { medicines, userDisease, searchQuery });
+        res.render("medicine", { userDisease, searchQuery });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading medicine UI");
     }
 });
+
 
 // search-disease API using Google Custom Search
 app.get("/search-disease", protectUser, async (req, res) => {
