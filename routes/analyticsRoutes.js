@@ -5,7 +5,7 @@ const { getAnalytics } = require("../controllers/analyticsController");
 
 const { protect, authorizeRoles } = require("../middleware/sessionMiddleware");
 
-// ONLY DOCTOR OR ADMIN CAN SEE ANALYTICS
+// only doctor or admin can see analytics
 router.get(
     "/",
     protect,

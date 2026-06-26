@@ -5,7 +5,7 @@
     
     <div class="card chat-container" style="padding: 0; align-items: stretch; border-radius: var(--radius-lg); overflow: hidden; height: 75vh; max-height: 700px; display: flex; flex-direction: column;">
         
-        <!-- Chat Header -->
+        <!-- chat header -->
         <div class="chat-header" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line);">
             <div>
                 <h2 style="color: white; margin: 0; text-align: left; font-size: 1.25rem;">
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <!-- Chat Area (Messages) -->
+        <!-- chat area (messages) -->
         <div id="chat-messages" style="flex: 1; padding: 24px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 12px;">
             <% if (messages && messages.length > 0) { %>
                 <% messages.forEach(msg => { %>
@@ -61,7 +61,7 @@
             <% } %>
         </div>
 
-        <!-- Chat Input Form -->
+        <!-- chat input form -->
         <div class="chat-input-panel" style="padding: 16px; background: white; border-top: 1px solid var(--line); display: flex; gap: 12px;">
             <input 
                 type="text" 
@@ -85,7 +85,7 @@
 
 </main>
 
-<!-- SOCKET REAL-TIME SCRIPTS -->
+<!-- socket real-time scripts -->
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
@@ -98,21 +98,21 @@
     const chatMessagesContainer = document.getElementById("chat-messages");
     const messageInput = document.getElementById("message-text");
 
-    // Scroll chat window to bottom
+    // scroll chat window to bottom
     function scrollToBottom() {
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
     }
 
-    // Initialize: Join Socket Room
+    // initialize: join socket room
     socket.emit("join-room", roomId);
     scrollToBottom();
 
-    // Send Message function
+    // send message function
     function sendMessage() {
         const text = messageInput.value.trim();
         if (!text) return;
 
-        // Emit message payload to server via Socket
+        // emit message payload to server via socket
         socket.emit("send-message", {
             roomId: roomId,
             content: text,
@@ -124,16 +124,16 @@
         messageInput.focus();
     }
 
-    // Send on Enter Key
+    // send on enter key
     function handleKeyPress(e) {
         if (e.key === "Enter") {
             sendMessage();
         }
     }
 
-    // Receive message
+    // receive message
     socket.on("new-message", (msg) => {
-        // Remove empty state prompt if visible
+        // remove empty state prompt if visible
         const prompt = document.getElementById("no-chat-prompt");
         if (prompt) prompt.remove();
 
@@ -185,7 +185,7 @@
         scrollToBottom();
     });
 
-    // Sanitization helper
+    // sanitization helper
     function escapeHTML(str) {
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }

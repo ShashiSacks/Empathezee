@@ -9,13 +9,13 @@ const {
     deleteComment
 } = require("../controllers/commentController");
 
-// CREATE COMMENT
+// create comment
 router.post("/", protect, createComment);
 
-// GET COMMENTS OF A POST
+// get comments of a post
 router.get("/:postId", protect, getCommentsByPost);
 
-// DELETE COMMENT
+// delete comment
 router.delete("/:id", protect, deleteComment);
 
 module.exports = router;

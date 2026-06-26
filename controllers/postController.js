@@ -1,7 +1,7 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 
-// CREATE POST
+// create post
 const createPost = async (req, res) => {
     try {
 
@@ -21,7 +21,7 @@ const createPost = async (req, res) => {
             });
         }
 
-        // Auto-approve post without AI verifier
+        // auto-approve post without ai verifier
         const aiStatus = "SAFE";
         const aiReason = "Auto-approved";
         const riskScore = 0;
@@ -37,7 +37,7 @@ const createPost = async (req, res) => {
             riskScore: riskScore
         });
 
-        // SOCKET EVENT (optional real-time support)
+        // socket event (optional real-time support)
         const io = req.app.get("io");
         if (io) {
             io.emit("new-post", post);
@@ -59,7 +59,7 @@ const createPost = async (req, res) => {
     }
 };
 
-// GET ALL POSTS (AI RANKED FEED)
+// get all posts (ai ranked feed)
 const getPosts = async (req, res) => {
     try {
 
@@ -72,7 +72,7 @@ const getPosts = async (req, res) => {
             .populate("author", "username email")
             .populate("community", "name disease");
 
-        // remove FAKE posts early
+        // remove fake posts early
         const validPosts = posts.filter(p => p.status !== "FAKE");
 
         const rankedPosts = validPosts
@@ -82,7 +82,7 @@ const getPosts = async (req, res) => {
 
                 let score = 0;
 
-                // AI trust score
+                // ai trust score
                 if (post.status === "SAFE") score += 5;
                 else if (post.status === "SUSPICIOUS") score += 2;
                 else score += 1;
@@ -122,7 +122,7 @@ const getPosts = async (req, res) => {
     }
 };
 
-// LIKE POST
+// like post
 const likePost = async (req, res) => {
     try {
 
@@ -147,7 +147,7 @@ const likePost = async (req, res) => {
             await post.save();
         }
 
-        // SOCKET EVENT
+        // socket event
         const io = req.app.get("io");
         if (io) {
             io.emit("post-liked", {
@@ -172,7 +172,7 @@ const likePost = async (req, res) => {
     }
 };
 
-// UNLIKE POST
+// unlike post
 const unlikePost = async (req, res) => {
     try {
 
@@ -195,7 +195,7 @@ const unlikePost = async (req, res) => {
         post.likes = post.likes.filter(id => id.toString() !== userId);
         await post.save();
 
-        // SOCKET EVENT
+        // socket event
         const io = req.app.get("io");
         if (io) {
             io.emit("post-unliked", {
@@ -220,7 +220,7 @@ const unlikePost = async (req, res) => {
     }
 };
 
-// UPDATE POST
+// update post
 const updatePost = async (req, res) => {
     try {
 
@@ -266,7 +266,7 @@ const updatePost = async (req, res) => {
     }
 };
 
-// DELETE POST
+// delete post
 const deletePost = async (req, res) => {
     try {
 
@@ -294,7 +294,7 @@ const deletePost = async (req, res) => {
 
         await Post.findByIdAndDelete(req.params.id);
 
-        // SOCKET EVENT
+        // socket event
         const io = req.app.get("io");
         if (io) {
             io.emit("post-deleted", {

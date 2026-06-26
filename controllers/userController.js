@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const Community = require("../models/Community");
 
-// Get Profile
+// get profile
 const getProfile = async (req, res) => {
     try {
         res.status(200).json({
@@ -15,7 +15,7 @@ const getProfile = async (req, res) => {
     }
 };
 
-// Update Profile
+// update profile
 const updateProfile = async (req, res, next) => {
     try {
         const { username, email, age, gender, disease, bio, city, country, state, district } = req.body;
@@ -32,12 +32,12 @@ const updateProfile = async (req, res, next) => {
         if (username) updateData.username = username.trim();
         if (email) updateData.email = email.trim().toLowerCase();
         
-        // Handle age casting
+        // handle age casting
         if (age !== undefined) {
             updateData.age = age === "" ? null : parseInt(age, 10);
         }
         
-        // Handle optional gender, disease, bio, location fields
+        // handle optional gender, disease, bio, location fields
         if (gender !== undefined) {
             updateData.gender = normalizedGender || null;
         }
@@ -66,7 +66,7 @@ const updateProfile = async (req, res, next) => {
             { new: true, runValidators: true }
         );
 
-        // Synchronize updated values with user session context
+        // synchronize updated values with user session context
         if (req.session && req.session.user) {
             req.session.user.username = updatedUser.username;
             req.session.user.email = updatedUser.email;
@@ -79,7 +79,7 @@ const updateProfile = async (req, res, next) => {
 
     } catch (error) {
         if (req.accepts('html')) {
-            // Let the global error handler render the EJS error view
+            // let the global error handler render the ejs error view
             return next(error);
         }
         res.status(500).json({
@@ -88,7 +88,7 @@ const updateProfile = async (req, res, next) => {
     }
 };
 
-// Get User Communities
+// get user communities
 const getUserCommunities = async (req, res) => {
     try {
         const user = await User.findById(req.user.id)

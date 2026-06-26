@@ -1,12 +1,10 @@
-/**
- * Location Data for Empathezee — Cascading Location Picker
- * Contains all world countries + detailed India states/districts/cities
- */
+// location data for empathezee — cascading location picker
+// contains all world countries + detailed india states/districts/cities
 
 (function () {
     'use strict';
 
-    // All countries (ISO sorted)
+    // all countries (iso sorted)
     const COUNTRIES = [
         "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
         "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
@@ -41,7 +39,7 @@
         "Yemen", "Zambia", "Zimbabwe"
     ];
 
-    // Indian States & Union Territories → Districts → Cities/Towns
+    // indian states & union territories → districts → cities/towns
     const INDIA_DATA = {
         "Andhra Pradesh": {
             "Anantapur": ["Anantapur", "Dharmavaram", "Hindupur", "Kadiri", "Guntakal", "Tadipatri", "Penukonda", "Rayadurg"],
@@ -464,7 +462,7 @@
             "South 24 Parganas": ["Diamond Harbour", "Baruipur"],
             "Purulia": ["Purulia"]
         },
-        // Union Territories
+        // union territories
         "Andaman and Nicobar Islands": {
             "South Andaman": ["Port Blair"]
         },
@@ -513,7 +511,7 @@
         }
     };
 
-    // Public API
+    // public api
     window.LOCATION_DATA = {
         getCountries: function () {
             return COUNTRIES.slice();

@@ -1,7 +1,7 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 
-// GET PLATFORM ANALYTICS
+// get platform analytics
 const getAnalytics = async (req, res) => {
     try {
 

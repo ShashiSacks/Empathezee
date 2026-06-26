@@ -6,19 +6,19 @@ const messageSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    // For direct telehealth chats
+    // for direct telehealth chats
     recipient: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         default: null
     },
-    // For telehealth chat contextual grouping
+    // for telehealth chat contextual grouping
     appointment: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Appointment",
         default: null
     },
-    // For community-wide real-time group chats
+    // for community-wide real-time group chats
     community: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Community",

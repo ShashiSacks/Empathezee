@@ -16,34 +16,34 @@ const {
     deleteCommunity
 } = require("../controllers/communityController");
 
-// Create Community
+// create community
 router.post("/", protect, createCommunity);
 
-// Get All Communities
+// get all communities
 router.get("/", getCommunities);
 
-// Search Communities
+// search communities
 router.get("/search", searchCommunities);
 
-// Get Community By ID
+// get community by id
 router.get("/:id", getCommunityById);
 
-// Get Posts of a Community
+// get posts of a community
 router.get("/:id/posts", getCommunityPosts);
 
-// Get Community Members
+// get community members
 router.get("/:id/members", getCommunityMembers);
 
-// Get Community Statistics
+// get community statistics
 router.get("/:id/stats", getCommunityStats);
 
-// Join Community
+// join community
 router.post("/:id/join", protect, joinCommunity);
 
-// Leave Community
+// leave community
 router.post("/:id/leave", protect, leaveCommunity);
 
-// Delete Community
+// delete community
 router.delete("/:id", protect, deleteCommunity);
 
 module.exports = router;

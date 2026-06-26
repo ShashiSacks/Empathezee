@@ -1,6 +1,6 @@
 const Post = require("../models/Post");
 
-// Doctor verifies a post
+// doctor verifies a post
 const verifyPost = async (req, res) => {
     try {
 
@@ -42,7 +42,7 @@ const verifyPost = async (req, res) => {
             comment
         });
 
-        // update AI status based on verdict
+        // update ai status based on verdict
         if (verdict === "VERIFIED") {
             post.status = "SAFE";
         } else if (verdict === "NOT_VERIFIED") {

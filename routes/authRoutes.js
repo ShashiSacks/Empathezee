@@ -10,22 +10,22 @@ const {
     googleLogin
 } = require("../controllers/authController");
 
-// REGISTER
+// register
 router.post("/register", register);
 
-// LOGIN
+// login
 router.post("/login", login);
 
-// GOOGLE OAUTH SIGN-IN
+// google oauth sign-in
 router.post("/google", googleLogin);
 
-// DOCTOR REGISTER
+// doctor register
 router.post("/doctor/register", registerDoctor);
 
-// DOCTOR LOGIN
+// doctor login
 router.post("/doctor/login", loginDoctor);
 
-// LOGOUT
+// logout
 router.get("/logout", logout);
 
 module.exports = router;

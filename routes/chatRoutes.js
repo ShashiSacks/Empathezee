@@ -3,10 +3,10 @@ const router = express.Router();
 const { renderAppointmentChat, getCommunityChatHistory } = require("../controllers/chatController");
 const { protect } = require("../middleware/sessionMiddleware");
 
-// Render telehealth direct consult room (Web Page)
+// render telehealth direct consult room (web page)
 router.get("/appointment/:appointmentId", protect, renderAppointmentChat);
 
-// Get community support group chat logs (JSON API)
+// get community support group chat logs (json api)
 router.get("/community/:communityId", protect, getCommunityChatHistory);
 
 module.exports = router;

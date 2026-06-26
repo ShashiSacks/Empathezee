@@ -1,6 +1,6 @@
 const Post = require("../models/Post");
 
-// GET ALL PENDING POSTS FOR DOCTOR
+// get all pending posts for doctor
 const getPendingPosts = async (req, res) => {
     try {
 
@@ -21,7 +21,7 @@ const getPendingPosts = async (req, res) => {
     }
 };
 
-// VERIFY / REVIEW POST (DOCTOR ACTION)
+// verify / review post (doctor action)
 const reviewPost = async (req, res) => {
     try {
 
@@ -67,7 +67,7 @@ const reviewPost = async (req, res) => {
 
         await post.save();
 
-        // REAL-TIME UPDATE (IMPORTANT UPGRADE)
+        // real-time update (important upgrade)
         const io = req.app.get("io");
         if (io) {
             io.emit("post-updated", post);

@@ -14,13 +14,13 @@ const seedCommunities = async () => {
 
         console.log("Seeding default communities and posts...");
 
-        // Find a doctor or user to act as author
+        // find a doctor or user to act as author
         let defaultAuthor = await User.findOne({ role: "doctor" });
         if (!defaultAuthor) {
             defaultAuthor = await User.findOne();
         }
         
-        // If still no user, let's create a temporary system user
+        // if still no user, let's create a temporary system user
         if (!defaultAuthor) {
             defaultAuthor = await User.create({
                 username: "SystemModerator",
@@ -30,7 +30,7 @@ const seedCommunities = async () => {
             });
         }
 
-        // Create AIDS Support Group
+        // create aids support group
         const aidsGroup = await Community.create({
             name: "AIDS Support Group",
             description: "A safe, secure, and compassionate space for patients living with HIV/AIDS to share experiences, support each other, and discuss antiretroviral treatments.",
@@ -39,7 +39,7 @@ const seedCommunities = async () => {
             paymentType: "free"
         });
 
-        // Create Cardiology Forum
+        // create cardiology forum
         const cardioGroup = await Community.create({
             name: "Cardiovascular Health Meetup",
             description: "An offline community to discuss cardiac health, lifestyle, and exercise plans with peer patients and cardiologists in Kadapa.",
@@ -51,7 +51,7 @@ const seedCommunities = async () => {
             paymentType: "free"
         });
 
-        // Create Orthopedics Group
+        // create orthopedics group
         const orthoGroup = await Community.create({
             name: "Orthopedics & Joint Care Forum",
             description: "Discussion on joint replacements, physiotherapy, bone health, and injury recovery.",
@@ -62,7 +62,7 @@ const seedCommunities = async () => {
 
         console.log("Seeded communities: AIDS Support Group, Cardiology Health Meetup, Orthopedics & Joint Care Forum");
 
-        // Seed posts for AIDS Support Group
+        // seed posts for aids support group
         const post1 = await Post.create({
             title: "Welcome to the AIDS Support Community!",
             content: "Hello everyone! This is a secure, welcoming space for patients and caregivers to connect. Please feel free to introduce yourself or ask any questions about antiretroviral treatments (ART), nutrition, or general wellness. We are in this together.",

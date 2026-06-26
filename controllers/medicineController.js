@@ -1,6 +1,6 @@
-// Unused local database catalog search and creation functions have been removed.
+// unused local database catalog search and creation functions have been removed.
 
-// Book medicine order (Create)
+// book medicine order (create)
 const MedicineOrder = require("../models/MedicineOrder");
 const orderMedicine = async (req, res) => {
     try {
@@ -64,7 +64,7 @@ const orderMedicine = async (req, res) => {
     }
 };
 
-// Confirm payment status
+// confirm payment status
 const confirmPayment = async (req, res) => {
     try {
         const { orderId, paymentIntentId } = req.body;

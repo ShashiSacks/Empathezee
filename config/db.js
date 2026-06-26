@@ -6,7 +6,7 @@ const connectDB = async () => {
 
         console.log("MongoDB Connected");
 
-        // Auto-seed default communities and posts on startup
+        // auto-seed default communities and posts on startup
         const seedCommunities = require("./seedCommunities");
         await seedCommunities();
     } catch (error) {

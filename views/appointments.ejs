@@ -5,7 +5,7 @@
     <h1 class="title">Your Appointments</h1>
 
     <div class="appointment-layout">
-        <!-- LEFT COLUMN: EXISTING APPOINTMENTS -->
+        <!-- left column: existing appointments -->
         <div class="appointment-list-section">
             <h2>📅 Booked Appointments</h2>
 
@@ -42,12 +42,12 @@
             <% } %>
         </div>
 
-        <!-- RIGHT COLUMN: BOOK AN APPOINTMENT -->
+        <!-- right column: book an appointment -->
         <div class="appointment-form-section">
             <h2>🩺 Book New Appointment</h2>
             <form action="/api/appointments" method="POST" class="form-card">
                 
-                <!-- Specialization Dropdown -->
+                <!-- specialization dropdown -->
                 <div class="form-group">
                     <label for="specializationFilter">Filter by Specialization</label>
                     <select id="specializationFilter">
@@ -109,7 +109,7 @@
         const specFilter = document.getElementById("specializationFilter");
         const doctorSelect = document.getElementById("doctorId");
         
-        // Cache all option elements initially (skip the first placeholder option)
+        // cache all option elements initially (skip the first placeholder option)
         const allDoctorOptions = Array.from(doctorSelect.options).slice(1).map(opt => ({
             value: opt.value,
             text: opt.text,
@@ -119,10 +119,10 @@
         specFilter.addEventListener("change", function() {
             const selectedSpec = this.value.toLowerCase();
             
-            // Reset select and add placeholder back
+            // reset select and add placeholder back
             doctorSelect.innerHTML = '<option value="" disabled selected>-- Choose a Doctor --</option>';
             
-            // Re-populate options based on matching specialization
+            // re-populate options based on matching specialization
             allDoctorOptions.forEach(doc => {
                 if (!selectedSpec || doc.specialization.includes(selectedSpec)) {
                     const opt = document.createElement("option");

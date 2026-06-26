@@ -8,14 +8,14 @@ const {
 
 const { protectDoctor } = require("../middleware/sessionMiddleware");
 
-// GET PENDING POSTS
+// get pending posts
 router.get(
     "/pending",
     protectDoctor,
     getPendingPosts
 );
 
-// REVIEW POST
+// review post
 router.put(
     "/review/:id",
     protectDoctor,

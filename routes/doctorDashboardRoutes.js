@@ -9,14 +9,14 @@ const {
 
 const { protect } = require("../middleware/sessionMiddleware")
 
-// Doctor views appointments
+// doctor views appointments
 router.get("/appointments", protect, getDoctorAppointments)
 
-// Accept appointment
+// accept appointment
 router.put("/accept/:id", protect, acceptAppointment)
 router.post("/accept/:id", protect, acceptAppointment)
 
-// Reject appointment
+// reject appointment
 router.put("/reject/:id", protect, rejectAppointment)
 router.post("/reject/:id", protect, rejectAppointment)
 

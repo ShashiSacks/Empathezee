@@ -7,7 +7,7 @@
         <p class="section-desc">Instantly locate medical specialists in your city based on your symptoms.</p>
     </div>
 
-    <!-- SEARCH PANEL -->
+    <!-- search panel -->
     <div class="card search-section" style="max-width: 600px; margin: 0 auto 40px; padding: 30px;">
         <form id="doctor-search-form" class="form-card" style="margin: 0; padding: 0; box-shadow: none; border: none; background: transparent;">
             <div class="form-group">
@@ -35,7 +35,7 @@
         </form>
     </div>
 
-    <!-- LOADING & RESULTS CONTAINER -->
+    <!-- loading & results container -->
     <div id="search-status" style="text-align: center; display: none; margin-bottom: 20px;">
         <div class="spinner" style="margin: 20px auto; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
         <p style="color: var(--text-secondary);">Searching OpenStreetMap database for doctors near you...</p>
@@ -44,7 +44,7 @@
     <div id="results-section" style="display: none;">
         <h2 id="results-title" style="text-align: center; margin-bottom: 30px; color: var(--primary);">Recommended Specialists</h2>
         <div id="doctors-grid" class="medicine-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
-            <!-- Dynamic Doctor Cards will be populated here -->
+            <!-- dynamic doctor cards will be populated here -->
         </div>
     </div>
 
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (!symptom || !city) return;
 
-        // Reset UI state
+        // reset ui state
         statusDiv.style.display = "block";
         resultsDiv.style.display = "none";
         emptyStateDiv.style.display = "none";

@@ -12,12 +12,12 @@
         </div>
     </div>
 
-    <!-- SPLIT LAYOUT -->
+    <!-- split layout -->
     <div class="appointment-layout">
         
-        <!-- LEFT COLUMN: POSTS FEED -->
+        <!-- left column: posts feed -->
         <div class="post-feed-section">
-            <!-- CREATE POST -->
+            <!-- create post -->
             <h2 style="text-align: left; margin-bottom: 15px;">Create Post</h2>
 
             <form action="/api/posts" method="POST" class="form-card" style="margin-bottom: 30px; text-align: left;">
@@ -37,7 +37,7 @@
                 <button type="submit" class="btn-primary" style="align-self: flex-start; min-width: unset;">Post Message</button>
             </form>
 
-            <!-- POSTS DISCUSSION FEED -->
+            <!-- posts discussion feed -->
             <h2 style="text-align: left; margin-bottom: 15px;">Posts Discussion Feed</h2>
 
             <div id="posts-container">
@@ -66,14 +66,14 @@
                             </div>
 
                             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px;">
-                                <!-- LIKE BUTTON -->
+                                <!-- like button -->
                                 <form action="/api/posts/like/<%= post._id %>" method="POST" style="margin:0; width: auto; display: inline-flex;">
                                     <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 0.82rem; min-width: unset;">
                                         👍 Like (<span class="like-count"><%= post.likes.length %></span>)
                                     </button>
                                 </form>
 
-                                <!-- COMMENT FORM -->
+                                <!-- comment form -->
                                 <form action="/api/comments" method="POST" style="margin:0; flex: 1; display: inline-flex; gap: 10px; flex-wrap: nowrap; background: transparent; border: none; box-shadow: none; padding: 0;">
                                     <input type="hidden" name="postId" value="<%= post._id %>">
                                     <input type="text" name="content" placeholder="Comment..." required style="padding: 6px 10px; font-size: 0.82rem; flex: 1; min-width: 100px;">
@@ -81,7 +81,7 @@
                                 </form>
                             </div>
 
-                            <!-- COMMENTS -->
+                            <!-- comments -->
                             <div class="comments" style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line);">
                                 <% if (post.comments && post.comments.length > 0) { %>
                                     <% post.comments.forEach(c => { %>
@@ -100,18 +100,18 @@
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: COMMUNITY LIVE CHATROOM -->
+        <!-- right column: community live chatroom -->
         <div class="community-chat-section">
             <h2 style="text-align: left; margin-bottom: 15px;">💬 Live Group Chat</h2>
             
             <div class="card" style="padding: 0; align-items: stretch; border-radius: var(--radius-lg); overflow: hidden; height: 600px; display: flex; flex-direction: column;">
                 
-                <!-- Chat Window -->
+                <!-- chat window -->
                 <div id="comm-messages" style="flex: 1; padding: 16px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 8px;">
-                    <!-- Dynamically populated -->
+                    <!-- dynamically populated -->
                 </div>
 
-                <!-- Chat Input Form -->
+                <!-- chat input form -->
                 <div style="padding: 12px; background: white; border-top: 1px solid var(--line); display: flex; gap: 8px;">
                     <input 
                         type="text" 
@@ -135,7 +135,7 @@
 
     </div>
 
-    <!-- SOCKET REAL-TIME -->
+    <!-- socket real-time -->
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
@@ -149,13 +149,13 @@
         const container = document.getElementById("posts-container");
 
         // -----------------------------
-        // COMMUNITY CHAT LOGIC (NEW)
+        // community chat logic (new)
         // -----------------------------
 
-        // Join community chat room
+        // join community chat room
         socket.emit("join-room", commRoomId);
 
-        // Load community chat history on mount
+        // load community chat history on mount
         fetch(`/chat/community/${communityId}`)
             .then(res => res.json())
             .then(messages => {
@@ -173,12 +173,12 @@
             })
             .catch(err => console.error("Error loading chat history:", err));
 
-        // Scroll chat to bottom
+        // scroll chat to bottom
         function scrollToCommBottom() {
             commMessagesContainer.scrollTop = commMessagesContainer.scrollHeight;
         }
 
-        // Send a community message
+        // send a community message
         function sendCommMessage() {
             const text = commInput.value.trim();
             if (!text) return;
@@ -199,7 +199,7 @@
             }
         }
 
-        // Render received message
+        // render received message
         function appendCommMessage(msg) {
             const noMsgPrompt = document.getElementById("no-comm-msg");
             if (noMsgPrompt) noMsgPrompt.remove();
@@ -246,10 +246,10 @@
         }
 
         // -----------------------------
-        // POSTS & COMMENTS SOCKET LOGIC
+        // posts & comments socket logic
         // -----------------------------
 
-        // Listen for new posts
+        // listen for new posts
         socket.on("new-post", (post) => {
             const emptyState = container.querySelector(".empty-state");
             if (emptyState) {
@@ -294,15 +294,15 @@
             container.prepend(div);
         });
 
-        // Listen for message broadcasts in direct rooms
+        // listen for message broadcasts in direct rooms
         socket.on("new-message", (msg) => {
-            // If it is sent to this community room, append it!
+            // if it is sent to this community room, append it!
             if (msg.community && msg.community.toString() === communityId.toString()) {
                 appendCommMessage(msg);
             }
         });
 
-        // LIKE UPDATE
+        // like update
         socket.on("post-liked", (data) => {
             const post = document.querySelector(`[data-id="${data.postId}"]`);
             if (post) {
@@ -310,7 +310,7 @@
             }
         });
 
-        // UNLIKE UPDATE
+        // unlike update
         socket.on("post-unliked", (data) => {
             const post = document.querySelector(`[data-id="${data.postId}"]`);
             if (post) {
@@ -318,7 +318,7 @@
             }
         });
 
-        // NEW COMMENT
+        // new comment
         socket.on("new-comment", (comment) => {
             const post = document.querySelector(`[data-id="${comment.post}"]`);
 
@@ -340,7 +340,7 @@
             }
         });
 
-        // DELETE COMMENT
+        // delete comment
         socket.on("delete-comment", (data) => {
             const post = document.querySelector(`[data-id="${data.commentId}"]`);
             if (post) {

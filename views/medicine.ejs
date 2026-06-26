@@ -15,7 +15,7 @@
         <p style="color: var(--text-secondary); font-size: 1rem; max-width: 550px; margin: 0 auto; line-height: 1.6;">Search verified medical databases (Mayo Clinic, WebMD, NIH, Wikipedia) for instant drug guides, dosages, and book orders.</p>
     </div>
 
-    <!-- GOOGLE PROGRAMMABLE SEARCH ENGINE (INTERACTIVE HERO PANEL) -->
+    <!-- google programmable search engine (interactive hero panel) -->
     <div class="google-cse-section card" style="margin-bottom: 40px; padding: 32px; box-shadow: var(--shadow-md); border-radius: var(--radius-lg); background: var(--surface); border: 1.5px solid var(--line); text-align: left;">
         <form id="google-search-form" class="search-form" style="display: flex; gap: 12px; margin-bottom: 0;">
             <select id="searchType" style="max-width: 220px; font-size: 0.9rem; background: var(--bg-warm); border: 1px solid var(--line); font-weight: 600; border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text);">
@@ -26,22 +26,22 @@
             <button type="submit" class="btn-primary" style="padding: 12px 28px; font-weight: 600; font-size: 0.95rem; border-radius: var(--radius-sm); border: none; cursor: pointer;">Search</button>
         </form>
 
-        <!-- Loading state -->
+        <!-- loading state -->
         <div id="google-search-status" style="display: none; text-align: center; margin-top: 32px; width: 100%;">
             <div class="spinner" style="margin: 15px auto; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; width: 36px; height: 36px; animation: spin 1s linear infinite;"></div>
             <p style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;">Querying Google medical index...</p>
         </div>
     </div>
 
-    <!-- MIDDLE: SEARCH RESULTS SECTION -->
+    <!-- middle: search results section -->
     <div id="google-results" style="display: none; margin-bottom: 40px;">
         <h3 style="text-align: left; margin-bottom: 20px; color: var(--primary); font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; border-bottom: 2px solid var(--line); padding-bottom: 8px;">Top Medical Results</h3>
         <div id="google-results-list" style="display: flex; flex-direction: column; gap: 20px;">
-            <!-- Result items loaded dynamically -->
+            <!-- result items loaded dynamically -->
         </div>
     </div>
 
-    <!-- Empty state -->
+    <!-- empty state -->
     <div id="google-empty" style="display: none; margin-bottom: 40px; text-align: center; padding: 40px 20px; border: 2px dashed var(--line); border-radius: var(--radius-lg); background: var(--surface);">
         <span style="font-size: 2.5rem; display: block; margin-bottom: 12px;">🔍</span>
         <h3 style="color: var(--text); font-size: 1.15rem; margin-bottom: 6px; font-weight: 700;">No Results Found</h3>
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
     async function performSearch(query, type) {
         if (!query) return;
 
-        // Reset UI state
+        // reset ui state
         statusDiv.style.display = "block";
         resultsDiv.style.display = "none";
         emptyDiv.style.display = "none";
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     card.style.transition = "transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease)";
                     card.style.textAlign = "left";
 
-                    // Hover effects
+                    // hover effects
                     card.addEventListener("mouseover", function() {
                         card.style.transform = "translateY(-3px)";
                         card.style.boxShadow = "var(--shadow-md)";
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
         performSearch(queryInput.value.trim(), searchType.value);
     });
 
-    // Auto-trigger search if query parameter exists
+    // auto-trigger search if query parameter exists
     const initialQuery = "<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>";
     if (initialQuery.trim()) {
         performSearch(initialQuery.trim(), "medicine");
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// Checkout Modal Actions
+// checkout modal actions
 const userCity = "<%= user?.city || '' %>";
 const modal = document.getElementById("checkout-modal");
 const modalMedName = document.getElementById("modal-med-name");
@@ -168,7 +168,7 @@ const checkoutForm = document.getElementById("checkout-form");
 const paymentProcessing = document.getElementById("payment-processing");
 const paymentSuccess = document.getElementById("payment-success");
 
-// Initialize Stripe Elements
+// initialize stripe elements
 const stripeKey = "<%= stripePublishableKey %>";
 let stripe = null;
 let elements = null;
@@ -215,12 +215,12 @@ function openCheckoutModal(medicineName) {
     modalDeliveryAddr.value = userCity ? userCity + ", India" : "";
     modalTotalAmt.textContent = "₹150.00";
     
-    // Reset views
+    // reset views
     checkoutForm.style.display = "flex";
     paymentProcessing.style.display = "none";
     paymentSuccess.style.display = "none";
     
-    // Clear card inputs if stripe is loaded
+    // clear card inputs if stripe is loaded
     if (cardElement) {
         cardElement.clear();
         document.getElementById("card-errors").style.display = "none";
@@ -236,7 +236,7 @@ function closeCheckoutModal() {
 document.getElementById("close-modal-btn").addEventListener("click", closeCheckoutModal);
 document.getElementById("success-close-btn").addEventListener("click", closeCheckoutModal);
 
-// Toggle dynamic payment inputs
+// toggle dynamic payment inputs
 document.querySelectorAll('input[name="paymentOption"]').forEach(radio => {
     radio.addEventListener("change", function() {
         const upiGroup = document.getElementById("payment-upi-group");
@@ -255,13 +255,13 @@ document.querySelectorAll('input[name="paymentOption"]').forEach(radio => {
     });
 });
 
-// Update dynamic price
+// update dynamic price
 modalMedQty.addEventListener("change", function() {
     const qty = parseInt(this.value, 10);
     modalTotalAmt.textContent = "₹" + (qty * 150) + ".00";
 });
 
-// Submit payment order
+// submit payment order
 checkoutForm.addEventListener("submit", async function(e) {
     e.preventDefault();
     
@@ -270,7 +270,7 @@ checkoutForm.addEventListener("submit", async function(e) {
     const address = modalDeliveryAddr.value.trim();
     const paymentMethod = document.querySelector('input[name="paymentOption"]:checked').value;
     
-    // Hide form, show processing spinner
+    // hide form, show processing spinner
     checkoutForm.style.display = "none";
     paymentProcessing.style.display = "block";
     
@@ -298,7 +298,7 @@ checkoutForm.addEventListener("submit", async function(e) {
         }
 
         if (data.requiresAction && paymentMethod === "card") {
-            // Stripe payment validation
+            // stripe payment validation
             const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
                 payment_method: {
                     card: cardElement,
@@ -310,7 +310,7 @@ checkoutForm.addEventListener("submit", async function(e) {
             });
 
             if (error) {
-                // Show card confirmation errors
+                // show card confirmation errors
                 const errorDiv = document.getElementById("card-errors");
                 errorDiv.textContent = error.message;
                 errorDiv.style.display = "block";
@@ -318,7 +318,7 @@ checkoutForm.addEventListener("submit", async function(e) {
                 checkoutForm.style.display = "flex";
                 paymentProcessing.style.display = "none";
             } else if (paymentIntent.status === "succeeded") {
-                // Confirm paid order status in database
+                // confirm paid order status in database
                 const confirmRes = await fetch("/api/medicine/confirm-payment", {
                     method: "POST",
                     headers: {
@@ -343,7 +343,7 @@ checkoutForm.addEventListener("submit", async function(e) {
                 paymentProcessing.style.display = "none";
             }
         } else {
-            // For UPI or COD
+            // for upi or cod
             document.getElementById("success-order-id").textContent = data.orderId;
             document.getElementById("success-med-name").textContent = medicineName;
             document.getElementById("success-med-qty").textContent = quantity + " Pack(s)";
@@ -361,14 +361,14 @@ checkoutForm.addEventListener("submit", async function(e) {
 });
 </script>
 
-<!-- CHECKOUT & BOOKING MODAL -->
+<!-- checkout & booking modal -->
 <div id="checkout-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 10000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(4px);">
     <div class="card" style="width: 100%; max-width: 500px; background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); padding: 30px; text-align: left; position: relative;">
         <button id="close-modal-btn" style="position: absolute; top: 15px; right: 15px; border: none; background: transparent; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
         
         <h2 style="margin-top: 0; color: var(--primary); font-size: 1.4rem; text-align: left; margin-bottom: 20px; letter-spacing: -0.5px;">💳 Book & Pay for Medicine</h2>
         
-        <!-- Step 1: Form -->
+        <!-- step 1: form -->
         <form id="checkout-form" style="display: flex; flex-direction: column; gap: 16px;">
             <div class="form-group">
                 <label for="modal-med-name" style="text-align: left;">Medicine Name</label>
@@ -406,7 +406,7 @@ checkoutForm.addEventListener("submit", async function(e) {
                 </div>
             </div>
 
-            <!-- Dynamic Payment Fields -->
+            <!-- dynamic payment fields -->
             <div id="payment-upi-group" class="form-group">
                 <label for="modal-upi-id" style="text-align: left;">UPI ID</label>
                 <input type="text" id="modal-upi-id" placeholder="e.g. user@okhdfcbank" style="font-size: 0.9rem;" />
@@ -418,7 +418,7 @@ checkoutForm.addEventListener("submit", async function(e) {
                 <div id="card-errors" role="alert" style="color: var(--danger); font-size: 0.8rem; margin-top: 4px; display: none;"></div>
             </div>
 
-            <!-- Price Breakdown -->
+            <!-- price breakdown -->
             <div style="background: var(--bg-warm); padding: 14px; border-radius: var(--radius); border: 1px solid var(--line); font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
                 <div style="display: flex; justify-content: space-between;">
                     <span>Unit Price:</span>
@@ -437,14 +437,14 @@ checkoutForm.addEventListener("submit", async function(e) {
             <button type="submit" class="btn-primary-block" style="margin-top: 10px;">💳 Pay & Confirm Booking</button>
         </form>
 
-        <!-- Step 2: Processing Spinner -->
+        <!-- step 2: processing spinner -->
         <div id="payment-processing" style="display: none; text-align: center; padding: 40px 0;">
             <div class="spinner" style="margin: 0 auto 20px; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite;"></div>
             <h3 style="margin-bottom: 8px;">Processing Payment...</h3>
             <p style="color: var(--text-secondary); font-size: 0.9rem;">Please do not close or refresh this page.</p>
         </div>
 
-        <!-- Step 3: Success Invoice -->
+        <!-- step 3: success invoice -->
         <div id="payment-success" style="display: none; text-align: center; padding: 20px 0;">
             <span style="font-size: 4rem; display: block; margin-bottom: 12px;">✅</span>
             <h3 style="color: var(--success); font-size: 1.35rem; margin-bottom: 8px;">Booking Confirmed!</h3>

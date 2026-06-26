@@ -5,7 +5,7 @@ const { verifyPost } = require("../controllers/doctorController");
 
 const { protectDoctor } = require("../middleware/sessionMiddleware");
 
-// Doctor verifies post 
+// doctor verifies post
 router.post(
     "/verify/:id",
     protectDoctor,

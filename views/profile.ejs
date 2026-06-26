@@ -5,7 +5,7 @@
     <h1 class="title">User Profile</h1>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 40px;">
-        <!-- Left Column: Current Profile Details -->
+        <!-- left column: current profile details -->
         <div class="card" style="margin: 0; display: flex; flex-direction: column; justify-content: center; text-align: left;">
             <h2 style="text-align: center;">👤 <%= user.username %></h2>
             <div class="profile-details" style="display: flex; flex-direction: column; gap: 15px; margin-top: 25px;">
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <!-- Right Column: Edit Profile Details Form -->
+        <!-- right column: edit profile details form -->
         <div class="card" style="margin: 0; text-align: left;">
             <h2 style="text-align: center;">✏️ Edit Details</h2>
             <form action="/api/users/profile" method="POST" style="margin-top: 20px; display: flex; flex-direction: column; background: transparent; border: none; box-shadow: none; padding: 0;">
@@ -59,7 +59,7 @@
                     <input type="text" name="disease" id="disease" value="<%= user.disease %>" placeholder="e.g., Asthma">
                 </div>
 
-                <!-- Location Picker in Profile Edit -->
+                <!-- location picker in profile edit -->
                 <div class="location-picker">
                     <div class="form-group">
                         <label for="profile-country" style="font-weight: 600;">Country</label>
@@ -119,7 +119,7 @@
         </div>
     <% } %>
 
-    <!-- Centered Back to Dashboard Link -->
+    <!-- centered back to dashboard link -->
     <div style="text-align: center; margin-top: 40px;">
         <a href="/dashboard" class="btn-danger-outline" style="display: inline-block;">⬅ Back to Dashboard</a>
     </div>
@@ -136,13 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var districtGroup = document.getElementById('profile-district-group');
     var cityGroup = document.getElementById('profile-city-group');
 
-    // Current user values
+    // current user values
     var currentCountry = '<%= user.country || "" %>';
     var currentState = '<%= user.state || "" %>';
     var currentDistrict = '<%= user.district || "" %>';
     var currentCity = '<%= user.city || "" %>';
 
-    // Populate countries
+    // populate countries
     var countries = LOCATION_DATA.getCountries();
     countries.forEach(function(c) {
         var opt = document.createElement('option');
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
         countryEl.appendChild(opt);
     });
 
-    // If user already has a country, populate states
+    // if user already has a country, populate states
     if (currentCountry && LOCATION_DATA.hasDetailedData(currentCountry)) {
         var states = LOCATION_DATA.getStates(currentCountry);
         states.forEach(function(s) {
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         stateGroup.style.display = 'flex';
 
-        // If user has a state, populate districts
+        // if user has a state, populate districts
         if (currentState) {
             var districts = LOCATION_DATA.getDistricts(currentState);
             districts.forEach(function(d) {
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             districtGroup.style.display = 'flex';
 
-            // If user has a district, populate cities
+            // if user has a district, populate cities
             if (currentDistrict) {
                 var cities = LOCATION_DATA.getCities(currentDistrict);
                 cities.forEach(function(c) {
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Country change
+    // country change
     countryEl.addEventListener('change', function() {
         var country = this.value;
         stateEl.innerHTML = '<option value="">Select State</option>';
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // State change
+    // state change
     stateEl.addEventListener('change', function() {
         var state = this.value;
         districtEl.innerHTML = '<option value="">Select District</option>';
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // District change
+    // district change
     districtEl.addEventListener('change', function() {
         var district = this.value;
         cityEl.innerHTML = '<option value="">Select City</option>';

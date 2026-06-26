@@ -2,7 +2,7 @@ const Community = require("../models/Community");
 const Post = require("../models/Post");
 const User = require("../models/User");
 
-// CREATE COMMUNITY
+// create community
 const createCommunity = async (req, res, next) => {
     try {
         const { name, description, disease, type, meetingTime, meetingDate, meetingPlace, paymentType, price, location } = req.body;
@@ -56,7 +56,7 @@ const createCommunity = async (req, res, next) => {
     }
 };
 
-// GET ALL COMMUNITIES
+// get all communities
 const getCommunities = async (req, res) => {
     try {
         const communities = await Community.find()
@@ -69,7 +69,7 @@ const getCommunities = async (req, res) => {
     }
 };
 
-// GET COMMUNITY BY ID
+// get community by id
 const getCommunityById = async (req, res) => {
     try {
         const community = await Community.findById(req.params.id);
@@ -87,7 +87,7 @@ const getCommunityById = async (req, res) => {
     }
 };
 
-// GET POSTS OF COMMUNITY
+// get posts of community
 const getCommunityPosts = async (req, res) => {
     try {
         const posts = await Post.find({
@@ -104,7 +104,7 @@ const getCommunityPosts = async (req, res) => {
     }
 };
 
-// JOIN COMMUNITY 
+// join community
 const joinCommunity = async (req, res) => {
     try {
         const userId = req.session.user?.id;
@@ -146,7 +146,7 @@ const joinCommunity = async (req, res) => {
     }
 };
 
-// LEAVE COMMUNITY
+// leave community
 const leaveCommunity = async (req, res) => {
     try {
         const userId = req.session.user?.id;
@@ -181,7 +181,7 @@ const leaveCommunity = async (req, res) => {
     }
 };
 
-// GET COMMUNITY MEMBERS
+// get community members
 const getCommunityMembers = async (req, res) => {
     try {
         const members = await User.find({
@@ -198,7 +198,7 @@ const getCommunityMembers = async (req, res) => {
     }
 };
 
-// GET COMMUNITY STATS
+// get community stats
 const getCommunityStats = async (req, res) => {
     try {
         const community = await Community.findById(req.params.id);
@@ -229,7 +229,7 @@ const getCommunityStats = async (req, res) => {
     }
 };
 
-// SEARCH COMMUNITIES
+// search communities
 const searchCommunities = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
@@ -248,7 +248,7 @@ const searchCommunities = async (req, res) => {
     }
 };
 
-// DELETE COMMUNITY
+// delete community
 const deleteCommunity = async (req, res) => {
     try {
         const community = await Community.findById(req.params.id);

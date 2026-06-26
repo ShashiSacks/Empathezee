@@ -14,19 +14,19 @@ const errorHandler = (err, req, res, next) => {
     
     let message = err.message || "Internal Server Error";
 
-    // Mongoose Validation Error
+    // mongoose validation error
     if (err.name === "ValidationError") {
         statusCode = 400;
         message = Object.values(err.errors).map(val => val.message).join(", ");
     }
 
-    // Mongoose CastError (e.g. invalid ObjectId format)
+    // mongoose casterror (e.g. invalid objectid format)
     if (err.name === "CastError") {
         statusCode = 400;
         message = `Invalid field path: ${err.path}`;
     }
 
-    // Mongoose Duplicate Key Error
+    // mongoose duplicate key error
     if (err.code === 11000) {
         statusCode = 400;
         message = `Duplicate field value entered: ${Object.keys(err.keyValue).join(", ")}`;

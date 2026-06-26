@@ -1,6 +1,6 @@
 const Appointment = require("../models/Appointment");
 
-// Book appointment (Create)
+// book appointment (create)
 const bookAppointment = async (req, res) => {
     try {
         const { doctorId, date, time } = req.body;
@@ -32,7 +32,7 @@ const bookAppointment = async (req, res) => {
     }
 };
 
-// Get my appointments (Read)
+// get my appointments (read)
 const getMyAppointments = async (req, res) => {
     try {
         const appointments = await Appointment.find({
@@ -49,7 +49,7 @@ const getMyAppointments = async (req, res) => {
     }
 };
 
-// Update appointment status / date (Update)
+// update appointment status / date (update)
 const updateAppointment = async (req, res) => {
     try {
         const { status, date, time } = req.body;
@@ -60,7 +60,7 @@ const updateAppointment = async (req, res) => {
             return res.status(404).json({ message: "Appointment not found" });
         }
 
-        // Only patient or doctor involved can update
+        // only patient or doctor involved can update
         if (appointment.patient.toString() !== req.user._id && appointment.doctor.toString() !== req.user._id) {
             return res.status(403).json({ message: "Not authorized to update this appointment" });
         }
@@ -86,7 +86,7 @@ const updateAppointment = async (req, res) => {
     }
 };
 
-// Delete/Cancel appointment (Delete)
+// delete/cancel appointment (delete)
 const deleteAppointment = async (req, res) => {
     try {
         const appointmentId = req.params.id;
@@ -96,7 +96,7 @@ const deleteAppointment = async (req, res) => {
             return res.status(404).json({ message: "Appointment not found" });
         }
 
-        // Only patient or doctor involved can delete
+        // only patient or doctor involved can delete
         if (appointment.patient.toString() !== req.user._id && appointment.doctor.toString() !== req.user._id) {
             return res.status(403).json({ message: "Not authorized to delete this appointment" });
         }

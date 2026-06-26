@@ -10,17 +10,17 @@ const {
 
 const { protect } = require("../middleware/sessionMiddleware");
 
-// Get all user appointments
+// get all user appointments
 router.get("/", protect, getMyAppointments);
 
-// Book a new appointment
+// book a new appointment
 router.post("/", protect, bookAppointment);
 
-// Update/Cancel appointment (Supports both PUT for API and POST for standard HTML Forms)
+// update/cancel appointment (supports both put for api and post for standard html forms)
 router.put("/:id", protect, updateAppointment);
 router.post("/:id/update", protect, updateAppointment);
 
-// Delete/Cancel appointment (Supports both DELETE for API and POST for standard HTML Forms)
+// delete/cancel appointment (supports both delete for api and post for standard html forms)
 router.delete("/:id", protect, deleteAppointment);
 router.post("/:id/delete", protect, deleteAppointment);
 

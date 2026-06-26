@@ -8,10 +8,10 @@ const {
 
 const { protect } = require("../middleware/sessionMiddleware");
 
-// Book medicine order
+// book medicine order
 router.post("/order", protect, orderMedicine);
 
-// Confirm Stripe payment
+// confirm stripe payment
 router.post("/confirm-payment", protect, confirmPayment);
 
 module.exports = router;

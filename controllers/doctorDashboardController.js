@@ -1,6 +1,6 @@
 const Appointment = require("../models/Appointment");
 
-// Get all appointments for logged-in doctor
+// get all appointments for logged-in doctor
 const getDoctorAppointments = async (req, res) => {
     try {
         const appointments = await Appointment.find({
@@ -17,7 +17,7 @@ const getDoctorAppointments = async (req, res) => {
     }
 };
 
-// Accept appointment
+// accept appointment
 const acceptAppointment = async (req, res) => {
     try {
         const appointment = await Appointment.findById(req.params.id);
@@ -43,7 +43,7 @@ const acceptAppointment = async (req, res) => {
     }
 };
 
-// Reject appointment
+// reject appointment
 const rejectAppointment = async (req, res) => {
     try {
         const appointment = await Appointment.findById(req.params.id);

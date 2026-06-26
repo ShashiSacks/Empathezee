@@ -18,7 +18,7 @@ const morgan = require("morgan");
 
 // security + logging
 app.use(helmet({
-    contentSecurityPolicy: false // disable CSP to allow socket.io and scripts to work without headers conflict
+    contentSecurityPolicy: false // disable csp to allow socket.io and scripts to work without headers conflict
 }));
 app.use(morgan("dev"));
 
@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// DB connection
+// db connection
 const connectDB = require("./config/db");
 connectDB();
 
@@ -71,7 +71,7 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const communityRoutes = require("./routes/communityRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 
-// API routes
+// api routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
@@ -86,7 +86,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/communities", communityRoutes);
 app.use("/", chatRoutes);
 
-// Platform Analytics Dashboard Route
+// platform analytics dashboard route
 app.get("/analytics", protect, async (req, res) => {
     try {
         const totalPosts = await Post.countDocuments();
@@ -151,13 +151,13 @@ io.on("connection", (socket) => {
 
     console.log("user connected:", user?.username || socket.id);
 
-    // Join room event
+    // join room event
     socket.on("join-room", (roomId) => {
         socket.join(roomId);
         console.log(`User ${user?.username || socket.id} joined room: ${roomId}`);
     });
 
-    // Send real-time chat message
+    // send real-time chat message
     socket.on("send-message", async (data) => {
         try {
             const { roomId, content, recipientId, appointmentId, communityId } = data;
@@ -191,10 +191,10 @@ io.on("connection", (socket) => {
 
 
 // ======================
-// UI ROUTES
+// ui routes
 // ======================
 
-// HOME (FIXED CLEAN FLOW)
+// home (fixed clean flow)
 app.get("/", (req, res) => {
     if (!req.session.user) {
         return res.redirect("/login");
@@ -214,7 +214,7 @@ app.get("/communities", protectUser, async (req, res) => {
         const userCommunities = user ? user.communities.map(id => id.toString()) : [];
         const userDisease = user ? user.disease || "" : "";
 
-        // Reorder communities: matching target profile disease first, then by date desc
+        // reorder communities: matching target profile disease first, then by date desc
         communities.sort((a, b) => {
             const aMatch = userDisease && a.disease.toLowerCase().includes(userDisease.toLowerCase());
             const bMatch = userDisease && b.disease.toLowerCase().includes(userDisease.toLowerCase());
@@ -332,7 +332,7 @@ app.get("/dashboard", protectUser, (req, res) => {
     res.render("dashboard");
 });
 
-// appointments UI
+// appointments ui
 app.get("/appointments-ui", protectUser, async (req, res) => {
     try {
         const appointments = await Appointment.find({ patient: req.user._id })
@@ -346,7 +346,7 @@ app.get("/appointments-ui", protectUser, async (req, res) => {
     }
 });
 
-// medicine UI
+// medicine ui
 app.get("/medicine-ui", protectUser, async (req, res) => {
     try {
         const searchQuery = req.query.search || "";
@@ -361,7 +361,7 @@ app.get("/medicine-ui", protectUser, async (req, res) => {
 });
 
 
-// search-disease API using Google Custom Search
+// search-disease api using google custom search
 app.get("/search-disease", protectUser, async (req, res) => {
     try {
         const query = req.query.query || req.query.q || "";
@@ -373,7 +373,7 @@ app.get("/search-disease", protectUser, async (req, res) => {
         const cx = process.env.GOOGLE_CSE_CX || "b1c032ebe988b40d9";
 
         if (!apiKey) {
-            // High-quality static/informative responses for testing without API keys
+            // high-quality static/informative responses for testing without api keys
             const fallbackResults = {
                 cold: [
                     {
@@ -486,7 +486,7 @@ app.get("/search-disease", protectUser, async (req, res) => {
     }
 });
 
-// medicine-info API using Google Custom Search
+// medicine-info api using google custom search
 app.get("/medicine-info", protectUser, async (req, res) => {
     try {
         const query = req.query.query || req.query.q || "";
@@ -541,7 +541,7 @@ app.get("/medicine-info", protectUser, async (req, res) => {
     }
 });
 
-// find-doctors API using Nominatim OpenStreetMap
+// find-doctors api using nominatim openstreetmap
 app.get("/find-doctors", protectUser, async (req, res) => {
     try {
         const { symptom, city } = req.query;
@@ -564,7 +564,7 @@ app.get("/find-doctors", protectUser, async (req, res) => {
         const key = symptom.toLowerCase().trim();
         const specialization = symptomToSpecialty[key] || "General Physician";
 
-        // Query chain fallbacks
+        // query chain fallbacks
         const queries = [
             `${specialization} doctor in ${city}`,
             `${specialization} in ${city}`,
@@ -611,12 +611,12 @@ app.get("/find-doctors", protectUser, async (req, res) => {
     }
 });
 
-// doctor search UI
+// doctor search ui
 app.get("/doctor-search-ui", protectUser, (req, res) => {
     res.render("doctorSearch");
 });
 
-// Error handling middlewares
+// error handling middlewares
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 app.use(notFound);
 app.use(errorHandler);

@@ -8,13 +8,13 @@
         <p class="section-desc">Manage medical verification requests and schedule consultations with patients.</p>
     </div>
 
-    <!-- TAB SELECTORS -->
+    <!-- tab selectors -->
     <div class="tabs-container" style="display: flex; justify-content: center; gap: 20px; margin-bottom: 30px;">
         <button id="tab-posts-btn" class="tab-btn active-tab" onclick="switchTab('posts')">📋 Post Verification Queue (<%= posts.length %>)</button>
         <button id="tab-apps-btn" class="tab-btn" onclick="switchTab('apps')">📅 Appointments Hub (<%= appointments.length %>)</button>
     </div>
 
-    <!-- POSTS MODERATION TAB -->
+    <!-- posts moderation tab -->
     <div id="posts-tab" class="tab-content active-content">
         <h2>📋 Pending Verification Queue</h2>
         <p class="section-desc" style="margin-bottom: 25px;">Review medical queries and advice to tag them as Safe, Misleading/Fake, or Suspicious.</p>
@@ -40,7 +40,7 @@
                             </p>
                         </div>
                         
-                        <!-- VERIFY FORM -->
+                        <!-- verify form -->
                         <form action="/api/doctor-posts/review/<%= post._id %>" method="POST" class="moderation-form" style="margin-top: 10px;">
                             <div class="form-group" style="margin-bottom: 12px; width: 100%;">
                                 <label for="comment-<%= post._id %>" style="text-align: left; font-weight: 600; font-size: 0.85rem;">Verification Note</label>
@@ -58,7 +58,7 @@
         <% } %>
     </div>
 
-    <!-- APPOINTMENTS TAB -->
+    <!-- appointments tab -->
     <div id="apps-tab" class="tab-content">
         <h2>📅 Booked Consultations</h2>
         <p class="section-desc" style="margin-bottom: 25px;">Accept new requests, manage schedule, and launch Telehealth chat sessions with your patients.</p>
@@ -148,11 +148,11 @@
 
 <script>
     function switchTab(tabName) {
-        // Toggle tab contents
+        // toggle tab contents
         document.getElementById('posts-tab').classList.remove('active-content');
         document.getElementById('apps-tab').classList.remove('active-content');
         
-        // Toggle active button styling
+        // toggle active button styling
         document.getElementById('tab-posts-btn').classList.remove('active-tab');
         document.getElementById('tab-apps-btn').classList.remove('active-tab');
         

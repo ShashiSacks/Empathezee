@@ -2,7 +2,7 @@
 
 <div class="auth-container">
 
-    <!-- LEFT SIDE (FORM AREA) -->
+    <!-- left side (form area) -->
     <div class="auth-left" style="overflow-y: auto; padding-top: 60px; padding-bottom: 60px;">
         <div class="auth-left-content">
             <h1 class="title">Doctor Register</h1>
@@ -29,7 +29,7 @@
 
                 <input type="text" name="disease" placeholder="Specialization" />
 
-                <!-- Cascading Location Picker -->
+                <!-- cascading location picker -->
                 <div class="location-picker">
                     <div class="form-group">
                         <label for="country">Country <span class="optional-tag">(optional)</span></label>
@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    <!-- RIGHT SIDE IMAGE -->
+    <!-- right side image -->
     <div class="auth-right"></div>
 
 </div>
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Populate countries
+    // populate countries
     var countries = LOCATION_DATA.getCountries();
     countries.forEach(function(c) {
         var opt = document.createElement('option');
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
         countryEl.appendChild(opt);
     });
 
-    // Country change → populate states (if India)
+    // country change → populate states (if india)
     countryEl.addEventListener('change', function() {
         var country = this.value;
         stateEl.innerHTML = '<option value="">Select State</option>';
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // State change → populate districts
+    // state change → populate districts
     stateEl.addEventListener('change', function() {
         var state = this.value;
         districtEl.innerHTML = '<option value="">Select District</option>';
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // District change → populate cities
+    // district change → populate cities
     districtEl.addEventListener('change', function() {
         var district = this.value;
         cityEl.innerHTML = '<option value="">Select City</option>';

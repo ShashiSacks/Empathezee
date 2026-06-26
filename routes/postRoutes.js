@@ -12,24 +12,24 @@ const {
     deletePost
 } = require("../controllers/postController");
 
-// Create Post
+// create post
 router.post("/", protect, createPost);
 
-// Get All Posts
+// get all posts
 router.get("/", getPosts);
 
-// Update Post
+// update post
 router.put("/:id", protect, updatePost);
 
-// Like Post
+// like post
 router.put("/:id/like", protect, likePost);
 router.post("/like/:id", protect, likePost);
 
-// Unlike Post
+// unlike post
 router.put("/:id/unlike", protect, unlikePost);
 router.post("/unlike/:id", protect, unlikePost);
 
-// Delete Post
+// delete post
 router.delete("/:id", protect, deletePost);
 
 module.exports = router;

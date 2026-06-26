@@ -7,9 +7,9 @@
         <p class="section-desc">Real-time transparency statistics on doctor verifications, community engagement, and disease safety distributions.</p>
     </div>
 
-    <!-- GENERAL SUMMARY WIDGETS -->
+    <!-- general summary widgets -->
     <div class="container" style="margin-bottom: 40px;">
-        <!-- Card 1 -->
+        <!-- card 1 -->
         <div class="card" style="padding: 20px; text-align: center; border-left: 4px solid var(--blue);">
             <div class="card-body">
                 <span style="font-size: 2.2rem; display: block; margin-bottom: 5px;">💬</span>
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <!-- Card 2 -->
+        <!-- card 2 -->
         <div class="card" style="padding: 20px; text-align: center; border-left: 4px solid var(--success);">
             <div class="card-body">
                 <span style="font-size: 2.2rem; display: block; margin-bottom: 5px;">🩺</span>
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <!-- Card 3 -->
+        <!-- card 3 -->
         <div class="card" style="padding: 20px; text-align: center; border-left: 4px solid var(--danger);">
             <div class="card-body">
                 <span style="font-size: 2.2rem; display: block; margin-bottom: 5px;">🛡️</span>
@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <!-- Card 4 -->
+        <!-- card 4 -->
         <div class="card" style="padding: 20px; text-align: center; border-left: 4px solid var(--warning);">
             <div class="card-body">
                 <span style="font-size: 2.2rem; display: block; margin-bottom: 5px;">👥</span>
@@ -46,10 +46,10 @@
         </div>
     </div>
 
-    <!-- CHARTS PANEL -->
+    <!-- charts panel -->
     <div class="appointment-layout" style="margin-bottom: 40px;">
         
-        <!-- Safety Analysis (Chart 1) -->
+        <!-- safety analysis (chart 1) -->
         <div class="card" style="padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
             <h3 style="margin-bottom: 20px; text-align: center;">🛡️ Content Safety Analysis</h3>
             <div style="width: 100%; max-width: 320px; height: 320px; margin: 0 auto; display: flex; justify-content: center; align-items: center;">
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <!-- Disease Distributions (Chart 2) -->
+        <!-- disease distributions (chart 2) -->
         <div class="card" style="padding: 30px; display: flex; flex-direction: column; align-items: center;">
             <h3 style="margin-bottom: 20px; text-align: center;">🔥 Most Active Diseases</h3>
             
@@ -79,7 +79,7 @@
         </div>
     </div>
 
-    <!-- DATA BREAKDOWN TABLES -->
+    <!-- data breakdown tables -->
     <div class="card" style="padding: 30px; text-align: left; align-items: stretch; margin-bottom: 40px;">
         <h3 style="text-align: left; margin-bottom: 15px;">📊 Detailed Safety Audit Records</h3>
         <p style="text-align: left; margin-top: -10px; margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);">
@@ -127,11 +127,11 @@
     </div>
 </main>
 
-<!-- CDN Script for ChartJS -->
+<!-- cdn script for chartjs -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // 1. SAFETY DOUGHNUT CHART
+    // 1. safety doughnut chart
     const safetyCtx = document.getElementById('safetyChart').getContext('2d');
     new Chart(safetyCtx, {
         type: 'doughnut',
@@ -166,11 +166,11 @@
         }
     });
 
-    // 2. DISEASE BAR CHART
+    // 2. disease bar chart
     <% if (diseaseStats && diseaseStats.length > 0) { %>
         const diseaseCtx = document.getElementById('diseaseChart').getContext('2d');
         
-        // Parse EJS analytics aggregation array
+        // parse ejs analytics aggregation array
         const rawStats = <%- JSON.stringify(diseaseStats) %>;
         
         const labels = rawStats.map(stat => stat._id || 'Unknown');

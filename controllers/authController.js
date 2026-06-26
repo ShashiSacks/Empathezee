@@ -86,26 +86,26 @@ const loginUser = async (req, res, allowedRoles, redirectPath) => {
     }
 };
 
-// REGISTER
+// register
 const register = (req, res) => registerUser(req, res, "user", "/login");
 
-// LOGIN
+// login
 const login = (req, res) => loginUser(req, res, ["user", "admin"], "/dashboard");
 
-// DOCTOR REGISTER
+// doctor register
 const registerDoctor = (req, res) => registerUser(req, res, "doctor", "/doctor/login");
 
-// DOCTOR LOGIN
+// doctor login
 const loginDoctor = (req, res) => loginUser(req, res, ["doctor"], "/doctor/dashboard");
 
-// LOGOUT
+// logout
 const logout = (req, res) => {
     req.session.destroy(() => {
         res.redirect("/login");
     });
 };
 
-// GOOGLE OAUTH SIGN-IN
+// google oauth sign-in
 const googleLogin = async (req, res) => {
     try {
         const { credential } = req.body;
@@ -128,7 +128,7 @@ const googleLogin = async (req, res) => {
         let user = await User.findOne({ email: email.toLowerCase() });
 
         if (!user) {
-            // Create user automatically
+            // create user automatically
             const randomPassword = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             const hashedPassword = await bcrypt.hash(randomPassword, 10);
             

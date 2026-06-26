@@ -9,13 +9,13 @@ const {
     getUserCommunities
 } = require("../controllers/userController");
 
-// PROFILE ROUTES 
+// profile routes
 router.get("/profile", protect, getProfile);
 
 router.put("/profile", protect, updateProfile);
 router.post("/profile", protect, updateProfile);
 
-// USER COMMUNITIES 
+// user communities
 router.get("/communities", protect, getUserCommunities);
 
 module.exports = router;

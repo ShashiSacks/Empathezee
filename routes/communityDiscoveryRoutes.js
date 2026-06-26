@@ -7,7 +7,7 @@ const {
 
 const { protect } = require("../middleware/sessionMiddleware");
 
-// Get recommended communities
+// get recommended communities
 router.get("/recommend", protect, getRecommendedCommunities);
 
 module.exports = router;

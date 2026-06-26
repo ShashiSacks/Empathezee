@@ -1,6 +1,6 @@
 const Comment = require("../models/Comment");
 
-// CREATE COMMENT
+// create comment
 const createComment = async (req, res) => {
     try {
 
@@ -38,7 +38,7 @@ const createComment = async (req, res) => {
         const fullComment = await Comment.findById(comment._id)
             .populate("author", "username email");
 
-        // REAL-TIME (if socket exists)
+        // real-time (if socket exists)
         const io = req.app.get("io");
         if (io) {
             io.emit("new-comment", fullComment);
@@ -60,7 +60,7 @@ const createComment = async (req, res) => {
     }
 };
 
-// GET COMMENTS BY POST
+// get comments by post
 const getCommentsByPost = async (req, res) => {
     try {
 
@@ -82,7 +82,7 @@ const getCommentsByPost = async (req, res) => {
     }
 };
 
-// DELETE COMMENT
+// delete comment
 const deleteComment = async (req, res) => {
     try {
 
@@ -110,7 +110,7 @@ const deleteComment = async (req, res) => {
 
         await Comment.findByIdAndDelete(req.params.id);
 
-        // REAL-TIME DELETE EVENT
+        // real-time delete event
         const io = req.app.get("io");
         if (io) {
             io.emit("delete-comment", { commentId: req.params.id });

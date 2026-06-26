@@ -1,11 +1,11 @@
 const Community = require("../models/Community");
 const User = require("../models/User");
 
-// Get recommended communities based on user disease
+// get recommended communities based on user disease
 const getRecommendedCommunities = async (req, res) => {
     try {
 
-        // FIX: session-based auth (NOT JWT)
+        // fix: session-based auth (not jwt)
         const userId = req.session.user?.id;
 
         if (!userId) {
