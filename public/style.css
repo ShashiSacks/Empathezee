@@ -20,6 +20,8 @@
     --surface-alt: #fdfcfa;
     --line: #e8e4de;
     --line-light: #f0ece6;
+    --border: var(--line);
+    --surface-hover: var(--surface-alt);
 
     /* Text */
     --text: #1c1917;
@@ -218,29 +220,16 @@ body::after {
    AUTH PAGES — Login / Register
    ===================================================== */
 body.auth-page {
-    background: url("/peer-discussion.jpg") center/cover no-repeat fixed;
-    position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
-    padding: 30px 15px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
 }
 
 body.auth-page::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        160deg,
-        rgba(26, 26, 46, 0.88) 0%,
-        rgba(15, 52, 96, 0.78) 50%,
-        rgba(233, 69, 96, 0.35) 100%
-    );
-    backdrop-filter: blur(12px) saturate(1.3);
-    -webkit-backdrop-filter: blur(12px) saturate(1.3);
-    z-index: 1;
+    display: none; /* Hide old full screen blurred bg */
 }
 
 body.auth-page .main-navbar,
@@ -249,63 +238,153 @@ body.auth-page .main-footer {
 }
 
 body.auth-page .auth-container {
-    position: relative;
-    z-index: 2;
     display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
-    max-width: 460px;
+    min-height: 100vh;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
 }
 
 body.auth-page .auth-left {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.96);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: var(--radius-xl);
-    padding: 44px 36px 36px;
-    box-shadow:
-        0 24px 48px -12px rgba(0, 0, 0, 0.35),
-        0 0 0 1px rgba(255, 255, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+    padding: 60px 40px;
+    background: var(--surface);
+    overflow-y: auto;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+    z-index: 5;
+    min-height: 100vh;
+}
+
+/* Card container inside left side */
+body.auth-page .auth-left-content {
+    margin: auto 0;
+    width: 100%;
+    max-width: 400px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    padding: 40px 32px;
+    box-shadow: var(--shadow-lg);
+}
+
+body.auth-page .auth-left form select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2357534e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 12px;
+    padding-right: 36px;
+    cursor: pointer;
 }
 
 body.auth-page .auth-right {
-    display: none;
+    flex: 1.2;
+    display: block;
+    background: url("/peer-discussion.jpg") center/cover no-repeat;
+    position: relative;
+    min-height: 100vh;
+}
+
+body.auth-page .auth-right::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(26, 26, 46, 0.85) 0%,
+        rgba(15, 52, 96, 0.95) 100%
+    );
+    z-index: 1;
 }
 
 body.auth-page .title {
     font-family: 'Outfit', sans-serif;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    font-size: 1.9rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--primary);
-    margin: 0 0 28px;
+    margin: 0 0 24px;
     text-align: center;
     letter-spacing: -1px;
 }
 
 body.auth-page .auth-left form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 16px;
     background: transparent;
     border: none;
     box-shadow: none;
     padding: 0;
-    width: 100%;
     margin: 0;
-    gap: 14px;
+}
+
+body.auth-page .auth-left form input,
+body.auth-page .auth-left form select,
+body.auth-page .auth-left form textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface-hover);
+    color: var(--text);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.25s var(--ease);
+}
+
+body.auth-page .auth-left form input:focus,
+body.auth-page .auth-left form select:focus,
+body.auth-page .auth-left form textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+}
+
+body.auth-page .auth-left form button {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-size: 0.98rem;
+    transition: all 0.25s var(--ease);
+    margin-top: 8px;
+}
+
+body.auth-page .auth-left form button:hover {
+    background: var(--accent-hover, #d82c48);
+    transform: translateY(-1px);
 }
 
 body.auth-page .auth-left p {
     text-align: center;
-    margin-top: 14px;
+    margin-top: 16px;
     color: var(--text-secondary);
     font-size: 0.88rem;
+}
+
+body.auth-page .auth-left p a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+body.auth-page .auth-left p a:hover {
+    text-decoration: underline;
+}
+
+/* Full Width medicine catalog search centering */
+.medicine-layout.full-width-layout {
+    grid-template-columns: 1fr;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 /* =====================================================
@@ -942,6 +1021,10 @@ body {
 
     body.auth-page .auth-left {
         padding: 32px 24px 28px;
+    }
+
+    body.auth-page .auth-right {
+        display: none;
     }
 
     body.auth-page .title {

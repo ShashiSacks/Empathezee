@@ -1,0 +1,136 @@
+<%- include('partials/header', { title: 'Find Doctors' }) %>
+<%- include('partials/navbar') %>
+
+<main class="page-container">
+    <div class="doctor-search-header" style="text-align: center; margin-bottom: 40px; margin-top: 20px;">
+        <h1 class="title">Find a Doctor Nearby</h1>
+        <p class="section-desc">Instantly locate medical specialists in your city based on your symptoms.</p>
+    </div>
+
+    <!-- SEARCH PANEL -->
+    <div class="card search-section" style="max-width: 600px; margin: 0 auto 40px; padding: 30px;">
+        <form id="doctor-search-form" class="form-card" style="margin: 0; padding: 0; box-shadow: none; border: none; background: transparent;">
+            <div class="form-group">
+                <label for="symptom">Select Your Symptom</label>
+                <select id="symptom" name="symptom" required>
+                    <option value="" disabled selected>-- Choose Symptom --</option>
+                    <option value="cold">Cold</option>
+                    <option value="fever">Fever</option>
+                    <option value="cough">Cough</option>
+                    <option value="chest pain">Chest Pain</option>
+                    <option value="skin rash">Skin Rash</option>
+                    <option value="stomach pain">Stomach Pain</option>
+                    <option value="headache">Headache</option>
+                    <option value="eye pain">Eye Pain</option>
+                    <option value="joint pain">Joint Pain</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cityInput">Enter Your City / Location</label>
+                <input type="text" id="cityInput" name="city" placeholder="e.g., Hyderabad, Bangalore, Kadapa..." required />
+            </div>
+
+            <button type="submit" class="btn-primary-block" style="margin-top: 20px;">🔍 Search Doctors</button>
+        </form>
+    </div>
+
+    <!-- LOADING & RESULTS CONTAINER -->
+    <div id="search-status" style="text-align: center; display: none; margin-bottom: 20px;">
+        <div class="spinner" style="margin: 20px auto; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+        <p style="color: var(--text-secondary);">Searching OpenStreetMap database for doctors near you...</p>
+    </div>
+
+    <div id="results-section" style="display: none;">
+        <h2 id="results-title" style="text-align: center; margin-bottom: 30px; color: var(--primary);">Recommended Specialists</h2>
+        <div id="doctors-grid" class="medicine-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+            <!-- Dynamic Doctor Cards will be populated here -->
+        </div>
+    </div>
+
+    <div id="empty-state" class="empty-state" style="display: none; max-width: 500px; margin: 0 auto 40px;">
+        <span class="empty-icon">👨‍⚕️</span>
+        <h3>No Doctors Found</h3>
+        <p>We couldn't find any specific clinics or practitioners matching that symptom in your city. Try entering a larger city nearby, or check your spelling.</p>
+    </div>
+</main>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("doctor-search-form");
+    const statusDiv = document.getElementById("search-status");
+    const resultsDiv = document.getElementById("results-section");
+    const doctorsGrid = document.getElementById("doctors-grid");
+    const emptyStateDiv = document.getElementById("empty-state");
+    const resultsTitle = document.getElementById("results-title");
+
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const symptom = document.getElementById("symptom").value;
+        const city = document.getElementById("cityInput").value.trim();
+
+        if (!symptom || !city) return;
+
+        // Reset UI state
+        statusDiv.style.display = "block";
+        resultsDiv.style.display = "none";
+        emptyStateDiv.style.display = "none";
+        doctorsGrid.innerHTML = "";
+
+        try {
+            const res = await fetch(`/find-doctors?symptom=${encodeURIComponent(symptom)}&city=${encodeURIComponent(city)}`);
+            const data = await res.json();
+
+            statusDiv.style.display = "none";
+
+            if (data.doctors && data.doctors.length > 0) {
+                resultsTitle.textContent = `Recommended ${data.specialization}s in ${city}`;
+                
+                data.doctors.forEach(doc => {
+                    const card = document.createElement("div");
+                    card.className = "card medicine-card";
+                    card.style.display = "flex";
+                    card.style.flexDirection = "column";
+                    card.style.justifyContent = "space-between";
+                    card.style.height = "100%";
+                    card.style.padding = "24px";
+                    card.style.boxShadow = "var(--shadow-sm)";
+                    card.style.borderRadius = "var(--radius-lg)";
+                    card.style.background = "var(--surface)";
+                    card.style.border = "1px solid var(--border)";
+
+                    card.innerHTML = `
+                        <div>
+                            <h3 style="margin-top: 0; color: var(--primary); font-size: 1.25rem;">👨‍⚕️ ${doc.name}</h3>
+                            <p style="margin: 8px 0; color: var(--accent); font-weight: 600; font-size: 0.95rem;">🏥 ${doc.specialization}</p>
+                            <p style="margin: 12px 0 0 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">📍 ${doc.address}</p>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <a href="${doc.mapsLink}" target="_blank" class="btn-primary" style="display: block; text-align: center; text-decoration: none; font-size: 0.88rem; padding: 10px 16px;">🗺️ Open in Google Maps</a>
+                        </div>
+                    `;
+                    doctorsGrid.appendChild(card);
+                });
+
+                resultsDiv.style.display = "block";
+            } else {
+                emptyStateDiv.style.display = "block";
+            }
+        } catch (err) {
+            console.error(err);
+            statusDiv.style.display = "none";
+            alert("An error occurred while finding doctors. Please try again later.");
+        }
+    });
+});
+</script>
+
+<%- include('partials/footer') %>

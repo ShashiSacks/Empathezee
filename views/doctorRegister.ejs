@@ -4,78 +4,81 @@
 
     <!-- LEFT SIDE (FORM AREA) -->
     <div class="auth-left" style="overflow-y: auto; padding-top: 60px; padding-bottom: 60px;">
+        <div class="auth-left-content">
+            <h1 class="title">Doctor Register</h1>
 
-        <h1 class="title">Doctor Register</h1>
+            <form action="/api/auth/doctor/register" method="POST">
 
-        <form action="/api/auth/doctor/register" method="POST">
+                <input type="text" name="username" placeholder="Full name" required autocomplete="name" />
 
-            <input type="text" name="username" placeholder="Full name" required autocomplete="name" />
+                <input type="email" name="email" placeholder="Doctor email" required autocomplete="email" />
 
-            <input type="email" name="email" placeholder="Doctor email" required autocomplete="email" />
+                <input type="password" name="password" placeholder="Password" required autocomplete="new-password" />
 
-            <input type="password" name="password" placeholder="Password" required autocomplete="new-password" />
+                <input type="number" name="age" placeholder="Age" min="18" max="120" />
 
-            <input type="number" name="age" placeholder="Age" min="18" max="120" />
-
-            <div class="form-group">
-                <label for="gender">Gender</label>
-                <select name="gender" id="gender" required>
-                    <option value="" disabled selected>Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Rather not to say</option>
-                </select>
-            </div>
-
-            <input type="text" name="disease" placeholder="Specialization" />
-
-            <!-- Cascading Location Picker -->
-            <div class="location-picker">
                 <div class="form-group">
-                    <label for="country">Country <span class="optional-tag">(optional)</span></label>
-                    <select name="country" id="country">
-                        <option value="">Select Country</option>
+                    <label for="gender">Gender</label>
+                    <select name="gender" id="gender" required>
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Rather not to say</option>
                     </select>
                 </div>
 
-                <div class="form-group" id="state-group" style="display: none;">
-                    <label for="state">State <span class="optional-tag">(optional)</span></label>
-                    <select name="state" id="state">
-                        <option value="">Select State</option>
-                    </select>
+                <input type="text" name="disease" placeholder="Specialization" />
+
+                <!-- Cascading Location Picker -->
+                <div class="location-picker">
+                    <div class="form-group">
+                        <label for="country">Country <span class="optional-tag">(optional)</span></label>
+                        <select name="country" id="country">
+                            <option value="">Select Country</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="state-group" style="display: none;">
+                        <label for="state">State <span class="optional-tag">(optional)</span></label>
+                        <select id="state">
+                            <option value="">Select State</option>
+                        </select>
+                        <input type="text" id="state-input" placeholder="Type State" style="display: none;" />
+                    </div>
+
+                    <div class="form-group" id="district-group" style="display: none;">
+                        <label for="district">District <span class="optional-tag">(optional)</span></label>
+                        <select id="district">
+                            <option value="">Select District</option>
+                        </select>
+                        <input type="text" id="district-input" placeholder="Type District" style="display: none;" />
+                    </div>
+
+                    <div class="form-group" id="city-group" style="display: none;">
+                        <label for="city">City / Place <span class="optional-tag">(optional)</span></label>
+                        <select id="city">
+                            <option value="">Select City</option>
+                        </select>
+                        <input type="text" id="city-input" placeholder="Type City / Place" style="display: none;" />
+                    </div>
                 </div>
 
-                <div class="form-group" id="district-group" style="display: none;">
-                    <label for="district">District <span class="optional-tag">(optional)</span></label>
-                    <select name="district" id="district">
-                        <option value="">Select District</option>
-                    </select>
-                </div>
+                <textarea name="bio" placeholder="Short professional bio"></textarea>
 
-                <div class="form-group" id="city-group" style="display: none;">
-                    <label for="city">City / Place <span class="optional-tag">(optional)</span></label>
-                    <select name="city" id="city">
-                        <option value="">Select City</option>
-                    </select>
-                </div>
-            </div>
+                <button type="submit">Create Doctor Account</button>
 
-            <textarea name="bio" placeholder="Short professional bio"></textarea>
+            </form>
 
-            <button type="submit">Create Doctor Account</button>
+            <p>
+                Already registered?
+                <a href="/doctor/login">Doctor login</a>
+            </p>
 
-        </form>
-
-        <p>
-            Already registered?
-            <a href="/doctor/login">Doctor login</a>
-        </p>
-
-        <p>
-            Patient account?
-            <a href="/register">Patient registration</a>
-        </p>
-
+            <p>
+                Patient account?
+                <a href="/register">Patient registration</a>
+            </p>
+        </div>
     </div>
 
     <!-- RIGHT SIDE IMAGE -->
@@ -90,9 +93,33 @@ document.addEventListener('DOMContentLoaded', function() {
     var districtEl = document.getElementById('district');
     var cityEl = document.getElementById('city');
 
-    var stateGroup = document.getElementById('state-group');
-    var districtGroup = document.getElementById('district-group');
-    var cityGroup = document.getElementById('city-group');
+    var stateInput = document.getElementById('state-input');
+    var districtInput = document.getElementById('district-input');
+    var cityInput = document.getElementById('city-input');
+
+    function configureField(prefix, mode) {
+        var group = document.getElementById(prefix + '-group');
+        var select = document.getElementById(prefix);
+        var input = document.getElementById(prefix + '-input');
+
+        if (mode === 'select') {
+            group.style.display = 'flex';
+            select.style.display = 'block';
+            select.setAttribute('name', prefix);
+            input.style.display = 'none';
+            input.removeAttribute('name');
+        } else if (mode === 'input') {
+            group.style.display = 'flex';
+            select.style.display = 'none';
+            select.removeAttribute('name');
+            input.style.display = 'block';
+            input.setAttribute('name', prefix);
+        } else {
+            group.style.display = 'none';
+            select.removeAttribute('name');
+            input.removeAttribute('name');
+        }
+    }
 
     // Populate countries
     var countries = LOCATION_DATA.getCountries();
@@ -109,10 +136,16 @@ document.addEventListener('DOMContentLoaded', function() {
         stateEl.innerHTML = '<option value="">Select State</option>';
         districtEl.innerHTML = '<option value="">Select District</option>';
         cityEl.innerHTML = '<option value="">Select City</option>';
-        districtGroup.style.display = 'none';
-        cityGroup.style.display = 'none';
 
-        if (LOCATION_DATA.hasDetailedData(country)) {
+        stateInput.value = '';
+        districtInput.value = '';
+        cityInput.value = '';
+
+        if (!country) {
+            configureField('state', 'none');
+            configureField('district', 'none');
+            configureField('city', 'none');
+        } else if (LOCATION_DATA.hasDetailedData(country)) {
             var states = LOCATION_DATA.getStates(country);
             states.forEach(function(s) {
                 var opt = document.createElement('option');
@@ -120,9 +153,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 opt.textContent = s;
                 stateEl.appendChild(opt);
             });
-            stateGroup.style.display = 'flex';
+            configureField('state', 'select');
+            configureField('district', 'none');
+            configureField('city', 'none');
         } else {
-            stateGroup.style.display = 'none';
+            configureField('state', 'input');
+            configureField('district', 'input');
+            configureField('city', 'input');
         }
     });
 
@@ -131,7 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var state = this.value;
         districtEl.innerHTML = '<option value="">Select District</option>';
         cityEl.innerHTML = '<option value="">Select City</option>';
-        cityGroup.style.display = 'none';
+        districtInput.value = '';
+        cityInput.value = '';
 
         if (state) {
             var districts = LOCATION_DATA.getDistricts(state);
@@ -141,9 +179,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 opt.textContent = d;
                 districtEl.appendChild(opt);
             });
-            districtGroup.style.display = 'flex';
+            configureField('district', 'select');
+            configureField('city', 'none');
         } else {
-            districtGroup.style.display = 'none';
+            configureField('district', 'none');
+            configureField('city', 'none');
         }
     });
 
@@ -151,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
     districtEl.addEventListener('change', function() {
         var district = this.value;
         cityEl.innerHTML = '<option value="">Select City</option>';
+        cityInput.value = '';
 
         if (district) {
             var cities = LOCATION_DATA.getCities(district);
@@ -160,9 +201,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 opt.textContent = c;
                 cityEl.appendChild(opt);
             });
-            cityGroup.style.display = 'flex';
+            configureField('city', 'select');
         } else {
-            cityGroup.style.display = 'none';
+            configureField('city', 'none');
         }
     });
 });

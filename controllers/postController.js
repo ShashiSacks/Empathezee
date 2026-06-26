@@ -2,8 +2,6 @@ const Post = require("../models/Post");
 const User = require("../models/User");
 
 // CREATE POST
-const { verifyPost: aiVerify } = require("../services/aiVerifier");
-
 const createPost = async (req, res) => {
     try {
 
@@ -23,22 +21,10 @@ const createPost = async (req, res) => {
             });
         }
 
-        // Call AI safety verifier
-        const aiResponseRaw = await aiVerify(content);
-        let aiStatus = "PENDING";
-        let aiReason = "";
-        let riskScore = 0;
-        try {
-            const parsedRes = aiResponseRaw.trim().replace(/^```json\s*/i, '').replace(/```\s*$/i, '');
-            const aiData = JSON.parse(parsedRes);
-            aiStatus = aiData.status || "PENDING";
-            aiReason = aiData.reason || "";
-            if (aiStatus === "SAFE") riskScore = 0;
-            else if (aiStatus === "SUSPICIOUS") riskScore = 5;
-            else if (aiStatus === "FAKE") riskScore = 10;
-        } catch (e) {
-            console.error("AI JSON Parse Error:", e);
-        }
+        // Auto-approve post without AI verifier
+        const aiStatus = "SAFE";
+        const aiReason = "Auto-approved";
+        const riskScore = 0;
 
         const post = await Post.create({
             author: userId,

@@ -18,23 +18,6 @@ const getMedicines = async (req, res) => {
         
         let medicines = await Medicine.find(filter).sort({ name: 1 });
 
-        // If no local results, query OpenAI
-        if (medicines.length === 0 && disease && disease.trim() !== "") {
-            const { getMedicinesFromAI } = require("../services/aiVerifier");
-            const aiMeds = await getMedicinesFromAI(disease.trim());
-            
-            if (aiMeds && aiMeds.length > 0) {
-                for (const med of aiMeds) {
-                    const exists = await Medicine.findOne({ name: med.name });
-                    if (!exists) {
-                        await Medicine.create(med);
-                    }
-                }
-                // Re-fetch with the newly created medicines
-                medicines = await Medicine.find(filter).sort({ name: 1 });
-            }
-        }
-
         res.status(200).json(medicines);
 
     } catch (error) {

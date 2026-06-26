@@ -4,6 +4,40 @@
 <main class="page-container">
     <h1 class="title">Medicines Directory</h1>
 
+    <!-- GOOGLE PROGRAMMABLE SEARCH ENGINE (INTERACTIVE AJAX PANEL) -->
+    <div class="google-cse-section card" style="margin-bottom: 30px; padding: 28px; box-shadow: var(--shadow-sm); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); text-align: left;">
+        <h2 style="margin-top: 0; margin-bottom: 8px; color: var(--primary); font-size: 1.4rem; text-align: left;">🔍 Trusted Google Medical Search</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.9rem; line-height: 1.5; text-align: left;">Search verified databases (Mayo Clinic, WebMD, NIH, Wikipedia) for instant medical definitions and drug guides.</p>
+        
+        <form id="google-search-form" class="search-form" style="display: flex; gap: 12px; margin-bottom: 0;">
+            <select id="searchType" style="max-width: 220px; font-size: 0.9rem;">
+                <option value="disease" selected>Search Disease Info</option>
+                <option value="medicine">Search Drug / Medicine Info</option>
+            </select>
+            <input type="text" id="googleQuery" placeholder="Enter query (e.g. cold, fever, asthma, ibuprofen)..." required style="flex: 1; font-size: 0.9rem; padding: 11px 14px;" />
+            <button type="submit" class="btn-primary" style="padding: 11px 24px;">Search</button>
+        </form>
+
+        <!-- Loading state -->
+        <div id="google-search-status" style="display: none; text-align: center; margin-top: 24px; width: 100%;">
+            <div class="spinner" style="margin: 15px auto; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite;"></div>
+            <p style="color: var(--text-secondary); font-size: 0.88rem;">Querying Google medical index...</p>
+        </div>
+
+        <!-- Results state -->
+        <div id="google-results" style="display: none; margin-top: 24px;">
+            <h3 style="text-align: left; margin-bottom: 16px; color: var(--primary); font-size: 1.15rem;">Top Search Results</h3>
+            <div id="google-results-list" style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Result items loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Empty state -->
+        <div id="google-empty" style="display: none; margin-top: 24px; text-align: center; padding: 20px; border: 1.5px dashed var(--line); border-radius: var(--radius);">
+            <p style="color: var(--text-secondary); margin: 0;">No results found. Try a different medical term.</p>
+        </div>
+    </div>
+
     <!-- SEARCH & FILTER BAR -->
     <div class="search-section card">
         <form action="/medicine-ui" method="GET" class="search-form">
@@ -15,7 +49,7 @@
         </form>
     </div>
 
-    <div class="medicine-layout">
+    <div class="medicine-layout <%= user && user.role === 'doctor' ? '' : 'full-width-layout' %>">
         <!-- LEFT COLUMN: MEDICINE CARDS -->
         <div class="medicine-list-section">
             <h2>💊 Catalog</h2>
@@ -90,5 +124,72 @@
         <% } %>
     </div>
 </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("google-search-form");
+    const searchType = document.getElementById("searchType");
+    const queryInput = document.getElementById("googleQuery");
+    const statusDiv = document.getElementById("google-search-status");
+    const resultsDiv = document.getElementById("google-results");
+    const resultsList = document.getElementById("google-results-list");
+    const emptyDiv = document.getElementById("google-empty");
+
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const query = queryInput.value.trim();
+        const type = searchType.value;
+
+        if (!query) return;
+
+        // Reset UI state
+        statusDiv.style.display = "block";
+        resultsDiv.style.display = "none";
+        emptyDiv.style.display = "none";
+        resultsList.innerHTML = "";
+
+        const endpoint = type === "disease" ? "/search-disease" : "/medicine-info";
+
+        try {
+            const res = await fetch(`${endpoint}?query=${encodeURIComponent(query)}`);
+            const data = await res.json();
+
+            statusDiv.style.display = "none";
+
+            if (data.results && data.results.length > 0) {
+                // Show top 3-5 results
+                const topResults = data.results.slice(0, 5);
+                topResults.forEach(item => {
+                    const card = document.createElement("div");
+                    card.style.padding = "16px 20px";
+                    card.style.border = "1px solid var(--line)";
+                    card.style.borderRadius = "var(--radius)";
+                    card.style.background = "var(--surface-alt)";
+                    card.style.display = "flex";
+                    card.style.flexDirection = "column";
+                    card.style.gap = "6px";
+                    card.style.boxShadow = "var(--shadow-xs)";
+
+                    card.innerHTML = `
+                        <h4 style="margin: 0; font-size: 1.05rem; font-family: 'Outfit', sans-serif; text-align: left;">
+                            <a href="${item.link}" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 700;">${item.title}</a>
+                        </h4>
+                        <p style="margin: 0; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; text-align: left;">${item.snippet}</p>
+                        <a href="${item.link}" target="_blank" style="color: var(--accent); font-size: 0.8rem; font-weight: 600; text-decoration: none; word-break: break-all; align-self: flex-start; text-align: left;">${item.link}</a>
+                    `;
+                    resultsList.appendChild(card);
+                });
+                resultsDiv.style.display = "block";
+            } else {
+                emptyDiv.style.display = "block";
+            }
+        } catch (err) {
+            console.error(err);
+            statusDiv.style.display = "none";
+            alert("Error querying Google search. Please try again later.");
+        }
+    });
+});
+</script>
 
 <%- include('partials/footer') %>

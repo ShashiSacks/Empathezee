@@ -8,43 +8,52 @@
         <p class="section-desc" style="margin-top: 5px;">You are logged in as a <b><%= user?.role %></b>.</p>
     </div>
 
-    <div class="container">
+    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
 
         <!-- COMMUNITIES -->
-        <div class="card dashboard-card">
-            <div class="card-body">
-                <h3>👥 Communities</h3>
-                <p>View disease-based communities & support groups.</p>
+        <div class="card dashboard-card" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 24px;">
+            <div class="card-body" style="padding: 0;">
+                <h3 style="margin-top: 0;">👥 Communities</h3>
+                <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5; margin-bottom: 20px;">Join disease-based support communities and share discussions with other patients.</p>
             </div>
-            <a href="/communities" class="btn-primary">Open Directory</a>
+            <a href="/communities" class="btn-primary" style="text-align: center; text-decoration: none;">Open Directory</a>
+        </div>
+
+        <!-- FIND DOCTORS -->
+        <div class="card dashboard-card" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 24px;">
+            <div class="card-body" style="padding: 0;">
+                <h3 style="margin-top: 0;">👨‍⚕️ Find Doctors</h3>
+                <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5; margin-bottom: 20px;">Locate medical specialists nearby using location search based on your symptoms.</p>
+            </div>
+            <a href="/doctor-search-ui" class="btn-primary" style="text-align: center; text-decoration: none;">Search Directory</a>
         </div>
 
         <!-- APPOINTMENTS -->
-        <div class="card dashboard-card">
-            <div class="card-body">
-                <h3>📅 Appointments</h3>
-                <p>Book & manage doctor appointments.</p>
+        <div class="card dashboard-card" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 24px;">
+            <div class="card-body" style="padding: 0;">
+                <h3 style="margin-top: 0;">📅 Appointments</h3>
+                <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5; margin-bottom: 20px;">Schedule virtual consultations and direct chat sessions with verified doctors.</p>
             </div>
-            <a href="/appointments-ui" class="btn-primary">Book Appointment</a>
+            <a href="/appointments-ui" class="btn-primary" style="text-align: center; text-decoration: none;">Book Consultation</a>
         </div>
 
         <!-- MEDICINES -->
-        <div class="card dashboard-card">
-            <div class="card-body">
-                <h3>💊 Medicines</h3>
-                <p>Search disease-based medicine catalogs.</p>
+        <div class="card dashboard-card" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 24px;">
+            <div class="card-body" style="padding: 0;">
+                <h3 style="margin-top: 0;">💊 Medicine Directory</h3>
+                <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5; margin-bottom: 20px;">Browse local medicine catalogs or search disease info using Google Custom Search.</p>
             </div>
-            <a href="/medicine-ui" class="btn-primary">Open Medicines</a>
+            <a href="/medicine-ui" class="btn-primary" style="text-align: center; text-decoration: none;">Open Catalog</a>
         </div>
 
         <!-- DOCTOR PANEL (Optional for doctor users) -->
         <% if (user?.role === "doctor") { %>
-        <div class="card dashboard-card" style="border-color: var(--blue);">
-            <div class="card-body">
-                <h3>👨‍⚕️ Doctor Panel</h3>
-                <p>Verify and review medical posts in the queue.</p>
+        <div class="card dashboard-card" style="border-color: var(--accent); display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 24px;">
+            <div class="card-body" style="padding: 0;">
+                <h3 style="margin-top: 0;">👨‍⚕️ Doctor Moderation</h3>
+                <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5; margin-bottom: 20px;">Review reported forum posts, verify medical facts, and view consult queues.</p>
             </div>
-            <a href="/doctor/dashboard" class="btn-primary">Open Queue</a>
+            <a href="/doctor/dashboard" class="btn-primary" style="text-align: center; text-decoration: none;">Open Moderator Panel</a>
         </div>
         <% } %>
 
