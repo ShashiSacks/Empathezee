@@ -1,147 +1,159 @@
 <%- include('partials/header', { title: 'Disease Communities' }) %>
 <%- include('partials/navbar') %>
 
-<main class="page-container">
-    <h1 class="title">Disease Communities</h1>
+<main class="page-container" style="max-width: var(--max); margin: 0 auto; padding: 40px 24px;">
+    <div style="text-align: center; margin-bottom: 48px; margin-top: 20px;">
+        <h1 class="title" style="font-size: 2.2rem; margin-bottom: 8px; font-family: 'Outfit', sans-serif; font-weight: 800; letter-spacing: -1px; color: var(--primary);">👥 Support Communities</h1>
+        <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">Join disease-based support communities to share discussions, ask questions, and connect with other patients.</p>
+    </div>
 
-    <div class="medicine-layout">
-        <!-- LEFT COLUMN: COMMUNITIES CATALOG -->
-        <div class="medicine-list-section">
-            <h2>👥 Support Groups</h2>
-            
-            <% if (!communities || communities.length === 0) { %>
-                <div class="empty-state">
-                    <span class="empty-icon">👥</span>
-                    <h3>No Communities Found</h3>
-                    <p>There are no medical support communities created yet. Create one on the right to start peer discussions!</p>
-                </div>
-            <% } else { %>
-                <div class="appointment-grid" style="margin-top: 15px;">
-                    <% communities.forEach((c) => { %>
-                        <% 
-                           const isRecommended = userDisease && c.disease.toLowerCase().includes(userDisease.toLowerCase());
-                        %>
-                        <div class="card community-card <%= isRecommended ? 'highlight-card' : '' %>" style="text-align: left; align-items: stretch;">
+    <!-- MAIN: SUPPORT GROUPS GRID (TAKES ENTIRE PAGE WIDTH) -->
+    <div class="support-groups-section" style="margin-bottom: 60px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; border-bottom: 2px solid var(--line); padding-bottom: 14px;">
+            <h2 style="margin: 0; color: var(--primary); font-size: 1.45rem; font-weight: 700; letter-spacing: -0.5px;">Active Support Groups</h2>
+            <a href="#create-community-section" class="btn-primary" style="padding: 10px 20px; font-size: 0.9rem; font-weight: 600; text-decoration: none; border-radius: var(--radius-sm); border: none; cursor: pointer;">➕ Create New Group</a>
+        </div>
+        
+        <% if (!communities || communities.length === 0) { %>
+            <div class="empty-state" style="padding: 60px 20px; text-align: center; border: 2px dashed var(--line); border-radius: var(--radius-lg); background: var(--surface);">
+                <span class="empty-icon" style="font-size: 3rem; display: block; margin-bottom: 12px;">👥</span>
+                <h3 style="font-size: 1.25rem; margin-top: 12px; margin-bottom: 6px; font-weight: 700; color: var(--text);">No Communities Found</h3>
+                <p style="color: var(--text-secondary); max-width: 400px; margin: 0 auto; font-size: 0.92rem;">There are no support communities created yet. Be the first to start a group below!</p>
+            </div>
+        <% } else { %>
+            <div class="communities-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px;">
+                <% communities.forEach((c) => { %>
+                    <% 
+                       const isRecommended = userDisease && c.disease.toLowerCase().includes(userDisease.toLowerCase());
+                    %>
+                    <div class="card community-card <%= isRecommended ? 'highlight-card' : '' %>" style="text-align: left; display: flex; flex-direction: column; justify-content: space-between; padding: 28px; box-shadow: var(--shadow-sm); border-radius: var(--radius-lg); background: var(--surface); border: 1.5px solid var(--line); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'; this.style.borderColor='var(--accent)';" onmouseout="this.style.transform='none'; this.style.boxShadow='var(--shadow-sm)'; this.style.borderColor='var(--line)';">
+                        <div>
                             <% if (isRecommended) { %>
-                                <span class="badge recommendation-badge" style="margin-bottom: 12px; align-self: flex-start;">✨ Matches Your Profile (<%= userDisease %>)</span>
+                                <span class="badge recommendation-badge" style="margin-bottom: 14px; align-self: flex-start; display: inline-block;">✨ Matches Your Profile (<%= userDisease %>)</span>
                             <% } %>
-                            <h3 style="text-align: left; font-size: 1.25rem;"><%= c.name %></h3>
-                            <p class="community-desc" style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 12px;"><%= c.description %></p>
-                            <p class="community-disease" style="font-size: 0.9rem; margin-bottom: 8px;"><b>Target Disease:</b> <span style="background: rgba(79, 70, 229, 0.05); padding: 2px 6px; border-radius: 4px; font-weight: 600;"><%= c.disease %></span></p>
-                            <% if (c.location) { %>
-                                <p class="community-location" style="font-size: 0.9rem; margin-bottom: 12px;"><b>Location:</b> 📍 <span style="font-weight: 600;"><%= c.location %></span></p>
-                            <% } %>
-
-                            <!-- Meetup specifications (Online / In-person) -->
-                            <div class="community-event-details" style="margin-bottom: 20px; padding: 12px; background: rgba(79, 70, 229, 0.03); border-radius: var(--radius); border: 1px solid rgba(79, 70, 229, 0.06); font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px;">
-                                <p style="margin: 0;">
+                            <h3 style="text-align: left; font-size: 1.3rem; margin-top: 0; color: var(--primary); font-family: 'Outfit', sans-serif; font-weight: 700; line-height: 1.3;"><%= c.name %></h3>
+                            <p class="community-desc" style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.6; margin-top: 8px; margin-bottom: 18px; min-height: 48px;"><%= c.description %></p>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; font-size: 0.88rem; color: var(--text-secondary); border-top: 1px solid var(--line-light); padding-top: 14px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <b>Target Disease:</b> 
+                                    <span style="background: var(--bg-warm); color: var(--primary); padding: 2px 8px; border-radius: var(--radius-sm); font-weight: 600; border: 1px solid var(--line);"><%= c.disease %></span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <b>Location:</b> 
+                                    <span>📍 <span style="font-weight: 600; color: var(--text);"><%= c.location %></span></span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
                                     <b>Type:</b> 
-                                    <span class="badge" style="background: <%= c.type === 'online' ? 'rgba(13, 148, 136, 0.1)' : 'rgba(217, 119, 6, 0.1)' %>; color: <%= c.type === 'online' ? 'var(--success)' : 'var(--warning)' %>; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem;">
+                                    <span class="badge" style="background: <%= c.type === 'online' ? 'var(--success-bg)' : 'var(--warning-bg)' %>; color: <%= c.type === 'online' ? 'var(--success)' : 'var(--warning)' %>; padding: 2px 8px; border-radius: var(--radius-sm); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; border: 1px solid <%= c.type === 'online' ? 'var(--success)' : 'var(--warning)' %>1a;">
                                         <%= c.type || 'online' %>
                                     </span>
-                                </p>
+                                </div>
                                 <% if (c.type === 'offline') { %>
-                                    <p style="margin: 0;"><b>Date:</b> <%= c.meetingDate %></p>
-                                    <p style="margin: 0;"><b>Time:</b> <%= c.meetingTime %></p>
-                                    <p style="margin: 0;"><b>Location:</b> 📍 <%= c.meetingPlace %></p>
+                                    <div style="background: var(--bg-warm); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--line); font-size: 0.82rem; margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
+                                        <div><b>Date:</b> <%= c.meetingDate %></div>
+                                        <div><b>Time:</b> <%= c.meetingTime %></div>
+                                        <div><b>Place:</b> 📍 <%= c.meetingPlace %></div>
+                                    </div>
                                 <% } %>
-                                <p style="margin: 0;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
                                     <b>Access Fee:</b> 
                                     <span style="font-weight: 700; color: <%= c.paymentType === 'paid' ? 'var(--danger)' : 'var(--success)' %>">
                                         <%= c.paymentType === 'paid' ? `Paid (₹${c.price})` : 'Free 🟢' %>
                                     </span>
-                                </p>
-                            </div>
-
-                            <div class="community-actions">
-                                <% if (userCommunities.includes(c._id.toString())) { %>
-                                    <div style="display: flex; gap: 10px; width: 100%;">
-                                        <form action="/api/communities/<%= c._id %>/leave" method="POST" style="flex: 1; margin: 0; background: transparent; border: none; box-shadow: none; padding: 0;">
-                                            <button type="submit" class="btn-danger-outline" style="width: 100%; padding: 8px 12px; font-size: 0.85rem; font-weight: 600; min-width: unset;">Leave Group</button>
-                                        </form>
-                                        <a href="/community/<%= c._id %>" class="btn-primary" style="flex: 1; padding: 8px 12px; font-size: 0.85rem; margin: 0; font-weight: 600; text-align: center; text-decoration: none;">Enter Group</a>
-                                    </div>
-                                <% } else { %>
-                                    <form action="/api/communities/<%= c._id %>/join" method="POST" style="width: 100%; margin: 0; background: transparent; border: none; box-shadow: none; padding: 0;">
-                                        <button type="submit" class="btn-success" style="width: 100%; padding: 8px 12px; font-size: 0.85rem; font-weight: 600; min-width: unset;">Join Community</button>
-                                    </form>
-                                <% } %>
+                                </div>
                             </div>
                         </div>
-                    <% }) %>
-                </div>
-            <% } %>
-        </div>
 
-        <!-- RIGHT COLUMN: CREATE COMMUNITY -->
-        <div class="medicine-form-section">
-            <h2>➕ Create Community</h2>
-            <form action="/api/communities" method="POST" class="form-card" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label for="name">Community Name</label>
-                    <input type="text" name="name" id="name" required placeholder="e.g. Aids support group">
-                </div>
-
-                <div class="form-group">
-                    <label for="disease">Target Disease</label>
-                    <input type="text" name="disease" id="disease" required placeholder="e.g. Aids">
-                </div>
-
-                <div class="form-group">
-                    <label for="location">Location / City <span class="optional-tag">(optional)</span></label>
-                    <input type="text" name="location" id="location" placeholder="e.g. Kadapa, Bangalore, Global">
-                </div>
-
-                <div class="form-group">
-                    <label for="type">Format / Type</label>
-                    <select name="type" id="type" required onchange="toggleEventDetails(this.value)">
-                        <option value="online" selected>Online Discussion</option>
-                        <option value="offline">Offline (In-Person Meeting)</option>
-                    </select>
-                </div>
-
-                <!-- Offline Schedule Details (Toggled via JS) -->
-                <div id="offline-details" style="display: none; border-left: 2px solid var(--warning); padding-left: 12px; margin-bottom: 20px;">
-                    <div class="form-group">
-                        <label for="meetingDate">Meeting Date</label>
-                        <input type="date" name="meetingDate" id="meetingDate">
+                        <div class="community-actions" style="border-top: 1px solid var(--line-light); padding-top: 16px; margin-top: 12px;">
+                            <% if (userCommunities.includes(c._id.toString())) { %>
+                                <div style="display: flex; gap: 12px; width: 100%;">
+                                    <form action="/api/communities/<%= c._id %>/leave" method="POST" style="flex: 1; margin: 0; background: transparent; border: none; box-shadow: none; padding: 0;">
+                                        <button type="submit" class="btn-danger-outline" style="width: 100%; padding: 10px 14px; font-size: 0.88rem; font-weight: 600; border-radius: var(--radius-sm); cursor: pointer; border: 1.5px solid var(--line);">Leave</button>
+                                    </form>
+                                    <a href="/community/<%= c._id %>" class="btn-primary" style="flex: 1; padding: 10px 14px; font-size: 0.88rem; font-weight: 600; text-align: center; text-decoration: none; border-radius: var(--radius-sm); line-height: 1.2; display: flex; align-items: center; justify-content: center;">Enter Group</a>
+                                </div>
+                            <% } else { %>
+                                <form action="/api/communities/<%= c._id %>/join" method="POST" style="width: 100%; margin: 0; background: transparent; border: none; box-shadow: none; padding: 0;">
+                                    <button type="submit" class="btn-success" style="width: 100%; padding: 10px 14px; font-size: 0.88rem; font-weight: 600; border-radius: var(--radius-sm); cursor: pointer; border: none;">Join Community</button>
+                                </form>
+                            <% } %>
+                        </div>
                     </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
 
-                    <div class="form-group">
-                        <label for="meetingTime">Meeting Time</label>
-                        <input type="time" name="meetingTime" id="meetingTime">
-                    </div>
+    <!-- BOTTOM: CREATE COMMUNITY (FULL-WIDTH CARD) -->
+    <div id="create-community-section" class="card" style="max-width: 650px; margin: 60px auto 40px; padding: 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); border: 1.5px solid var(--line); background: var(--surface); text-align: left;">
+        <h2 style="margin-top: 0; color: var(--primary); font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 24px; text-align: center;">➕ Create New Support Community</h2>
+        
+        <form action="/api/communities" method="POST" class="form-card" style="box-shadow: none; border: none; background: transparent; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px;">
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="name" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Community Name</label>
+                <input type="text" name="name" id="name" required placeholder="e.g. Aids support group" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none;" />
+            </div>
 
-                    <div class="form-group">
-                        <label for="meetingPlace">Meeting Address / Venue</label>
-                        <input type="text" name="meetingPlace" id="meetingPlace" placeholder="e.g. Kadapa Hospital Hall">
-                    </div>
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="disease" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Target Disease</label>
+                <input type="text" name="disease" id="disease" required placeholder="e.g. Aids" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none;" />
+            </div>
+
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="location" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Location / City</label>
+                <input type="text" name="location" id="location" required placeholder="e.g. Kadapa, Bangalore, Global" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none;" />
+            </div>
+
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="type" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Format / Type</label>
+                <select name="type" id="type" required onchange="toggleEventDetails(this.value)" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none; font-weight: 500;">
+                    <option value="online" selected>Online Discussion</option>
+                    <option value="offline">Offline (In-Person Meeting)</option>
+                </select>
+            </div>
+
+            <!-- Offline Schedule Details (Toggled via JS) -->
+            <div id="offline-details" style="display: none; border-left: 3px solid var(--warning); padding-left: 16px; margin-bottom: 4px; display: flex; flex-direction: column; gap: 16px;">
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                    <label for="meetingDate" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Meeting Date</label>
+                    <input type="date" name="meetingDate" id="meetingDate" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none;" />
                 </div>
 
-                <div class="form-group">
-                    <label for="paymentType">Payment Access</label>
-                    <select name="paymentType" id="paymentType" required onchange="togglePrice(this.value)">
-                        <option value="free" selected>Free</option>
-                        <option value="paid">Paid Entry</option>
-                    </select>
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                    <label for="meetingTime" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Meeting Time</label>
+                    <input type="time" name="meetingTime" id="meetingTime" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none;" />
                 </div>
 
-                <!-- Paid Entry pricing (Toggled via JS) -->
-                <div id="price-details" style="display: none; border-left: 2px solid var(--danger); padding-left: 12px; margin-bottom: 20px;">
-                    <div class="form-group">
-                        <label for="price">Entry Price (₹)</label>
-                        <input type="number" name="price" id="price" min="0" step="1" placeholder="e.g. 150">
-                    </div>
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                    <label for="meetingPlace" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Meeting Address / Venue</label>
+                    <input type="text" name="meetingPlace" id="meetingPlace" placeholder="e.g. Kadapa Hospital Hall" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none;" />
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="description">Guidelines / Description</label>
-                    <textarea name="description" id="description" required placeholder="Outline topics, meeting rules, or patient support goals..."></textarea>
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="paymentType" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Payment Access</label>
+                <select name="paymentType" id="paymentType" required onchange="togglePrice(this.value)" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none; font-weight: 500;">
+                    <option value="free" selected>Free</option>
+                    <option value="paid">Paid Entry</option>
+                </select>
+            </div>
+
+            <!-- Paid Entry pricing (Toggled via JS) -->
+            <div id="price-details" style="display: none; border-left: 3px solid var(--danger); padding-left: 16px; margin-bottom: 4px;">
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                    <label for="price" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Entry Price (₹)</label>
+                    <input type="number" name="price" id="price" min="0" step="1" placeholder="e.g. 150" style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none;" />
                 </div>
+            </div>
 
-                <button type="submit" class="btn-primary-block">Create Community</button>
-            </form>
-        </div>
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="description" style="font-weight: 600; font-size: 0.92rem; color: var(--primary);">Guidelines / Description</label>
+                <textarea name="description" id="description" required placeholder="Outline topics, meeting rules, or patient support goals..." style="padding: 11px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); font-size: 0.9rem; outline: none; min-height: 100px; font-family: inherit; line-height: 1.5; resize: vertical;"></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary-block" style="padding: 12px; font-weight: 700; font-size: 0.95rem; border-radius: var(--radius-sm); border: none; cursor: pointer; margin-top: 10px;">Create Community</button>
+        </form>
     </div>
 </main>
 
@@ -152,12 +164,12 @@
         const meetingTime = document.getElementById('meetingTime');
         const meetingPlace = document.getElementById('meetingPlace');
         if (type === 'offline') {
-            offlineDetails.style.display = 'block';
+            offlineDetails.style.setProperty('display', 'flex', 'important');
             meetingDate.required = true;
             meetingTime.required = true;
             meetingPlace.required = true;
         } else {
-            offlineDetails.style.display = 'none';
+            offlineDetails.style.setProperty('display', 'none', 'important');
             meetingDate.required = false;
             meetingTime.required = false;
             meetingPlace.required = false;

@@ -7,6 +7,16 @@ const createCommunity = async (req, res, next) => {
     try {
         const { name, description, disease, type, meetingTime, meetingDate, meetingPlace, paymentType, price, location } = req.body;
 
+        if (!location || !location.trim()) {
+            const err = new Error("Location / City is required.");
+            if (req.accepts('html')) {
+                return next(err);
+            }
+            return res.status(400).json({ message: err.message });
+        }
+
+
+
         const existing = await Community.findOne({ name: { $regex: new RegExp(`^${name.trim()}$`, "i") } });
 
         if (existing) {

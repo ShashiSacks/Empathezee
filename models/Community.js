@@ -39,6 +39,12 @@ const communitySchema = new mongoose.Schema(
             default: ""
         },
 
+        location: {
+            type: String,
+            required: true
+        },
+
+
         paymentType: {
             type: String,
             enum: ["free", "paid"],
