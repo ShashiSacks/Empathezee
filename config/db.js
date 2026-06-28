@@ -9,6 +9,10 @@ const connectDB = async () => {
         // auto-seed default communities and posts on startup
         const seedCommunities = require("./seedCommunities");
         await seedCommunities();
+
+        // auto-seed default doctors and medicines on startup
+        const seedData = require("./seedData");
+        await seedData();
     } catch (error) {
         console.error(error.message);
         process.exit(1);

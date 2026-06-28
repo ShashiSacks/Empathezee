@@ -1,4 +1,3 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
@@ -283,40 +282,38 @@ const medicines = [
     }
 ];
 
-async function seed() {
+const seedData = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log("Connected to MongoDB for data seeding...");
-
-        // Seed Doctors
-        console.log("Clearing old seeded doctors...");
-        const emails = doctors.map(d => d.email);
-        await User.deleteMany({ email: { $in: emails } });
-
-        const hashedPassword = await bcrypt.hash("password123", 10);
-        for (const doc of doctors) {
-            await User.create({
-                ...doc,
-                password: hashedPassword
-            });
-            console.log(`Seeded: Dr. ${doc.username} [${doc.disease}]`);
+        // Seed Doctors if none exist
+        const doctorCount = await User.countDocuments({ role: "doctor" });
+        if (doctorCount === 0) {
+            console.log("Seeding default doctors...");
+            const hashedPassword = await bcrypt.hash("password123", 10);
+            for (const doc of doctors) {
+                await User.create({
+                    ...doc,
+                    password: hashedPassword
+                });
+            }
+            console.log(`Seeded ${doctors.length} doctors successfully.`);
+        } else {
+            console.log("Database already has doctors, skipping doctor seeding.");
         }
 
-        // Seed Medicines
-        console.log("Clearing all old medicines...");
-        await Medicine.deleteMany({});
-
-        for (const med of medicines) {
-            await Medicine.create(med);
-            console.log(`Seeded Medicine: ${med.name} [${med.disease}]`);
+        // Seed Medicines if none exist
+        const medicineCount = await Medicine.countDocuments();
+        if (medicineCount === 0) {
+            console.log("Seeding default medicines...");
+            for (const med of medicines) {
+                await Medicine.create(med);
+            }
+            console.log(`Seeded ${medicines.length} medicines successfully.`);
+        } else {
+            console.log("Database already has medicines, skipping medicine seeding.");
         }
-
-        console.log("Data seeding finished successfully!");
-        process.exit(0);
     } catch (error) {
-        console.error("Data seeding failed:", error);
-        process.exit(1);
+        console.error("Error seeding doctors/medicines:", error);
     }
-}
+};
 
-seed();
+module.exports = seedData;
