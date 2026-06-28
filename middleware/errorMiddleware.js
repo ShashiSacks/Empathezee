@@ -1,6 +1,6 @@
 const notFound = (req, res, next) => {
     if (req.accepts("html")) {
-        return res.status(404).render("404");
+        return res.status(404).render("errors/404");
     }
     const error = new Error(`Not Found - ${req.originalUrl}`);
     res.status(404);
@@ -38,7 +38,7 @@ const errorHandler = (err, req, res, next) => {
     res.status(statusCode);
 
     if (req.accepts("html")) {
-        return res.render("error", {
+        return res.render("errors/error", {
             title: `Error ${statusCode}`,
             statusCode,
             message,

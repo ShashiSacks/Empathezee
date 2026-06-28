@@ -1,21 +1,21 @@
-<%- include('partials/header', { title: 'Register', bodyClass: 'auth-page' }) %>
+<%- include('../includes/header', { title: 'Doctor Register', bodyClass: 'auth-page' }) %>
 
 <div class="auth-container">
 
-    <!-- left side (form) -->
-    <div class="auth-left">
+    <!-- left side (form area) -->
+    <div class="auth-left" style="overflow-y: auto; padding-top: 60px; padding-bottom: 60px;">
         <div class="auth-left-content">
-            <h1 class="title">Register</h1>
+            <h1 class="title">Doctor Register</h1>
 
-            <form action="/api/auth/register" method="POST">
+            <form action="/api/auth/doctor/register" method="POST">
 
-                <input type="text" name="username" placeholder="Username" required />
+                <input type="text" name="username" placeholder="Full name" required autocomplete="name" />
 
-                <input type="email" name="email" placeholder="Email" required />
+                <input type="email" name="email" placeholder="Doctor email" required autocomplete="email" />
 
-                <input type="password" name="password" placeholder="Password" required />
+                <input type="password" name="password" placeholder="Password" required autocomplete="new-password" />
 
-                <input type="number" name="age" placeholder="Age" min="0" max="120" />
+                <input type="number" name="age" placeholder="Age" min="18" max="120" />
 
                 <div class="form-group">
                     <label for="gender">Gender</label>
@@ -27,7 +27,7 @@
                     </select>
                 </div>
 
-                <input type="text" name="disease" placeholder="Disease" />
+                <input type="text" name="disease" placeholder="Specialization" />
 
                 <!-- cascading location picker -->
                 <div class="location-picker">
@@ -63,68 +63,21 @@
                     </div>
                 </div>
 
-                <button type="submit">Create Account</button>
+                <textarea name="bio" placeholder="Short professional bio"></textarea>
+
+                <button type="submit">Create Doctor Account</button>
 
             </form>
 
             <p>
-                Already have an account?
-                <a href="/login">Login here</a>
+                Already registered?
+                <a href="/doctor/login">Doctor login</a>
             </p>
 
             <p>
-                Registering as a doctor?
-                <a href="/doctor/register">Doctor registration</a>
+                Patient account?
+                <a href="/register">Patient registration</a>
             </p>
-
-            <!-- google login button -->
-            <div style="margin-top: 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <div style="width: 100%; display: flex; align-items: center; margin-bottom: 15px; color: var(--text-muted); font-size: 0.8rem;">
-                    <div style="flex: 1; height: 1px; background: var(--line);"></div>
-                    <span style="padding: 0 10px; font-weight: 550; text-transform: uppercase;">or</span>
-                    <div style="flex: 1; height: 1px; background: var(--line);"></div>
-                </div>
-                <script src="https://accounts.google.com/gsi/client" async defer></script>
-                <div id="g_id_onload"
-                     data-client_id="<%= googleClientId %>"
-                     data-context="signup"
-                     data-ux_mode="redirect"
-                     data-login_uri="<%= baseUrl %>/auth/google/callback"
-                     data-use_fedcm_for_prompt="false"
-                     data-auto_select="false">
-                </div>
-                <div class="g_id_signin"
-                     data-type="standard"
-                     data-shape="rectangular"
-                     data-theme="outline"
-                     data-text="signup_with"
-                     data-size="large"
-                     data-logo_alignment="left"
-                     style="width: 100%;">
-                </div>
-            </div>
-
-            <script>
-            async function handleCredentialResponse(response) {
-                try {
-                    const res = await fetch("/api/auth/google", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ credential: response.credential })
-                    });
-                    if (res.ok) {
-                        window.location.href = "/dashboard";
-                    } else {
-                        const err = await res.text();
-                        alert("Google Registration failed: " + err);
-                    }
-                } catch (err) {
-                    console.error("Google register fetch error:", err);
-                }
-            }
-            </script>
         </div>
     </div>
 
@@ -256,4 +209,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<%- include('partials/footer') %>
+<%- include('../includes/footer') %>

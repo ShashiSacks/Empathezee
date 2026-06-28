@@ -29,6 +29,11 @@ app.use(express.urlencoded({ extended: true }));
 // session middleware
 app.use(sessionMiddleware);
 
+// passport initialization
+const passport = require("passport");
+app.use(passport.initialize());
+app.use(passport.session());
+
 // expose session user context to all views globally
 app.use((req, res, next) => {
     res.locals.user = req.session?.user || null;
@@ -56,6 +61,70 @@ const Post = require("./models/Post");
 const User = require("./models/User");
 const Appointment = require("./models/Appointment");
 const Medicine = require("./models/Medicine");
+
+// Passport configuration
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err, null);
+    }
+});
+
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: `${process.env.BASE_URL || "http://localhost:3000"}/auth/google/callback`
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            try {
+                // 1. Existing Google User
+                let existingUser = await User.findOne({ googleId: profile.id });
+                if (existingUser) {
+                    return done(null, existingUser);
+                }
+
+                // 2. Existing User with matching Email
+                let email = profile.emails?.[0]?.value;
+                if (email) {
+                    let emailUser = await User.findOne({ email: email.toLowerCase() });
+                    if (emailUser) {
+                        emailUser.googleId = profile.id;
+                        await emailUser.save();
+                        return done(null, emailUser);
+                    }
+                }
+
+                // 3. New User creation
+                const username = profile.displayName.replace(/\s+/g, "").toLowerCase() + Math.floor(Math.random() * 10000);
+                const randomPassword = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                const bcrypt = require("bcryptjs");
+                const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+                const newUser = await User.create({
+                    username: username,
+                    email: email ? email.toLowerCase() : `${username}@empathezee-oauth.com`,
+                    password: hashedPassword,
+                    googleId: profile.id,
+                    role: "user"
+                });
+
+                return done(null, newUser);
+            } catch (err) {
+                return done(err, null);
+            }
+        }
+    )
+);
 
 // routes
 const authRoutes = require("./routes/authRoutes");
@@ -92,8 +161,27 @@ app.use("/", chatRoutes);
 app.use("/", searchRoutes);
 app.use("/", doctorSearchRoutes);
 
-// Direct Google OAuth Callback POST (from redirect mode)
-app.post("/auth/google/callback", googleLogin);
+// Google Auth Routes (Airbnb Style)
+app.get(
+    "/auth/google",
+    passport.authenticate("google", {
+        scope: ["profile", "email"]
+    })
+);
+
+app.get(
+    "/auth/google/callback",
+    passport.authenticate("google", { failureRedirect: "/login" }),
+    (req, res) => {
+        // Sync Passport authenticated user with existing session-based middleware
+        req.session.user = {
+            id: req.user._id.toString(),
+            username: req.user.username,
+            role: req.user.role
+        };
+        res.redirect("/dashboard");
+    }
+);
 
 // platform analytics dashboard route
 app.get("/analytics", protect, async (req, res) => {
@@ -128,7 +216,7 @@ app.get("/analytics", protect, async (req, res) => {
             });
         });
 
-        res.render("analytics", {
+        res.render("analytics/index", {
             totalPosts,
             totalUsers,
             safePosts,
@@ -232,7 +320,7 @@ app.get("/communities", protectUser, async (req, res) => {
             return b.createdAt - a.createdAt;
         });
 
-        res.render("communities", { communities, userCommunities, userDisease });
+        res.render("communities/index", { communities, userCommunities, userDisease });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading communities");
@@ -260,7 +348,7 @@ app.get("/community/:id", protectUser, async (req, res) => {
             })
             .sort({ createdAt: -1 });
 
-        res.render("community", { community, posts });
+        res.render("communities/show", { community, posts });
 
     } catch (err) {
         console.error(err);
@@ -274,7 +362,7 @@ app.get("/login", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
     }
-    res.render("login");
+    res.render("users/login");
 });
 
 
@@ -283,7 +371,7 @@ app.get("/register", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
     }
-    res.render("register");
+    res.render("users/register");
 });
 
 // doctor login page
@@ -291,7 +379,7 @@ app.get("/doctor/login", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
     }
-    res.render("doctorLogin");
+    res.render("doctors/login");
 });
 
 // doctor register page
@@ -299,7 +387,7 @@ app.get("/doctor/register", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
     }
-    res.render("doctorRegister");
+    res.render("doctors/register");
 });
 
 // doctor moderation dashboard
@@ -313,7 +401,7 @@ app.get("/doctor/dashboard", protectDoctor, async (req, res) => {
             .populate("patient", "username email")
             .sort({ date: 1, time: 1 });
 
-        res.render("doctorDashboard", { posts, appointments });
+        res.render("doctors/dashboard", { posts, appointments });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading doctor dashboard");
@@ -327,7 +415,7 @@ app.get("/profile", protectUser, async (req, res) => {
         const user = await User.findById(req.user.id)
             .populate("communities");
 
-        res.render("profile", { user });
+        res.render("users/profile", { user });
 
     } catch (err) {
         console.error(err);
@@ -338,7 +426,7 @@ app.get("/profile", protectUser, async (req, res) => {
 
 // dashboard
 app.get("/dashboard", protectUser, (req, res) => {
-    res.render("dashboard");
+    res.render("users/dashboard");
 });
 
 // appointments ui
@@ -348,7 +436,7 @@ app.get("/appointments-ui", protectUser, async (req, res) => {
             .populate("doctor", "username email disease city")
             .sort({ date: 1, time: 1 });
         const doctors = await User.find({ role: "doctor" }).select("username email disease city");
-        res.render("appointments", { appointments, doctors });
+        res.render("appointments/index", { appointments, doctors });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading appointments UI");
@@ -362,7 +450,7 @@ app.get("/medicine", protectUser, async (req, res) => {
         const user = await User.findById(req.user.id);
         const userDisease = user?.disease || "";
 
-        res.render("medicine", { userDisease, searchQuery });
+        res.render("medicines/index", { userDisease, searchQuery });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading medicine UI");

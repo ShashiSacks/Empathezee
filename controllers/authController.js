@@ -1,7 +1,5 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
-const { OAuth2Client } = require("google-auth-library");
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const registerUser = async (req, res, role, redirectPath) => {
     try {
@@ -105,70 +103,10 @@ const logout = (req, res) => {
     });
 };
 
-// google oauth sign-in
-const googleLogin = async (req, res) => {
-    try {
-        const { credential } = req.body;
-        if (!credential) {
-            return res.status(400).send("ID Token is required.");
-        }
-
-        const ticket = await googleClient.verifyIdToken({
-            idToken: credential,
-            audience: process.env.GOOGLE_CLIENT_ID
-        });
-
-        const payload = ticket.getPayload();
-        const { email, name } = payload;
-
-        if (!email) {
-            return res.status(400).send("Google account does not provide email access.");
-        }
-
-        let user = await User.findOne({ email: email.toLowerCase() });
-
-        if (!user) {
-            // create user automatically
-            const randomPassword = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            const hashedPassword = await bcrypt.hash(randomPassword, 10);
-            
-            user = await User.create({
-                username: name ? name.trim() : email.split("@")[0],
-                email: email.trim().toLowerCase(),
-                password: hashedPassword,
-                role: "user"
-            });
-        }
-
-        req.session.user = {
-            id: user._id.toString(),
-            username: user.username,
-            role: user.role
-        };
-
-        if (req.path.includes("callback")) {
-            return res.redirect("/dashboard");
-        }
-
-        return res.status(200).json({
-            message: "Google login successful",
-            user: req.session.user
-        });
-
-    } catch (error) {
-        console.error("Google Auth Error:", error);
-        if (req.path.includes("callback")) {
-            return res.redirect("/login?error=" + encodeURIComponent(error.message));
-        }
-        return res.status(500).send("Google Authentication failed: " + error.message);
-    }
-};
-
 module.exports = {
     register,
     login,
     registerDoctor,
     loginDoctor,
-    logout,
-    googleLogin
+    logout
 };

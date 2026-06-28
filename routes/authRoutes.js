@@ -6,8 +6,7 @@ const {
     login,
     registerDoctor,
     loginDoctor,
-    logout,
-    googleLogin
+    logout
 } = require("../controllers/authController");
 
 // register
@@ -15,9 +14,6 @@ router.post("/register", register);
 
 // login
 router.post("/login", login);
-
-// google oauth sign-in
-router.post("/google", googleLogin);
 
 // doctor register
 router.post("/doctor/register", registerDoctor);

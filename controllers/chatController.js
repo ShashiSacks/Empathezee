@@ -31,7 +31,7 @@ const renderAppointmentChat = async (req, res) => {
 
         const otherUser = isPatient ? appointment.doctor : appointment.patient;
 
-        res.render("chat", {
+        res.render("chats/index", {
             appointment,
             messages,
             otherUser,

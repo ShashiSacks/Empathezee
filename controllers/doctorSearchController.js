@@ -65,7 +65,7 @@ const searchDoctors = async (req, res) => {
         }
 
         // If no search parameters, render page
-        return res.render("doctorSearch");
+        return res.render("doctors/search");
 
     } catch (err) {
         console.error("Doctor Search Error:", err);

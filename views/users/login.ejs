@@ -1,0 +1,68 @@
+<%- include('../includes/header', { title: 'Login', bodyClass: 'auth-page' }) %>
+
+<div class="auth-container">
+
+    <!-- left side (form area) -->
+    <div class="auth-left">
+        <div class="auth-left-content">
+            <h1 class="title">Login</h1>
+
+            <form action="/api/auth/login" method="POST">
+
+                <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="Email" 
+                    required 
+                    autocomplete="email" 
+                />
+
+                <input 
+                    type="password" 
+                    name="password" 
+                    placeholder="Password" 
+                    required 
+                    autocomplete="current-password" 
+                />
+
+                <button type="submit">Login</button>
+
+            </form>
+
+            <p>
+                Don't have an account?
+                <a href="/register">Register here</a>
+            </p>
+
+            <p>
+                Doctor account?
+                <a href="/doctor/login">Doctor login</a>
+            </p>
+
+            <!-- google login button -->
+            <div style="margin-top: 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+                <div style="width: 100%; display: flex; align-items: center; margin-bottom: 15px; color: var(--text-muted); font-size: 0.8rem;">
+                    <div style="flex: 1; height: 1px; background: var(--line);"></div>
+                    <span style="padding: 0 10px; font-weight: 550; text-transform: uppercase;">or</span>
+                    <div style="flex: 1; height: 1px; background: var(--line);"></div>
+                </div>
+                <a href="/auth/google" style="display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; border: 1.5px solid var(--line); border-radius: var(--radius); padding: 12px 16px; font-weight: 600; text-decoration: none; color: var(--text); background: var(--surface); transition: background-color 0.2s, border-color 0.2s; box-shadow: var(--shadow-sm); cursor: pointer;"
+                   onmouseover="this.style.backgroundColor='var(--bg-warm)'; this.style.borderColor='var(--border)'"
+                   onmouseout="this.style.backgroundColor='var(--surface)'; this.style.borderColor='var(--line)'">
+                    <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.336 0 3.327 2.673 1.327 6.573L5.266 9.765z"/>
+                        <path fill="#4285F4" d="M23.491 12.273c0-.818-.073-1.609-.209-2.373H12v4.509h6.445c-.277 1.482-1.11 2.736-2.364 3.582l3.864 2.99A11.896 11.896 0 0 0 23.491 12.273z"/>
+                        <path fill="#FBBC05" d="M5.266 14.235A7.127 7.127 0 0 1 4.909 12c0-.79.136-1.545.357-2.235L1.327 6.573A11.97 11.97 0 0 0 0 12c0 2.018.5 3.927 1.382 5.618l3.884-3.383z"/>
+                        <path fill="#34A853" d="M12 24c3.245 0 5.973-1.073 7.964-2.91l-3.864-2.99C15.027 18.782 13.627 19.09 12 19.09c-3.155 0-5.818-2.127-6.773-4.99L1.345 17.482C3.355 21.355 7.355 24 12 24z"/>
+                    </svg>
+                    Continue with Google
+                </a>
+            </div>
+    </div>
+
+    <!-- right side image -->
+    <div class="auth-right"></div>
+
+</div>
+
+<%- include('../includes/footer') %>
