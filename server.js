@@ -179,7 +179,7 @@ app.get(
             username: req.user.username,
             role: req.user.role
         };
-        res.redirect("/dashboard");
+        res.redirect(`${process.env.CLIENT_URL || "http://localhost:3000"}/dashboard`);
     }
 );
 
