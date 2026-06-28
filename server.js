@@ -6,35 +6,55 @@ const express = require("express");
 const { Server } = require("socket.io");
 
 // app setup
+
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+
 // middleware
+
+
 const sessionMiddleware = require("./middleware/sessionMiddleware");
 const { protectUser, protectDoctor, protect } = require("./middleware/sessionMiddleware");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
+
 // security + logging
+
+
 app.use(helmet({
-    contentSecurityPolicy: false // disable csp to allow socket.io and scripts to work without headers conflict
+    contentSecurityPolicy: false
 }));
 app.use(morgan("dev"));
 
+
 // body parsers
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // session middleware
+
+
 app.use(sessionMiddleware);
 
+
 // passport initialization
+
+
 const passport = require("passport");
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 // expose session user context to all views globally
+
+
 app.use((req, res, next) => {
     res.locals.user = req.session?.user || null;
     res.locals.currentPath = req.path;
@@ -44,25 +64,40 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // static files
+
+
 app.use(express.static(path.join(__dirname, "public")));
 
+
 // view engine
+
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+
 // db connection
+
+
 const connectDB = require("./config/db");
 connectDB();
 
+
 // models
+
+
 const Community = require("./models/Community");
 const Post = require("./models/Post");
 const User = require("./models/User");
 const Appointment = require("./models/Appointment");
 const Medicine = require("./models/Medicine");
 
+
 // Passport configuration
+
+
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 passport.serializeUser((user, done) => {
@@ -83,7 +118,9 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: `${process.env.BASE_URL || "http://localhost:3000"}/auth/google/callback`
+
+            // use relative path so OAuth callback works on any host (localhost, vercel, custom domain)
+            callbackURL: "/auth/google/callback"
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -127,6 +164,8 @@ passport.use(
 );
 
 // routes
+
+
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
@@ -144,7 +183,10 @@ const searchRoutes = require("./routes/searchRoutes");
 const doctorSearchRoutes = require("./routes/doctorSearchRoutes");
 const { googleLogin } = require("./controllers/authController");
 
+
 // api routes
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
@@ -161,7 +203,10 @@ app.use("/", chatRoutes);
 app.use("/", searchRoutes);
 app.use("/", doctorSearchRoutes);
 
-// Google Auth Routes (Airbnb Style)
+
+// Google Auth Routes
+
+
 app.get(
     "/auth/google",
     passport.authenticate("google", {
@@ -173,17 +218,23 @@ app.get(
     "/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
     (req, res) => {
-        // Sync Passport authenticated user with existing session-based middleware
+
+        // sync Passport authenticated user with existing session-based middleware
         req.session.user = {
             id: req.user._id.toString(),
             username: req.user.username,
             role: req.user.role
         };
-        res.redirect(`${process.env.CLIENT_URL || "http://localhost:3000"}/dashboard`);
+
+        // redirect to dashboard using a relative path so it works on all environments
+        res.redirect("/dashboard");
     }
 );
 
+
 // platform analytics dashboard route
+
+
 app.get("/analytics", protect, async (req, res) => {
     try {
         const totalPosts = await Post.countDocuments();
@@ -234,15 +285,24 @@ app.get("/analytics", protect, async (req, res) => {
     }
 });
 
+
 // attach socket.io
+
+
 app.set("io", io);
 
+
 // socket session support
+
+
 io.use((socket, next) => {
     sessionMiddleware(socket.request, {}, next);
 });
 
+
 // socket connection
+
+
 io.on("connection", (socket) => {
     const user = socket.request.session?.user;
 
@@ -292,6 +352,8 @@ io.on("connection", (socket) => {
 // ======================
 
 // home (fixed clean flow)
+
+
 app.get("/", (req, res) => {
     if (!req.session.user) {
         return res.redirect("/login");
@@ -303,7 +365,10 @@ app.get("/", (req, res) => {
 });
 
 
+
 // communities page
+
+
 app.get("/communities", protectUser, async (req, res) => {
     try {
         const communities = await Community.find();
@@ -328,7 +393,10 @@ app.get("/communities", protectUser, async (req, res) => {
 });
 
 
+
 // community page
+
+
 app.get("/community/:id", protectUser, async (req, res) => {
     try {
         const community = await Community.findById(req.params.id);
@@ -357,7 +425,10 @@ app.get("/community/:id", protectUser, async (req, res) => {
 });
 
 
+
 // login page
+
+
 app.get("/login", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
@@ -366,7 +437,10 @@ app.get("/login", (req, res) => {
 });
 
 
+
 // register page
+
+
 app.get("/register", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
@@ -375,6 +449,8 @@ app.get("/register", (req, res) => {
 });
 
 // doctor login page
+
+
 app.get("/doctor/login", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
@@ -383,6 +459,8 @@ app.get("/doctor/login", (req, res) => {
 });
 
 // doctor register page
+
+
 app.get("/doctor/register", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
@@ -391,6 +469,8 @@ app.get("/doctor/register", (req, res) => {
 });
 
 // doctor moderation dashboard
+
+
 app.get("/doctor/dashboard", protectDoctor, async (req, res) => {
     try {
         const posts = await Post.find({ status: "PENDING" })
@@ -410,6 +490,8 @@ app.get("/doctor/dashboard", protectDoctor, async (req, res) => {
 
 
 // profile page
+
+
 app.get("/profile", protectUser, async (req, res) => {
     try {
         const user = await User.findById(req.user.id)
@@ -425,11 +507,15 @@ app.get("/profile", protectUser, async (req, res) => {
 
 
 // dashboard
+
+
 app.get("/dashboard", protectUser, (req, res) => {
     res.render("users/dashboard");
 });
 
 // appointments ui
+
+
 app.get("/appointments-ui", protectUser, async (req, res) => {
     try {
         const appointments = await Appointment.find({ patient: req.user._id })
@@ -444,6 +530,8 @@ app.get("/appointments-ui", protectUser, async (req, res) => {
 });
 
 // medicine UI
+
+
 app.get("/medicine", protectUser, async (req, res) => {
     try {
         const searchQuery = req.query.search || "";
@@ -460,13 +548,18 @@ app.get("/medicine", protectUser, async (req, res) => {
 
 // search API and UI routes have been refactored to routes/searchRoutes.js
 
+
 // error handling middlewares
+
+
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 app.use(notFound);
 app.use(errorHandler);
 
 
 // start server
+
+
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
