@@ -50,8 +50,8 @@
                 <div id="g_id_onload"
                      data-client_id="<%= googleClientId %>"
                      data-context="signin"
-                     data-ux_mode="popup"
-                     data-callback="handleCredentialResponse"
+                     data-ux_mode="redirect"
+                     data-login_uri="<%= baseUrl %>/auth/google/callback"
                      data-use_fedcm_for_prompt="false"
                      data-auto_select="false">
                 </div>

@@ -5,13 +5,13 @@
             <% if (user) { %>
                 <% if (user.role === 'doctor') { %>
                     <a href="/doctor/dashboard">Doctor Dashboard</a>
-                    <a href="/medicine-ui">Medicines Directory</a>
+                    <a href="/medicine">Medicines Directory</a>
                     <a href="/analytics">Platform Analytics</a>
                 <% } else { %>
                     <a href="/communities">Communities</a>
-                    <a href="/doctor-search-ui">Find Doctors</a>
+                    <a href="/doctor/search">Find Doctors</a>
                     <a href="/appointments-ui">Appointments</a>
-                    <a href="/medicine-ui">Medicines</a>
+                    <a href="/medicine">Medicines</a>
                     <a href="/analytics">Platform Analytics</a>
                     <a href="/profile">Profile</a>
                 <% } %>

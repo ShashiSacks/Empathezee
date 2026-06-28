@@ -35,6 +35,7 @@ app.use((req, res, next) => {
     res.locals.currentPath = req.path;
     res.locals.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
     res.locals.googleClientId = process.env.GOOGLE_CLIENT_ID || "";
+    res.locals.baseUrl = process.env.BASE_URL || "http://localhost:3000";
     next();
 });
 
@@ -71,6 +72,8 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const communityRoutes = require("./routes/communityRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const searchRoutes = require("./routes/searchRoutes");
+const doctorSearchRoutes = require("./routes/doctorSearchRoutes");
+const { googleLogin } = require("./controllers/authController");
 
 // api routes
 app.use("/api/auth", authRoutes);
@@ -87,6 +90,10 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/communities", communityRoutes);
 app.use("/", chatRoutes);
 app.use("/", searchRoutes);
+app.use("/", doctorSearchRoutes);
+
+// Direct Google OAuth Callback POST (from redirect mode)
+app.post("/auth/google/callback", googleLogin);
 
 // platform analytics dashboard route
 app.get("/analytics", protect, async (req, res) => {
@@ -348,8 +355,8 @@ app.get("/appointments-ui", protectUser, async (req, res) => {
     }
 });
 
-// medicine ui
-app.get("/medicine-ui", protectUser, async (req, res) => {
+// medicine UI
+app.get("/medicine", protectUser, async (req, res) => {
     try {
         const searchQuery = req.query.search || "";
         const user = await User.findById(req.user.id);

@@ -146,6 +146,10 @@ const googleLogin = async (req, res) => {
             role: user.role
         };
 
+        if (req.path.includes("callback")) {
+            return res.redirect("/dashboard");
+        }
+
         return res.status(200).json({
             message: "Google login successful",
             user: req.session.user
@@ -153,6 +157,9 @@ const googleLogin = async (req, res) => {
 
     } catch (error) {
         console.error("Google Auth Error:", error);
+        if (req.path.includes("callback")) {
+            return res.redirect("/login?error=" + encodeURIComponent(error.message));
+        }
         return res.status(500).send("Google Authentication failed: " + error.message);
     }
 };

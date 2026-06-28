@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function() {
         doctorsGrid.innerHTML = "";
 
         try {
-            const res = await fetch(`/find-doctors?symptom=${encodeURIComponent(symptom)}&city=${encodeURIComponent(city)}`);
+            const res = await fetch(`/doctor/search?symptom=${encodeURIComponent(symptom)}&city=${encodeURIComponent(city)}`);
             const data = await res.json();
 
             statusDiv.style.display = "none";
