@@ -2,15 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const { getAnalytics } = require("../controllers/analyticsController");
+const { protect } = require("../middleware/sessionMiddleware");
 
-const { protect, authorizeRoles } = require("../middleware/sessionMiddleware");
-
-// only doctor or admin can see analytics
-router.get(
-    "/",
-    protect,
-    authorizeRoles("doctor", "admin"),
-    getAnalytics
-);
+// get platform analytics
+router.get("/", protect, getAnalytics);
 
 module.exports = router;

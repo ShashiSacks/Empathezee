@@ -1,6 +1,6 @@
 const Appointment = require("../models/Appointment");
 
-// book appointment (create)
+// book appointment
 const bookAppointment = async (req, res) => {
     try {
         const { doctorId, date, time } = req.body;
@@ -17,7 +17,7 @@ const bookAppointment = async (req, res) => {
             status: "PENDING"
         });
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/appointments-ui");
         }
 
@@ -32,7 +32,7 @@ const bookAppointment = async (req, res) => {
     }
 };
 
-// get my appointments (read)
+// get my appointments
 const getMyAppointments = async (req, res) => {
     try {
         const appointments = await Appointment.find({
@@ -49,7 +49,7 @@ const getMyAppointments = async (req, res) => {
     }
 };
 
-// update appointment status / date (update)
+// update appointment status / date
 const updateAppointment = async (req, res) => {
     try {
         const { status, date, time } = req.body;
@@ -71,7 +71,7 @@ const updateAppointment = async (req, res) => {
 
         await appointment.save();
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/appointments-ui");
         }
 
@@ -86,7 +86,7 @@ const updateAppointment = async (req, res) => {
     }
 };
 
-// delete/cancel appointment (delete)
+// delete / cancel appointment
 const deleteAppointment = async (req, res) => {
     try {
         const appointmentId = req.params.id;
@@ -103,12 +103,12 @@ const deleteAppointment = async (req, res) => {
 
         await Appointment.findByIdAndDelete(appointmentId);
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/appointments-ui");
         }
 
         res.status(200).json({
-            message: "Appointment cancelled/deleted successfully"
+            message: "Appointment cancelled successfully"
         });
 
     } catch (error) {

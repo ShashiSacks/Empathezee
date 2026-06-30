@@ -1,355 +1,434 @@
 <%- include('../includes/header', { title: community.name }) %>
 <%- include('../includes/navbar') %>
 
-<main class="page-container" style="max-width: 1300px;">
-    <h1 class="title"><%= community.name %></h1>
+<main>
+    <!-- Community Header Banner -->
+    <div style="
+        background: linear-gradient(145deg, var(--primary-50) 0%, var(--accent-50) 100%);
+        border-bottom: 1px solid var(--border);
+        padding: 40px 24px 32px;
+        position: relative;
+        overflow: hidden;
+    ">
+        <div aria-hidden="true" style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(37,99,235,0.08),transparent 70%);border-radius:50%;pointer-events:none;"></div>
 
-    <div class="card" style="margin-bottom: 25px; text-align: left; align-items: stretch; padding: 20px;">
-        <p style="margin-bottom: 6px; color: var(--text);"><b>Target Disease Spec:</b> <span style="background: rgba(79, 70, 229, 0.05); padding: 2px 8px; border-radius: 4px; font-weight: 700;"><%= community.disease %></span></p>
-        <p style="margin: 0; color: var(--text-muted);"><%= community.description %></p>
-        <div>
-            <a href="/communities" class="btn-danger-outline" style="display: inline-block; margin-top: 15px; padding: 8px 16px; font-size: 0.85rem; text-decoration: none;">⬅ Back to Support Groups</a>
-        </div>
-    </div>
+        <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;">
+            <a href="/communities" class="btn-outline btn-sm" style="border-radius:999px;margin-bottom:20px;display:inline-flex;gap:6px;align-items:center;" id="back-to-communities">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> All Communities
+            </a>
 
-    <!-- split layout -->
-    <div class="appointment-layout">
-        
-        <!-- left column: posts feed -->
-        <div class="post-feed-section">
-            <!-- create post -->
-            <h2 style="text-align: left; margin-bottom: 15px;">Create Post</h2>
-
-            <form action="/api/posts" method="POST" class="form-card" style="margin-bottom: 30px; text-align: left;">
-                <input type="hidden" name="community" value="<%= community._id %>">
-                <input type="hidden" name="disease" value="<%= community.disease %>">
-
-                <div class="form-group">
-                    <label for="post-title" style="text-align: left;">Post Title</label>
-                    <input type="text" name="title" id="post-title" placeholder="What is on your mind?" required>
+            <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
+                <div style="width:60px;height:60px;border-radius:var(--radius-xl);background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:var(--shadow-blue);" aria-hidden="true">
+                    🏥
                 </div>
-
-                <div class="form-group">
-                    <label for="post-content" style="text-align: left;">Post Content</label>
-                    <textarea name="content" id="post-content" placeholder="Share your experience, query, or advice..." required style="min-height: 100px;"></textarea>
-                </div>
-
-                <button type="submit" class="btn-primary" style="align-self: flex-start; min-width: unset;">Post Message</button>
-            </form>
-
-            <!-- posts discussion feed -->
-            <h2 style="text-align: left; margin-bottom: 15px;">Posts Discussion Feed</h2>
-
-            <div id="posts-container">
-                <% if (!posts || posts.length === 0) { %>
-                    <div class="empty-state">
-                        <span class="empty-icon">💬</span>
-                        <h3>No Posts Yet</h3>
-                        <p>No messages have been posted in this community yet. Be the first to share your experience!</p>
+                <div style="flex:1;">
+                    <h1 style="font-size:1.75rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;color:var(--text);">
+                        <%= community.name %>
+                    </h1>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                        <span class="badge badge-blue">
+                            <i class="fa-solid fa-virus" aria-hidden="true"></i> <%= community.disease %>
+                        </span>
+                        <span class="badge badge-green">
+                            <span class="online-dot" aria-hidden="true"></span> Active Community
+                        </span>
+                        <% if (community.type === 'online') { %>
+                            <span class="badge badge-teal">🌐 Online</span>
+                        <% } else { %>
+                            <span class="badge badge-orange">🏢 In-Person</span>
+                        <% } %>
+                        <% if (community.paymentType === 'free') { %>
+                            <span class="badge badge-green"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Free</span>
+                        <% } else { %>
+                            <span class="badge badge-red">₹<%= community.price %></span>
+                        <% } %>
                     </div>
-                <% } else { %>
-                    <% posts.forEach(post => { %>
-                        <div class="card" data-id="<%= post._id %>" style="margin-bottom: 20px; text-align: left; align-items: stretch; padding: 20px;">
-                            <h3 style="text-align: left; font-size: 1.15rem; margin-bottom: 8px;"><%= post.title %></h3>
-                            <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 12px;"><%= post.content %></p>
-
-                            <div style="display: flex; gap: 15px; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 15px; flex-wrap: wrap;">
-                                <span><b>Author:</b> <%= post.author?.username || 'Anonymous' %></span>
-                                <span><b>Status:</b> 
-                                    <span class="status status-<%= post.status.toLowerCase() %>" style="font-weight: 700;">
-                                        <%= post.status %>
-                                    </span>
-                                </span>
-                                <% if (post.aiReason) { %>
-                                    <span style="font-style: italic;"><b>AI Verdict Note:</b> <%= post.aiReason %></span>
-                                <% } %>
-                            </div>
-
-                            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px;">
-                                <!-- like button -->
-                                <form action="/api/posts/like/<%= post._id %>" method="POST" style="margin:0; width: auto; display: inline-flex;">
-                                    <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 0.82rem; min-width: unset;">
-                                        👍 Like (<span class="like-count"><%= post.likes.length %></span>)
-                                    </button>
-                                </form>
-
-                                <!-- comment form -->
-                                <form action="/api/comments" method="POST" style="margin:0; flex: 1; display: inline-flex; gap: 10px; flex-wrap: nowrap; background: transparent; border: none; box-shadow: none; padding: 0;">
-                                    <input type="hidden" name="postId" value="<%= post._id %>">
-                                    <input type="text" name="content" placeholder="Comment..." required style="padding: 6px 10px; font-size: 0.82rem; flex: 1; min-width: 100px;">
-                                    <button type="submit" class="btn-success" style="padding: 6px 12px; font-size: 0.82rem; min-width: unset; margin: 0;">Send</button>
-                                </form>
-                            </div>
-
-                            <!-- comments -->
-                            <div class="comments" style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line);">
-                                <% if (post.comments && post.comments.length > 0) { %>
-                                    <% post.comments.forEach(c => { %>
-                                        <p style="margin: 4px 0; border-bottom: 1px solid #f8fafc; padding-bottom: 4px; font-size: 0.88rem;">
-                                            <b><%= c.author?.username || 'Anonymous' %>:</b>
-                                            <%= c.content %>
-                                        </p>
-                                    <% }) %>
-                                <% } else { %>
-                                    <p class="no-comments" style="font-style: italic; font-size: 0.82rem; margin: 0; color: var(--text-muted);">No comments yet</p>
-                                <% } %>
-                            </div>
-                        </div>
-                    <% }) %>
-                <% } %>
-            </div>
-        </div>
-
-        <!-- right column: community live chatroom -->
-        <div class="community-chat-section">
-            <h2 style="text-align: left; margin-bottom: 15px;">💬 Live Group Chat</h2>
-            
-            <div class="card" style="padding: 0; align-items: stretch; border-radius: var(--radius-lg); overflow: hidden; height: 600px; display: flex; flex-direction: column;">
-                
-                <!-- chat window -->
-                <div id="comm-messages" style="flex: 1; padding: 16px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 8px;">
-                    <!-- dynamically populated -->
-                </div>
-
-                <!-- chat input form -->
-                <div style="padding: 12px; background: white; border-top: 1px solid var(--line); display: flex; gap: 8px;">
-                    <input 
-                        type="text" 
-                        id="comm-text" 
-                        placeholder="Type a group message..." 
-                        style="flex: 1; font-size: 0.88rem; border-radius: var(--radius); padding: 8px 12px; border: 1px solid #cbd5e1;"
-                        onkeypress="handleCommKeyPress(event)"
-                        autocomplete="off"
-                    />
-                    <button 
-                        id="comm-send-btn" 
-                        class="btn-primary" 
-                        style="padding: 8px 16px; margin: 0; font-size: 0.88rem; min-width: unset;" 
-                        onclick="sendCommMessage()"
-                    >
-                        Send
-                    </button>
+                    <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;max-width:640px;margin:0;">
+                        <%= community.description %>
+                    </p>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- socket real-time -->
-    <script src="/socket.io/socket.io.js"></script>
+    <!-- Main Content: Feed + Chat -->
+    <div class="page-container" style="padding-top:32px;max-width:1300px;">
+        <div style="display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:flex-start;">
 
-    <script>
-        const socket = io();
-        const communityId = "<%= community._id %>";
-        const commRoomId = "community_" + communityId;
-        const currentUserId = "<%= user.id %>";
-
-        const commMessagesContainer = document.getElementById("comm-messages");
-        const commInput = document.getElementById("comm-text");
-        const container = document.getElementById("posts-container");
-
-        // -----------------------------
-        // community chat logic (new)
-        // -----------------------------
-
-        // join community chat room
-        socket.emit("join-room", commRoomId);
-
-        // load community chat history on mount
-        fetch(`/chat/community/${communityId}`)
-            .then(res => res.json())
-            .then(messages => {
-                commMessagesContainer.innerHTML = "";
-                if (messages.length === 0) {
-                    commMessagesContainer.innerHTML = `
-                        <div id="no-comm-msg" style="margin: auto; text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">
-                            <b>Welcome to the Live Room!</b><br>Messages are instant and real-time. Say hi!
+            <!-- Left: Post Feed -->
+            <div>
+                <!-- Post Composer -->
+                <div class="card" style="padding:24px;margin-bottom:20px;border-top:3px solid var(--primary);">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                        <div class="feed-avatar" aria-hidden="true" style="font-size:0.9rem;flex-shrink:0;">
+                            <%= user.username.charAt(0).toUpperCase() %>
                         </div>
-                    `;
-                } else {
-                    messages.forEach(msg => appendCommMessage(msg));
-                }
-                scrollToCommBottom();
-            })
-            .catch(err => console.error("Error loading chat history:", err));
+                        <div>
+                            <div style="font-weight:700;font-size:0.9rem;color:var(--text);"><%= user.username %></div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);">Share with the community</div>
+                        </div>
+                    </div>
 
-        // scroll chat to bottom
-        function scrollToCommBottom() {
-            commMessagesContainer.scrollTop = commMessagesContainer.scrollHeight;
-        }
-
-        // send a community message
-        function sendCommMessage() {
-            const text = commInput.value.trim();
-            if (!text) return;
-
-            socket.emit("send-message", {
-                roomId: commRoomId,
-                content: text,
-                communityId: communityId
-            });
-
-            commInput.value = "";
-            commInput.focus();
-        }
-
-        function handleCommKeyPress(e) {
-            if (e.key === "Enter") {
-                sendCommMessage();
-            }
-        }
-
-        // render received message
-        function appendCommMessage(msg) {
-            const noMsgPrompt = document.getElementById("no-comm-msg");
-            if (noMsgPrompt) noMsgPrompt.remove();
-
-            const isMe = msg.sender._id.toString() === currentUserId.toString();
-            const div = document.createElement("div");
-            div.style.display = "flex";
-            div.style.flexDirection = "column";
-            div.style.alignItems = isMe ? "flex-end" : "flex-start";
-            div.style.marginBottom = "8px";
-
-            const nameSpan = document.createElement("span");
-            nameSpan.style.fontSize = "0.7rem";
-            nameSpan.style.fontWeight = "700";
-            nameSpan.style.color = "var(--text-muted)";
-            nameSpan.style.marginBottom = "2px";
-            nameSpan.innerText = msg.sender.username + (msg.sender.role === 'doctor' ? ' (Doctor 🩺)' : '');
-
-            const bubble = document.createElement("div");
-            bubble.style.padding = "8px 12px";
-            bubble.style.borderRadius = "10px";
-            bubble.style.fontSize = "0.85rem";
-            bubble.style.lineHeight = "1.35";
-            bubble.style.maxWidth = "85%";
-            bubble.style.wordBreak = "break-word";
-            bubble.style.boxShadow = "var(--shadow-soft)";
-
-            if (isMe) {
-                bubble.style.background = "var(--blue)";
-                bubble.style.color = "white";
-                bubble.style.borderTopRightRadius = "2px";
-            } else {
-                bubble.style.background = msg.sender.role === 'doctor' ? '#e0f2fe' : 'white';
-                bubble.style.color = "var(--text)";
-                bubble.style.border = "1px solid var(--line)";
-                bubble.style.borderTopLeftRadius = "2px";
-            }
-            bubble.innerText = msg.content;
-
-            div.appendChild(nameSpan);
-            div.appendChild(bubble);
-            commMessagesContainer.appendChild(div);
-            scrollToCommBottom();
-        }
-
-        // -----------------------------
-        // posts & comments socket logic
-        // -----------------------------
-
-        // listen for new posts
-        socket.on("new-post", (post) => {
-            const emptyState = container.querySelector(".empty-state");
-            if (emptyState) {
-                emptyState.remove();
-            }
-
-            const div = document.createElement("div");
-            div.classList.add("card");
-            div.style.marginBottom = "20px";
-            div.style.textAlign = "left";
-            div.style.alignItems = "stretch";
-            div.style.padding = "20px";
-            div.setAttribute("data-id", post._id);
-
-            div.innerHTML = `
-                <h3 style="text-align: left; font-size: 1.15rem; margin-bottom: 8px;">${post.title}</h3>
-                <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 12px;">${post.content}</p>
-                <div style="display: flex; gap: 15px; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 15px; flex-wrap: wrap;">
-                    <span><b>Author:</b> ${post.author?.username || "User"}</span>
-                    <span><b>Status:</b> <span class="status status-${post.status.toLowerCase()}" style="font-weight: 700;">${post.status}</span></span>
+                    <form action="/api/posts" method="POST" style="gap:12px;">
+                        <input type="hidden" name="community" value="<%= community._id %>">
+                        <input type="hidden" name="disease" value="<%= community.disease %>">
+                        <div class="form-group">
+                            <label for="post-title">Post Title</label>
+                            <input type="text" name="title" id="post-title" placeholder="What's on your mind?" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="post-content">Share Your Experience</label>
+                            <textarea name="content" id="post-content" placeholder="Share a question, experience, or supportive message..." required style="min-height:100px;"></textarea>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                            <button type="submit" class="btn-gradient btn-sm" style="min-width:unset;" id="post-submit-btn">
+                                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Post to Community
+                            </button>
+                            <span style="font-size:0.75rem;color:var(--text-muted);">
+                                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> All posts are moderated for safety
+                            </span>
+                        </div>
+                    </form>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px;">
-                    <form action="/api/posts/like/${post._id}" method="POST" style="margin:0; width: auto; display: inline-flex;">
-                        <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 0.82rem; min-width: unset;">
-                            👍 Like (<span class="like-count">0</span>)
+                <!-- Feed Header -->
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                    <h2 style="text-align:left;font-size:1.15rem;margin:0;color:var(--text);font-weight:700;">
+                        <i class="fa-solid fa-message" style="color:var(--primary);margin-right:6px;" aria-hidden="true"></i>
+                        Community Feed
+                    </h2>
+                    <span style="font-size:0.78rem;color:var(--text-secondary);">
+                        <%= posts ? posts.length : 0 %> post<%= (!posts || posts.length !== 1) ? 's' : '' %>
+                    </span>
+                </div>
+
+                <!-- Posts -->
+                <div id="posts-container" role="feed" aria-label="Community posts">
+                    <% if (!posts || posts.length === 0) { %>
+                        <div class="empty-state">
+                            <span class="empty-icon" aria-hidden="true">💬</span>
+                            <h3>No posts yet</h3>
+                            <p>Be the first to share your experience with this community. Your story might help someone today.</p>
+                        </div>
+                    <% } else { %>
+                        <% posts.forEach(function(post) { %>
+                            <article class="feed-post" data-id="<%= post._id %>" aria-label="Post: <%= post.title %>">
+                                <!-- Post Header -->
+                                <div class="feed-post-header">
+                                    <div class="feed-avatar" aria-hidden="true">
+                                        <%= (post.author?.username || 'A').charAt(0).toUpperCase() %>
+                                    </div>
+                                    <div class="feed-post-meta">
+                                        <div class="feed-author">
+                                            <%= post.author?.username || 'Anonymous' %>
+                                            <% if (post.author?.role === 'doctor') { %>
+                                                <span class="condition-badge" style="background:var(--accent-50);color:var(--accent-dark);border-color:rgba(20,184,166,0.2);">
+                                                    <i class="fa-solid fa-stethoscope" aria-hidden="true"></i> Doctor
+                                                </span>
+                                            <% } %>
+                                            <span class="condition-badge"><%= community.disease %></span>
+                                        </div>
+                                        <div class="feed-time">
+                                            <span class="status-<%= post.status.toLowerCase() %>" style="font-size:0.7rem;font-weight:700;padding:1px 7px;border-radius:999px;">
+                                                <%= post.status %>
+                                            </span>
+                                            <% if (post.aiReason) { %>
+                                                &nbsp;·&nbsp; <em style="color:var(--text-muted);font-size:0.72rem;"><%= post.aiReason %></em>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Post Content -->
+                                <h3 style="text-align:left;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;"><%= post.title %></h3>
+                                <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;margin-bottom:0;"><%= post.content %></p>
+
+                                <!-- Reactions Row -->
+                                <div class="feed-reactions" role="group" aria-label="Post reactions">
+                                    <form action="/api/posts/like/<%= post._id %>" method="POST" style="margin:0;width:auto;background:transparent;border:none;box-shadow:none;padding:0;">
+                                        <button type="submit" class="reaction-btn" aria-label="Like this post, <%= post.likes.length %> likes">
+                                            <span aria-hidden="true">❤️</span> Support
+                                            <span class="like-count" style="font-weight:700;color:var(--primary);">(<%= post.likes.length %>)</span>
+                                        </button>
+                                    </form>
+
+                                    <button class="reaction-btn helpful-btn" onclick="toggleCommentForm('<%= post._id %>')" aria-label="Comment on post" aria-expanded="false" aria-controls="comment-form-<%= post._id %>">
+                                        <i class="fa-solid fa-comment" aria-hidden="true"></i> Reply
+                                    </button>
+
+                                    <button class="reaction-btn" style="cursor:default;" aria-label="Helpful indicator">
+                                        <i class="fa-solid fa-circle-check" aria-hidden="true" style="color:var(--secondary);"></i> Helpful
+                                    </button>
+                                </div>
+
+                                <!-- Comment Form (toggleable) -->
+                                <div id="comment-form-<%= post._id %>" style="display:none;margin-top:12px;">
+                                    <form action="/api/comments" method="POST" style="background:transparent;border:none;box-shadow:none;padding:0;flex-direction:row;gap:8px;align-items:flex-end;">
+                                        <input type="hidden" name="postId" value="<%= post._id %>">
+                                        <input type="text" name="content" placeholder="Write a supportive reply..." required style="flex:1;font-size:0.85rem;border-radius:999px;padding:8px 16px;">
+                                        <button type="submit" class="btn-success btn-sm" style="min-width:unset;flex-shrink:0;" aria-label="Submit comment">
+                                            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Comments -->
+                                <% if (post.comments && post.comments.length > 0) { %>
+                                    <div class="comments" style="margin-top:14px;padding:14px;background:var(--bg-warm);border-radius:var(--radius-lg);display:flex;flex-direction:column;gap:8px;">
+                                        <% post.comments.forEach(function(c) { %>
+                                            <div style="display:flex;gap:10px;align-items:flex-start;">
+                                                <div style="width:28px;height:28px;border-radius:50%;background:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:var(--primary);flex-shrink:0;" aria-hidden="true">
+                                                    <%= (c.author?.username || 'A').charAt(0).toUpperCase() %>
+                                                </div>
+                                                <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:8px 12px;font-size:0.85rem;line-height:1.5;flex:1;">
+                                                    <span style="font-weight:700;color:var(--text);"><%= c.author?.username || 'Anonymous' %>:</span>
+                                                    <span style="color:var(--text-secondary);margin-left:4px;"><%= c.content %></span>
+                                                </div>
+                                            </div>
+                                        <% }); %>
+                                    </div>
+                                <% } else { %>
+                                    <div class="comments" style="margin-top:10px;display:none;"></div>
+                                <% } %>
+                            </article>
+                        <% }); %>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Right: Live Chat -->
+            <div style="position:sticky;top:calc(var(--nav-h) + 16px);">
+                <div class="card" style="padding:0;overflow:hidden;height:580px;display:flex;flex-direction:column;border-top:3px solid var(--accent);">
+                    <!-- Chat Header -->
+                    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+                        <span aria-hidden="true" style="font-size:1.1rem;">💬</span>
+                        <div>
+                            <div style="font-weight:700;font-size:0.9rem;color:var(--text);">Live Group Chat</div>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:4px;">
+                                <span class="online-dot" aria-hidden="true"></span> Real-time messaging
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages -->
+                    <div id="comm-messages" style="flex:1;padding:14px;overflow-y:auto;background:var(--bg-warm);display:flex;flex-direction:column;gap:8px;" role="log" aria-live="polite" aria-label="Live chat messages">
+                    </div>
+
+                    <!-- Input -->
+                    <div style="padding:12px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:8px;">
+                        <input
+                            type="text"
+                            id="comm-text"
+                            placeholder="Say something kind..."
+                            style="flex:1;font-size:0.85rem;border-radius:999px;padding:9px 16px;border:1.5px solid var(--border);"
+                            onkeypress="handleCommKeyPress(event)"
+                            autocomplete="off"
+                            aria-label="Type a message"
+                        >
+                        <button id="comm-send-btn" class="btn-primary btn-sm" style="margin:0;min-width:unset;border-radius:999px;padding:9px 16px;" onclick="sendCommMessage()" aria-label="Send message">
+                            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
                         </button>
-                    </form>
-
-                    <form action="/api/comments" method="POST" style="margin:0; flex: 1; display: inline-flex; gap: 10px; flex-wrap: nowrap; background: transparent; border: none; box-shadow: none; padding: 0;">
-                        <input type="hidden" name="postId" value="${post._id}">
-                        <input type="text" name="content" placeholder="Comment..." required style="padding: 6px 10px; font-size: 0.82rem; flex: 1; min-width: 100px;">
-                        <button type="submit" class="btn-success" style="padding: 6px 12px; font-size: 0.82rem; min-width: unset; margin: 0;">Send</button>
-                    </form>
+                    </div>
                 </div>
 
-                <div class="comments" style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line);">
-                    <p class="no-comments" style="font-style: italic; font-size: 0.82rem; margin: 0; color: var(--text-muted);">No comments yet</p>
+                <!-- Emergency Card (sidebar) -->
+                <div style="margin-top:16px;background:var(--danger-bg);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-xl);padding:16px;" role="complementary">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                        <span aria-hidden="true">🆘</span>
+                        <span style="font-weight:700;font-size:0.85rem;color:var(--danger);">Need Immediate Help?</span>
+                    </div>
+                    <a href="tel:112" class="btn-danger btn-sm btn-block" id="chat-emergency-call" aria-label="Call 112 emergency">
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i> Emergency — Call 112
+                    </a>
                 </div>
-            `;
+            </div>
 
-            container.prepend(div);
-        });
-
-        // listen for message broadcasts in direct rooms
-        socket.on("new-message", (msg) => {
-            // if it is sent to this community room, append it!
-            if (msg.community && msg.community.toString() === communityId.toString()) {
-                appendCommMessage(msg);
-            }
-        });
-
-        // like update
-        socket.on("post-liked", (data) => {
-            const post = document.querySelector(`[data-id="${data.postId}"]`);
-            if (post) {
-                post.querySelector(".like-count").innerText = data.likes;
-            }
-        });
-
-        // unlike update
-        socket.on("post-unliked", (data) => {
-            const post = document.querySelector(`[data-id="${data.postId}"]`);
-            if (post) {
-                post.querySelector(".like-count").innerText = data.likes;
-            }
-        });
-
-        // new comment
-        socket.on("new-comment", (comment) => {
-            const post = document.querySelector(`[data-id="${comment.post}"]`);
-
-            if (post) {
-                const box = post.querySelector(".comments");
-                const noComments = box.querySelector(".no-comments");
-                if (noComments) {
-                    noComments.remove();
-                }
-
-                const p = document.createElement("p");
-                p.style.margin = "4px 0";
-                p.style.borderBottom = "1px solid #f8fafc";
-                p.style.paddingBottom = "4px";
-                p.style.fontSize = "0.88rem";
-                p.innerHTML = `<b>${comment.author.username}:</b> ${comment.content}`;
-
-                box.appendChild(p);
-            }
-        });
-
-        // delete comment
-        socket.on("delete-comment", (data) => {
-            const post = document.querySelector(`[data-id="${data.commentId}"]`);
-            if (post) {
-                post.remove();
-            }
-        });
-
-    </script>
-
+        </div><!-- /grid -->
+    </div><!-- /page-container -->
 </main>
+
+<!-- Socket.IO -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+const communityId  = "<%= community._id %>";
+const commRoomId   = "community_" + communityId;
+const currentUserId = "<%= user.id %>";
+
+const commMessagesContainer = document.getElementById("comm-messages");
+const commInput = document.getElementById("comm-text");
+const postsContainer = document.getElementById("posts-container");
+
+// Join community room
+socket.emit("join-room", commRoomId);
+
+// Load chat history
+fetch(`/chat/community/${communityId}`)
+    .then(function(res) { return res.json(); })
+    .then(function(messages) {
+        commMessagesContainer.innerHTML = "";
+        if (messages.length === 0) {
+            commMessagesContainer.innerHTML = `
+                <div style="margin:auto;text-align:center;color:var(--text-muted);font-size:0.82rem;padding:24px 16px;line-height:1.6;">
+                    <div style="font-size:1.8rem;margin-bottom:8px;">👋</div>
+                    <strong>Welcome to Live Chat!</strong><br>
+                    Messages are instant & real-time. Say hello!
+                </div>`;
+        } else {
+            messages.forEach(function(msg) { appendCommMessage(msg); });
+        }
+        scrollToBottom();
+    })
+    .catch(function(err) { console.error("Chat load error:", err); });
+
+function scrollToBottom() {
+    commMessagesContainer.scrollTop = commMessagesContainer.scrollHeight;
+}
+
+function sendCommMessage() {
+    const text = commInput.value.trim();
+    if (!text) return;
+    socket.emit("send-message", { roomId: commRoomId, content: text, communityId: communityId });
+    commInput.value = "";
+    commInput.focus();
+}
+
+function handleCommKeyPress(e) {
+    if (e.key === "Enter") sendCommMessage();
+}
+
+function appendCommMessage(msg) {
+    const noMsg = commMessagesContainer.querySelector("#no-comm-msg");
+    if (noMsg) noMsg.remove();
+
+    const isMe = msg.sender._id.toString() === currentUserId.toString();
+    const wrap = document.createElement("div");
+    wrap.style.cssText = "display:flex;flex-direction:column;align-items:" + (isMe ? "flex-end" : "flex-start") + ";";
+
+    const label = document.createElement("span");
+    label.style.cssText = "font-size:0.68rem;font-weight:700;color:var(--text-muted);margin-bottom:2px;";
+    label.textContent = msg.sender.username + (msg.sender.role === "doctor" ? " 🩺" : "");
+
+    const bubble = document.createElement("div");
+    bubble.style.cssText = [
+        "padding:8px 14px",
+        "border-radius:16px",
+        "font-size:0.85rem",
+        "line-height:1.4",
+        "max-width:90%",
+        "word-break:break-word",
+        isMe
+            ? "background:var(--primary);color:white;border-top-right-radius:4px"
+            : (msg.sender.role === "doctor"
+                ? "background:var(--accent-50);color:var(--accent-dark);border:1px solid rgba(20,184,166,0.2)"
+                : "background:var(--surface);color:var(--text);border:1px solid var(--border)") + ";border-top-left-radius:4px"
+    ].join(";");
+    bubble.textContent = msg.content;
+
+    wrap.appendChild(label);
+    wrap.appendChild(bubble);
+    commMessagesContainer.appendChild(wrap);
+    scrollToBottom();
+}
+
+// Comment form toggle
+function toggleCommentForm(postId) {
+    const form = document.getElementById("comment-form-" + postId);
+    if (form) {
+        const isHidden = form.style.display === "none" || form.style.display === "";
+        form.style.display = isHidden ? "flex" : "none";
+        if (isHidden) form.querySelector("input[type='text']").focus();
+    }
+}
+
+// Socket events
+socket.on("new-message", function(msg) {
+    if (msg.community && msg.community.toString() === communityId) {
+        appendCommMessage(msg);
+    }
+});
+
+socket.on("new-post", function(post) {
+    const emptyState = postsContainer.querySelector(".empty-state");
+    if (emptyState) emptyState.remove();
+
+    const article = document.createElement("article");
+    article.className = "feed-post";
+    article.setAttribute("data-id", post._id);
+    article.innerHTML = `
+        <div class="feed-post-header">
+            <div class="feed-avatar">${(post.author?.username || "A").charAt(0).toUpperCase()}</div>
+            <div class="feed-post-meta">
+                <div class="feed-author">${post.author?.username || "Anonymous"} <span class="condition-badge">${communityId}</span></div>
+                <div class="feed-time"><span class="status-${post.status.toLowerCase()}" style="font-size:0.7rem;font-weight:700;padding:1px 7px;border-radius:999px;">${post.status}</span></div>
+            </div>
+        </div>
+        <h3 style="text-align:left;font-size:1rem;font-weight:700;margin-bottom:6px;">${post.title}</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;">${post.content}</p>
+        <div class="feed-reactions">
+            <form action="/api/posts/like/${post._id}" method="POST" style="margin:0;width:auto;background:transparent;border:none;box-shadow:none;padding:0;">
+                <button type="submit" class="reaction-btn">❤️ Support <span class="like-count" style="font-weight:700;color:var(--primary);">(0)</span></button>
+            </form>
+            <button class="reaction-btn helpful-btn" onclick="toggleCommentForm('${post._id}')">💬 Reply</button>
+        </div>
+        <div id="comment-form-${post._id}" style="display:none;margin-top:12px;">
+            <form action="/api/comments" method="POST" style="background:transparent;border:none;box-shadow:none;padding:0;flex-direction:row;gap:8px;align-items:flex-end;">
+                <input type="hidden" name="postId" value="${post._id}">
+                <input type="text" name="content" placeholder="Write a supportive reply..." required style="flex:1;font-size:0.85rem;border-radius:999px;padding:8px 16px;">
+                <button type="submit" class="btn-success btn-sm" style="min-width:unset;flex-shrink:0;">Send</button>
+            </form>
+        </div>
+        <div class="comments" style="margin-top:10px;"></div>
+    `;
+    postsContainer.prepend(article);
+});
+
+socket.on("post-liked", function(data) {
+    const el = document.querySelector(`[data-id="${data.postId}"] .like-count`);
+    if (el) el.textContent = "(" + data.likes + ")";
+});
+
+socket.on("post-unliked", function(data) {
+    const el = document.querySelector(`[data-id="${data.postId}"] .like-count`);
+    if (el) el.textContent = "(" + data.likes + ")";
+});
+
+socket.on("new-comment", function(comment) {
+    const post = document.querySelector(`[data-id="${comment.post}"]`);
+    if (post) {
+        const box = post.querySelector(".comments");
+        if (!box) return;
+        box.style.display = "flex";
+        box.style.flexDirection = "column";
+        box.style.gap = "8px";
+        box.style.marginTop = "14px";
+        box.style.padding = "14px";
+        box.style.background = "var(--bg-warm)";
+        box.style.borderRadius = "var(--radius-lg)";
+        const noComments = box.querySelector(".no-comments");
+        if (noComments) noComments.remove();
+        const p = document.createElement("div");
+        p.style.cssText = "display:flex;gap:10px;align-items:flex-start;";
+        p.innerHTML = `
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:var(--primary);flex-shrink:0;">
+                ${comment.author.username.charAt(0).toUpperCase()}
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:8px 12px;font-size:0.85rem;line-height:1.5;flex:1;">
+                <span style="font-weight:700;">${comment.author.username}:</span>
+                <span style="color:var(--text-secondary);margin-left:4px;">${comment.content}</span>
+            </div>`;
+        box.appendChild(p);
+    }
+});
+
+// Mobile: responsive chat column
+if (window.innerWidth < 768) {
+    const chatCol = document.querySelector('[style*="position:sticky"]');
+    if (chatCol) {
+        chatCol.style.position = "static";
+        chatCol.style.gridColumn = "1 / -1";
+    }
+}
+</script>
 
 <%- include('../includes/footer') %>

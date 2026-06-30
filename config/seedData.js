@@ -3,8 +3,9 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Medicine = require("../models/Medicine");
 
+
 const doctors = [
-    // ORTHOPEDICS
+    // orthopedics
     {
         username: "Samuel Lenald",
         email: "samuel@kadapadoctors.com",
@@ -49,7 +50,8 @@ const doctors = [
         city: "Kadapa",
         bio: "Highly skilled surgeon treating routine and complex orthopedic cases."
     },
-    // CARDIOLOGY
+
+    // cardiology
     {
         username: "Sravan Kumar Nandaluru",
         email: "sravan@kadapadoctors.com",
@@ -72,7 +74,8 @@ const doctors = [
         city: "Kadapa",
         bio: "Experienced Cardiologist specializing in cardiac critical care."
     },
-    // PEDIATRICS
+
+    // pediatrics
     {
         username: "Sreekanth Surasura",
         email: "sreekanth@kadapadoctors.com",
@@ -95,7 +98,8 @@ const doctors = [
         city: "Kadapa",
         bio: "Pediatric critical care expert serving Kadapa and surrounding areas."
     },
-    // DERMATOLOGY
+
+    // dermatology
     {
         username: "Y. K. Reddy",
         email: "ykreddy@kadapadoctors.com",
@@ -118,7 +122,8 @@ const doctors = [
         city: "Kadapa",
         bio: "Consultant Dermatologist focusing on pediatric dermatology and allergy management."
     },
-    // NEUROLOGY
+
+    // neurology
     {
         username: "Kranthi Kumar Sunnepaneni",
         email: "kranthi@kadapadoctors.com",
@@ -152,7 +157,8 @@ const doctors = [
         city: "Kadapa",
         bio: "Experienced Neuro-physician specializing in epilepsy, headache, and neuropathy."
     },
-    // GYNECOLOGY
+
+    // gynecology
     {
         username: "Vijaya K.",
         email: "vijaya@kadapadoctors.com",
@@ -175,7 +181,8 @@ const doctors = [
         city: "Kadapa",
         bio: "Specialist in laparoscopic surgeries and fertility treatment."
     },
-    // DENTISTRY
+
+    // dentistry
     {
         username: "D. V. K. Kumar",
         email: "dvk@kadapadoctors.com",
@@ -282,9 +289,11 @@ const medicines = [
     }
 ];
 
+
+// seed default doctors and medicines
 const seedData = async () => {
     try {
-        // Seed Doctors if none exist
+        // seed doctors
         const doctorCount = await User.countDocuments({ role: "doctor" });
         if (doctorCount === 0) {
             console.log("Seeding default doctors...");
@@ -300,7 +309,7 @@ const seedData = async () => {
             console.log("Database already has doctors, skipping doctor seeding.");
         }
 
-        // Seed Medicines if none exist
+        // seed medicines
         const medicineCount = await Medicine.countDocuments();
         if (medicineCount === 0) {
             console.log("Seeding default medicines...");

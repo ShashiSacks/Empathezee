@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Community = require("../models/Community");
 
+
 // get profile
 const getProfile = async (req, res) => {
     try {
@@ -14,6 +15,7 @@ const getProfile = async (req, res) => {
         });
     }
 };
+
 
 // update profile
 const updateProfile = async (req, res, next) => {
@@ -72,13 +74,13 @@ const updateProfile = async (req, res, next) => {
             req.session.user.email = updatedUser.email;
         }
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/profile");
         }
         res.status(200).json(updatedUser);
 
     } catch (error) {
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             // let the global error handler render the ejs error view
             return next(error);
         }
@@ -87,6 +89,7 @@ const updateProfile = async (req, res, next) => {
         });
     }
 };
+
 
 // get user communities
 const getUserCommunities = async (req, res) => {

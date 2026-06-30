@@ -1,7 +1,7 @@
-// unused local database catalog search and creation functions have been removed.
-
-// book medicine order (create)
 const MedicineOrder = require("../models/MedicineOrder");
+
+
+// book medicine order
 const orderMedicine = async (req, res) => {
     try {
         const { medicineName, quantity, address, paymentMethod } = req.body;
@@ -11,7 +11,7 @@ const orderMedicine = async (req, res) => {
         }
 
         const qty = parseInt(quantity, 10);
-        const totalAmount = qty * 150; // flat rate ₹150
+        const totalAmount = qty * 150;
 
         const order = await MedicineOrder.create({
             patient: req.user._id,
@@ -31,7 +31,7 @@ const orderMedicine = async (req, res) => {
             const stripe = require("stripe")(stripeSecret);
             
             const paymentIntent = await stripe.paymentIntents.create({
-                amount: totalAmount * 100, // cents
+                amount: totalAmount * 100,
                 currency: "inr",
                 metadata: {
                     orderId: order._id.toString(),
@@ -63,6 +63,7 @@ const orderMedicine = async (req, res) => {
         res.status(500).json({ message: "Server error booking medicine order" });
     }
 };
+
 
 // confirm payment status
 const confirmPayment = async (req, res) => {

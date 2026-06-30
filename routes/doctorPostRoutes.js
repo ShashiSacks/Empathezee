@@ -9,23 +9,10 @@ const {
 const { protectDoctor } = require("../middleware/sessionMiddleware");
 
 // get pending posts
-router.get(
-    "/pending",
-    protectDoctor,
-    getPendingPosts
-);
+router.get("/pending", protectDoctor, getPendingPosts);
 
-// review post
-router.put(
-    "/review/:id",
-    protectDoctor,
-    reviewPost
-);
-
-router.post(
-    "/review/:id",
-    protectDoctor,
-    reviewPost
-);
+// review post (supports PUT for API and POST for HTML forms)
+router.put("/review/:id", protectDoctor, reviewPost);
+router.post("/review/:id", protectDoctor, reviewPost);
 
 module.exports = router;

@@ -1,10 +1,9 @@
-// doctorSearchController.js handles rendering of doctorSearch.ejs and querying OpenStreetMap Nominatim API for local specialist doctors.
-
+// query osm local specialist doctors
 const searchDoctors = async (req, res) => {
     try {
         const { symptom, city } = req.query;
 
-        // If symptom and city are provided, perform OSM search and return JSON results
+        // perform osm search if query details provided
         if (symptom && city) {
             const symptomToSpecialty = {
                 cold: "General Physician / ENT",
@@ -64,7 +63,7 @@ const searchDoctors = async (req, res) => {
             return res.json({ doctors, specialization });
         }
 
-        // If no search parameters, render page
+        // render default search view
         return res.render("doctors/search");
 
     } catch (err) {

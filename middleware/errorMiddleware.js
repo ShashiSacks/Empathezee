@@ -1,3 +1,4 @@
+// not found handler
 const notFound = (req, res, next) => {
     if (req.accepts("html")) {
         return res.status(404).render("errors/404");
@@ -7,6 +8,8 @@ const notFound = (req, res, next) => {
     next(error);
 };
 
+
+// global error handler
 const errorHandler = (err, req, res, next) => {
     console.error("Error occurred:", err);
 

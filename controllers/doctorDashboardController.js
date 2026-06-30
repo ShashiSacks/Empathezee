@@ -1,5 +1,6 @@
 const Appointment = require("../models/Appointment");
 
+
 // get all appointments for logged-in doctor
 const getDoctorAppointments = async (req, res) => {
     try {
@@ -17,6 +18,7 @@ const getDoctorAppointments = async (req, res) => {
     }
 };
 
+
 // accept appointment
 const acceptAppointment = async (req, res) => {
     try {
@@ -29,7 +31,7 @@ const acceptAppointment = async (req, res) => {
         appointment.status = "CONFIRMED";
         await appointment.save();
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/doctor/dashboard");
         }
 
@@ -43,6 +45,7 @@ const acceptAppointment = async (req, res) => {
     }
 };
 
+
 // reject appointment
 const rejectAppointment = async (req, res) => {
     try {
@@ -55,7 +58,7 @@ const rejectAppointment = async (req, res) => {
         appointment.status = "CANCELLED";
         await appointment.save();
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/doctor/dashboard");
         }
 
@@ -74,4 +77,3 @@ module.exports = {
     acceptAppointment,
     rejectAppointment
 };
-

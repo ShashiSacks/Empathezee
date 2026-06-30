@@ -1,0 +1,450 @@
+<%- include('../includes/header', { title: 'Mental Wellness' }) %>
+<%- include('../includes/navbar') %>
+
+<main>
+    <!-- Hero Banner -->
+    <div style="
+        background: linear-gradient(145deg, #F5F3FF 0%, #FFF7ED 50%, #F0FDFA 100%);
+        padding: 64px 24px 52px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+    ">
+        <div aria-hidden="true" style="position:absolute;top:-30px;right:-30px;width:220px;height:220px;background:radial-gradient(circle,rgba(139,92,246,0.07),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+        <div aria-hidden="true" style="position:absolute;bottom:-40px;left:-20px;width:200px;height:200px;background:radial-gradient(circle,rgba(20,184,166,0.07),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+
+        <div style="position:relative;z-index:2;max-width:640px;margin:0 auto;">
+            <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.18);border-radius:999px;font-size:0.78rem;font-weight:600;color:#7C3AED;margin-bottom:20px;">
+                <i class="fa-solid fa-seedling" aria-hidden="true"></i> Mental Wellness Centre
+            </div>
+            <h1 class="title" style="font-size:clamp(1.75rem,4vw,2.75rem);margin-bottom:12px;">
+                Your <span style="background:linear-gradient(135deg,#8B5CF6,#14B8A6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Mind Matters</span>
+            </h1>
+            <p style="color:var(--text-secondary);font-size:0.95rem;line-height:1.7;margin-bottom:0;">
+                Living with a chronic illness is hard — but you don't have to do it alone. Take a moment to breathe, reflect, and find calm.
+            </p>
+        </div>
+    </div>
+
+    <div class="page-container" style="padding-top: 48px;">
+
+        <!-- Daily Affirmation Card -->
+        <div style="
+            background: linear-gradient(135deg, #7C3AED 0%, #2563EB 100%);
+            border-radius: var(--radius-2xl);
+            padding: 40px 36px;
+            text-align: center;
+            color: white;
+            margin-bottom: 48px;
+            position: relative;
+            overflow: hidden;
+        " role="complementary" aria-label="Daily affirmation">
+            <div aria-hidden="true" style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;background:rgba(255,255,255,0.05);border-radius:50%;"></div>
+            <div aria-hidden="true" style="position:absolute;bottom:-20px;left:-20px;width:120px;height:120px;background:rgba(255,255,255,0.04);border-radius:50%;"></div>
+            <div style="position:relative;z-index:2;">
+                <div style="font-size:2rem;margin-bottom:16px;" aria-hidden="true">💫</div>
+                <p style="font-size:0.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;opacity:0.7;margin-bottom:12px;">Today's Affirmation</p>
+                <blockquote id="affirmation-text" style="font-size:clamp(1.1rem,2.5vw,1.4rem);font-weight:700;line-height:1.5;letter-spacing:-0.02em;font-style:italic;margin:0 0 20px;">"I am stronger than my illness. Every day I choose to keep going is a victory."</blockquote>
+                <button onclick="newAffirmation()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;border-radius:999px;padding:9px 20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;" id="affirmation-refresh-btn" aria-label="Get new affirmation">
+                    <i class="fa-solid fa-rotate" aria-hidden="true"></i> New Affirmation
+                </button>
+            </div>
+        </div>
+
+        <!-- Section Label -->
+        <div style="text-align:center;margin-bottom:32px;">
+            <h2 style="font-size:1.5rem;font-weight:800;letter-spacing:-0.025em;color:var(--text);margin-bottom:6px;">Wellness Tools</h2>
+            <p style="color:var(--text-secondary);font-size:0.9rem;">Simple practices to help you feel calmer and more grounded</p>
+        </div>
+
+        <!-- Wellness Tools Grid -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:56px;">
+
+            <!-- Breathing Exercise -->
+            <div class="wellness-card" style="border-top:3px solid #8B5CF6;" role="region" aria-label="Breathing exercise">
+                <div class="wellness-icon" style="background:#F5F3FF;" aria-hidden="true">🫁</div>
+                <h3 style="font-weight:700;font-size:1.05rem;margin-bottom:6px;color:var(--text);">Box Breathing</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin-bottom:20px;">A proven technique to reduce anxiety and calm your nervous system in just 2 minutes.</p>
+
+                <!-- Breathing Circle -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+                    <div id="breathing-circle" style="
+                        width: 100px; height: 100px;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, #8B5CF6, #2563EB);
+                        display: flex; align-items: center; justify-content: center;
+                        color: white; font-size: 0.8rem; font-weight: 700;
+                        transition: transform 4s ease, opacity 4s ease;
+                        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.3);
+                        cursor: pointer;
+                    " id="breath-circle" aria-live="polite">
+                        Press Start
+                    </div>
+                    <div style="display:flex;gap:10px;">
+                        <button onclick="startBreathing()" class="btn-sm" style="border-radius:999px;background:#8B5CF6;color:white;border:none;cursor:pointer;padding:8px 18px;font-size:0.82rem;" id="breath-start-btn" aria-label="Start breathing exercise">
+                            <i class="fa-solid fa-play" aria-hidden="true"></i> Start
+                        </button>
+                        <button onclick="stopBreathing()" class="btn-sm btn-outline" style="border-radius:999px;font-size:0.82rem;" id="breath-stop-btn" aria-label="Stop breathing exercise">
+                            <i class="fa-solid fa-stop" aria-hidden="true"></i> Stop
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meditation Timer -->
+            <div class="wellness-card" style="border-top:3px solid var(--accent);" role="region" aria-label="Meditation timer">
+                <div class="wellness-icon" style="background:var(--accent-50);" aria-hidden="true">🧘</div>
+                <h3 style="font-weight:700;font-size:1.05rem;margin-bottom:6px;color:var(--text);">Meditation Timer</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin-bottom:20px;">Set a quiet timer for meditation, journaling, or mindful rest. No pressure, just peace.</p>
+
+                <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+                    <div style="font-size:2.5rem;font-weight:800;letter-spacing:-0.04em;color:var(--accent-dark);font-variant-numeric:tabular-nums;" id="meditation-timer" aria-live="polite" aria-label="Meditation timer">05:00</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+                        <button onclick="setTimer(5)" class="filter-pill" id="timer-5" aria-label="Set 5 minute timer">5 min</button>
+                        <button onclick="setTimer(10)" class="filter-pill" id="timer-10" aria-label="Set 10 minute timer">10 min</button>
+                        <button onclick="setTimer(15)" class="filter-pill" id="timer-15" aria-label="Set 15 minute timer">15 min</button>
+                        <button onclick="setTimer(20)" class="filter-pill" id="timer-20" aria-label="Set 20 minute timer">20 min</button>
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <button onclick="startTimer()" class="btn-sm btn-teal" style="border-radius:999px;" id="timer-start-btn" aria-label="Start meditation timer">
+                            <i class="fa-solid fa-play" aria-hidden="true"></i> Start
+                        </button>
+                        <button onclick="resetTimer()" class="btn-sm btn-outline" style="border-radius:999px;" id="timer-reset-btn" aria-label="Reset timer">
+                            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sleep Help -->
+            <div class="wellness-card" style="border-top:3px solid #0EA5E9;" role="region" aria-label="Sleep tips">
+                <div class="wellness-icon" style="background:#F0F9FF;" aria-hidden="true">😴</div>
+                <h3 style="font-weight:700;font-size:1.05rem;margin-bottom:6px;color:var(--text);">Better Sleep Guide</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin-bottom:16px;">Chronic illness often disrupts sleep. These science-backed tips can help you rest better.</p>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <% [
+                        { icon: '🌡️', tip: 'Keep your room cool (16–19°C is ideal)' },
+                        { icon: '📵', tip: 'Avoid screens 30 min before bed' },
+                        { icon: '🛁', tip: 'Warm bath 1 hour before helps melatonin' },
+                        { icon: '📔', tip: 'Write 3 gratitudes in a journal before sleep' },
+                        { icon: '🎵', tip: 'Try white noise or nature sounds' }
+                    ].forEach(function(item) { %>
+                        <div style="display:flex;align-items:flex-start;gap:10px;">
+                            <span style="width:28px;height:28px;background:#F0F9FF;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;" aria-hidden="true"><%= item.icon %></span>
+                            <span style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;"><%= item.tip %></span>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- Stress Management -->
+            <div class="wellness-card" style="border-top:3px solid var(--secondary);" role="region" aria-label="Stress management">
+                <div class="wellness-icon" style="background:var(--secondary-50);" aria-hidden="true">🌿</div>
+                <h3 style="font-weight:700;font-size:1.05rem;margin-bottom:6px;color:var(--text);">Stress Management</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin-bottom:16px;">Managing stress is critical for chronic illness. Try these evidence-based techniques.</p>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <% [
+                        { icon: '🚶', tip: '10-minute walk in nature lowers cortisol' },
+                        { icon: '✍️', tip: 'Expressive writing reduces anxiety' },
+                        { icon: '🤝', tip: 'Talking to your community helps healing' },
+                        { icon: '🎨', tip: 'Creative hobbies are natural stress-busters' },
+                        { icon: '🌞', tip: 'Morning sunlight regulates your stress hormones' }
+                    ].forEach(function(item) { %>
+                        <div style="display:flex;align-items:flex-start;gap:10px;">
+                            <span style="width:28px;height:28px;background:var(--secondary-50);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;" aria-hidden="true"><%= item.icon %></span>
+                            <span style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;"><%= item.tip %></span>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- Mood Tracker -->
+            <div class="wellness-card" style="border-top:3px solid var(--warning);" role="region" aria-label="Mood check-in">
+                <div class="wellness-icon" style="background:var(--warning-bg);" aria-hidden="true">🎯</div>
+                <h3 style="font-weight:700;font-size:1.05rem;margin-bottom:6px;color:var(--text);">Mood Check-In</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin-bottom:16px;">How are you feeling right now? Recognizing your emotions is the first step to wellness.</p>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;" role="group" aria-label="Select your mood">
+                    <% [
+                        { emoji: '😊', label: 'Good', color: '#16A34A' },
+                        { emoji: '😐', label: 'Okay', color: '#D97706' },
+                        { emoji: '😔', label: 'Low', color: '#2563EB' },
+                        { emoji: '😣', label: 'Struggling', color: '#DC2626' },
+                        { emoji: '🙏', label: 'Grateful', color: '#7C3AED' },
+                        { emoji: '😴', label: 'Tired', color: '#64748B' }
+                    ].forEach(function(m) { %>
+                        <button
+                            onclick="selectMood(this, '<%= m.label %>')"
+                            class="mood-btn"
+                            aria-label="I feel <%= m.label %>"
+                            style="
+                                display:flex;flex-direction:column;align-items:center;gap:4px;
+                                padding:10px 14px;border-radius:var(--radius-lg);
+                                background:var(--bg-warm);border:1.5px solid var(--border);
+                                cursor:pointer;font-size:0.78rem;font-weight:600;
+                                color:var(--text-secondary);transition:all 0.2s;
+                            "
+                        >
+                            <span style="font-size:1.5rem;" aria-hidden="true"><%= m.emoji %></span>
+                            <%= m.label %>
+                        </button>
+                    <% }); %>
+                </div>
+                <p id="mood-response" style="margin-top:14px;font-size:0.85rem;color:var(--text-secondary);text-align:center;min-height:20px;" aria-live="polite"></p>
+            </div>
+
+            <!-- Community Support -->
+            <div class="wellness-card" style="border-top:3px solid var(--primary);" role="region" aria-label="Community support">
+                <div class="wellness-icon" style="background:var(--primary-50);" aria-hidden="true">💙</div>
+                <h3 style="font-weight:700;font-size:1.05rem;margin-bottom:6px;color:var(--text);">You're Not Alone</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin-bottom:20px;">Connecting with others who truly understand your journey is one of the most powerful forms of healing.</p>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <a href="/communities" class="btn-primary btn-sm btn-block" id="wellness-find-community" style="text-align:center;">
+                        <i class="fa-solid fa-people-group" aria-hidden="true"></i> Find a Support Community
+                    </a>
+                    <a href="/doctor/search" class="btn-outline btn-sm btn-block" id="wellness-find-doctor" style="border-radius:999px;text-align:center;">
+                        <i class="fa-solid fa-user-doctor" aria-hidden="true"></i> Talk to a Doctor
+                    </a>
+                </div>
+                <!-- Emergency -->
+                <div style="margin-top:16px;padding:12px 14px;background:var(--danger-bg);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-lg);display:flex;align-items:center;gap:10px;">
+                    <i class="fa-solid fa-phone" style="color:var(--danger);flex-shrink:0;" aria-hidden="true"></i>
+                    <div>
+                        <div style="font-weight:700;font-size:0.82rem;color:var(--danger);">Mental Health Helpline</div>
+                        <a href="tel:1800111565" style="font-size:0.78rem;color:var(--danger);font-weight:600;" id="wellness-helpline-call">1800-111-565 (Free, 24/7)</a>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /wellness grid -->
+
+        <!-- Inspirational Stories -->
+        <div style="margin-bottom: 48px;">
+            <div style="text-align:center;margin-bottom:32px;">
+                <h2 style="font-size:1.5rem;font-weight:800;letter-spacing:-0.025em;color:var(--text);margin-bottom:6px;">Stories of Hope</h2>
+                <p style="color:var(--text-secondary);font-size:0.9rem;">Real journeys from our community — because healing is possible</p>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+                <% [
+                    {
+                        name: 'Priya S.',
+                        condition: 'Type 2 Diabetes',
+                        avatar: '🌸',
+                        quote: "Joining the Empathezee community changed everything. I finally found people who understand the daily challenges of managing diabetes. I feel less alone.",
+                        months: '8 months member'
+                    },
+                    {
+                        name: 'Rajan M.',
+                        condition: 'Heart Disease',
+                        avatar: '🦁',
+                        quote: "After my cardiac event, I was terrified and isolated. The community here helped me find doctors, understand my condition, and most importantly — hope.",
+                        months: '14 months member'
+                    },
+                    {
+                        name: 'Ananya K.',
+                        condition: 'PCOS',
+                        avatar: '✨',
+                        quote: "The wellness resources and community support on Empathezee helped me understand my body better and find balance I didn't know was possible.",
+                        months: '5 months member'
+                    }
+                ].forEach(function(story) { %>
+                    <div class="testimonial-card">
+                        <div class="testimonial-avatar" aria-hidden="true" style="font-size:1.5rem;"><%= story.avatar %></div>
+                        <p class="testimonial-quote">"<%= story.quote %>"</p>
+                        <div class="testimonial-name"><%= story.name %></div>
+                        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;">
+                            <span class="testimonial-condition"><%= story.condition %></span>
+                            <span style="color:var(--text-muted);font-size:0.72rem;">·</span>
+                            <span class="testimonial-condition"><%= story.months %></span>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+
+        <!-- Emergency Support -->
+        <div class="emergency-card" role="complementary" aria-label="Emergency mental health support" style="margin-bottom:20px;">
+            <div class="emergency-icon" aria-hidden="true">🆘</div>
+            <div style="flex:1;">
+                <h3 style="text-align:left;color:var(--danger);font-size:1rem;margin-bottom:4px;font-weight:700;">
+                    In Crisis? You're Not Alone.
+                </h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:0;line-height:1.6;">
+                    If you're experiencing a mental health crisis, reach out immediately. Help is available 24/7.
+                </p>
+                <div class="emergency-actions">
+                    <a href="tel:1800111565" class="btn-danger btn-sm" id="emergency-mh-helpline" aria-label="Call mental health helpline">
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i> iCall: 1800-111-565
+                    </a>
+                    <a href="tel:112" class="btn-outline btn-sm" style="border-radius:999px;border-color:var(--danger);color:var(--danger);" id="emergency-112" aria-label="Emergency 112">
+                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Emergency 112
+                    </a>
+                    <a href="tel:9152987821" class="btn-outline btn-sm" style="border-radius:999px;" id="emergency-vandrevala" aria-label="Vandrevala foundation helpline">
+                        <i class="fa-solid fa-brain" aria-hidden="true"></i> Vandrevala: 9152987821
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /page-container -->
+</main>
+
+<script>
+// ─── Daily Affirmations ───
+const affirmations = [
+    "I am stronger than my illness. Every day I choose to keep going is a victory.",
+    "My worth is not defined by my diagnosis. I am so much more than my condition.",
+    "Healing is not linear. It's okay to have difficult days — they do not erase my progress.",
+    "I deserve rest, care, and compassion — especially from myself.",
+    "I am allowed to ask for help. Reaching out is a sign of courage, not weakness.",
+    "My body is doing its best. I honor it with kindness and patience.",
+    "Every small step matters. Progress isn't always visible, but it's always happening.",
+    "I am not fighting alone. My community stands with me.",
+    "This moment of difficulty will pass. I have survived every hard day before today.",
+    "I choose hope. Not because it's easy, but because I deserve it.",
+    "My illness is a part of my story, not the whole story.",
+    "Gratitude and pain can coexist. I can acknowledge the struggle and still find light."
+];
+
+let affirmationIdx = 0;
+function newAffirmation() {
+    affirmationIdx = (affirmationIdx + 1) % affirmations.length;
+    const el = document.getElementById("affirmation-text");
+    if (el) {
+        el.style.opacity = "0";
+        setTimeout(function() {
+            el.textContent = '"' + affirmations[affirmationIdx] + '"';
+            el.style.opacity = "1";
+        }, 200);
+    }
+}
+document.querySelector("#affirmation-text") && (document.querySelector("#affirmation-text").style.transition = "opacity 0.2s");
+
+// ─── Box Breathing ───
+let breathInterval = null;
+const phases = [
+    { label: "Breathe In", duration: 4000 },
+    { label: "Hold",       duration: 4000 },
+    { label: "Breathe Out",duration: 4000 },
+    { label: "Hold",       duration: 4000 }
+];
+let phaseIdx = 0;
+
+function startBreathing() {
+    if (breathInterval) return;
+    runBreathPhase();
+    breathInterval = setInterval(runBreathPhase, 4000);
+}
+
+function runBreathPhase() {
+    const circle = document.getElementById("breath-circle");
+    if (!circle) return;
+    const phase = phases[phaseIdx % phases.length];
+    circle.textContent = phase.label;
+
+    if (phase.label === "Breathe In") {
+        circle.style.transform = "scale(1.5)";
+        circle.style.boxShadow = "0 0 0 16px rgba(139,92,246,0.15)";
+    } else if (phase.label === "Breathe Out") {
+        circle.style.transform = "scale(1)";
+        circle.style.boxShadow = "0 0 0 0 rgba(139,92,246,0)";
+    } else {
+        circle.style.transform = circle.style.transform; // hold current
+    }
+    phaseIdx++;
+}
+
+function stopBreathing() {
+    if (breathInterval) { clearInterval(breathInterval); breathInterval = null; }
+    const circle = document.getElementById("breath-circle");
+    if (circle) {
+        circle.textContent = "Press Start";
+        circle.style.transform = "scale(1)";
+        circle.style.boxShadow = "none";
+    }
+    phaseIdx = 0;
+}
+
+// ─── Meditation Timer ───
+let timerInterval = null;
+let timerSeconds  = 5 * 60;
+let timerRunning  = false;
+let selectedMinutes = 5;
+
+function setTimer(minutes) {
+    resetTimer();
+    selectedMinutes = minutes;
+    timerSeconds = minutes * 60;
+    updateTimerDisplay();
+    document.querySelectorAll(".filter-pill[id^='timer-']").forEach(function(p) { p.classList.remove("active"); });
+    const btn = document.getElementById("timer-" + minutes);
+    if (btn) btn.classList.add("active");
+}
+
+function startTimer() {
+    if (timerRunning) return;
+    timerRunning = true;
+    const startBtn = document.getElementById("timer-start-btn");
+    if (startBtn) startBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+    timerInterval = setInterval(function() {
+        if (timerSeconds <= 0) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            document.getElementById("meditation-timer").textContent = "Done! 🎉";
+            if (startBtn) startBtn.innerHTML = '<i class="fa-solid fa-play"></i> Start';
+            return;
+        }
+        timerSeconds--;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function resetTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    timerRunning = false;
+    timerSeconds = selectedMinutes * 60;
+    updateTimerDisplay();
+    const startBtn = document.getElementById("timer-start-btn");
+    if (startBtn) startBtn.innerHTML = '<i class="fa-solid fa-play"></i> Start';
+}
+
+function updateTimerDisplay() {
+    const m = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
+    const s = (timerSeconds % 60).toString().padStart(2, "0");
+    const el = document.getElementById("meditation-timer");
+    if (el) el.textContent = m + ":" + s;
+}
+
+// ─── Mood Check-In ───
+const moodResponses = {
+    "Good":       "That's wonderful! 🌟 Keep nurturing what's working for you today.",
+    "Okay":       "That's completely valid. 💙 Take things one step at a time.",
+    "Low":        "It's okay to not be okay. 🤍 Consider taking a breathing break or reaching out to someone.",
+    "Struggling": "We hear you. 💜 Please consider calling the helpline below — you deserve support.",
+    "Grateful":   "Gratitude is powerful medicine. 🌸 Hold onto that feeling.",
+    "Tired":      "Rest is healing. 😴 Be gentle with yourself today — you're doing enough."
+};
+
+function selectMood(btn, label) {
+    document.querySelectorAll(".mood-btn").forEach(function(b) {
+        b.style.background = "var(--bg-warm)";
+        b.style.borderColor = "var(--border)";
+        b.style.color = "var(--text-secondary)";
+        b.style.transform = "scale(1)";
+    });
+    btn.style.background = "var(--primary-50)";
+    btn.style.borderColor = "var(--primary)";
+    btn.style.color = "var(--primary)";
+    btn.style.transform = "scale(1.06)";
+
+    const resp = document.getElementById("mood-response");
+    if (resp) resp.textContent = moodResponses[label] || "Thank you for checking in. 💙";
+}
+
+// Initialize timer display
+document.getElementById("timer-5") && document.getElementById("timer-5").classList.add("active");
+updateTimerDisplay();
+</script>
+
+<%- include('../includes/footer') %>

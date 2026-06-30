@@ -18,6 +18,8 @@ const sessionMiddleware = session({
     }
 });
 
+
+// protect any authenticated user
 const protect = (req, res, next) => {
     try {
         if (!req.session || !req.session.user) {
@@ -37,6 +39,8 @@ const protect = (req, res, next) => {
     }
 };
 
+
+// protect regular users (redirects doctors)
 const protectUser = (req, res, next) => {
     try {
         if (!req.session || !req.session.user) {
@@ -64,6 +68,8 @@ const protectUser = (req, res, next) => {
     }
 };
 
+
+// authorize specific roles
 const authorizeRoles = (...roles) => {
     return (req, res, next) => {
         if (!req.session || !req.session.user) {
@@ -82,6 +88,8 @@ const authorizeRoles = (...roles) => {
     };
 };
 
+
+// protect doctor role routes
 const protectDoctor = (req, res, next) => {
     if (!req.session || !req.session.user) {
         return res.redirect("/doctor/login");

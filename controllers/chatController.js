@@ -2,6 +2,7 @@ const Appointment = require("../models/Appointment");
 const Message = require("../models/Message");
 const User = require("../models/User");
 
+
 // render private direct telehealth chat page
 const renderAppointmentChat = async (req, res) => {
     try {
@@ -16,7 +17,7 @@ const renderAppointmentChat = async (req, res) => {
 
         const currentUserId = req.user.id || req.user._id;
 
-        // check permission (only doctor or patient of this appointment)
+        // check permission
         const isPatient = appointment.patient._id.toString() === currentUserId.toString();
         const isDoctor = appointment.doctor._id.toString() === currentUserId.toString();
 
@@ -44,14 +45,15 @@ const renderAppointmentChat = async (req, res) => {
     }
 };
 
-// retrieve community chat message history (json api)
+
+// retrieve community chat message history
 const getCommunityChatHistory = async (req, res) => {
     try {
         const communityId = req.params.communityId;
         const messages = await Message.find({ community: communityId })
             .populate("sender", "username role")
             .sort({ createdAt: 1 })
-            .limit(100); // return last 100 messages
+            .limit(100);
 
         res.status(200).json(messages);
 

@@ -4,7 +4,6 @@ const User = require("../models/User");
 // get platform analytics
 const getAnalytics = async (req, res) => {
     try {
-
         // total posts
         const totalPosts = await Post.countDocuments();
 
@@ -17,7 +16,7 @@ const getAnalytics = async (req, res) => {
         // total users
         const totalUsers = await User.countDocuments();
 
-        // disease stats (simple aggregation)
+        // disease stats
         const diseaseStats = await Post.aggregate([
             {
                 $group: {

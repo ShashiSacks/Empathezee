@@ -1,9 +1,9 @@
 const Comment = require("../models/Comment");
 
+
 // create comment
 const createComment = async (req, res) => {
     try {
-
         const userId = req.session.user?.id;
 
         if (!userId) {
@@ -38,13 +38,13 @@ const createComment = async (req, res) => {
         const fullComment = await Comment.findById(comment._id)
             .populate("author", "username email");
 
-        // real-time (if socket exists)
+        // real-time
         const io = req.app.get("io");
         if (io) {
             io.emit("new-comment", fullComment);
         }
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect(`/community/${post.community}`);
         }
 
@@ -60,10 +60,10 @@ const createComment = async (req, res) => {
     }
 };
 
+
 // get comments by post
 const getCommentsByPost = async (req, res) => {
     try {
-
         const comments = await Comment.find({
             post: req.params.postId
         })
@@ -82,10 +82,10 @@ const getCommentsByPost = async (req, res) => {
     }
 };
 
+
 // delete comment
 const deleteComment = async (req, res) => {
     try {
-
         const userId = req.session.user?.id;
 
         if (!userId) {

@@ -1,5 +1,3 @@
-// searchController.js handles Google custom search for disease/medicine and OpenStreetMap Nominatim search for doctors.
-
 // search-disease api
 const searchDisease = async (req, res) => {
     try {
@@ -124,6 +122,7 @@ const searchDisease = async (req, res) => {
     }
 };
 
+
 // medicine-info api
 const searchMedicineInfo = async (req, res) => {
     try {
@@ -178,6 +177,7 @@ const searchMedicineInfo = async (req, res) => {
         return res.status(500).json({ error: "Failed to search medicine info" });
     }
 };
+
 
 // find-doctors api
 const findDoctors = async (req, res) => {
@@ -247,6 +247,7 @@ const findDoctors = async (req, res) => {
         return res.status(500).json({ error: "Failed to find doctors" });
     }
 };
+
 
 // doctor search UI page handler
 const getDoctorSearchUi = (req, res) => {

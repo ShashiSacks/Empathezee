@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
+
+// helper register handler
 const registerUser = async (req, res, role, redirectPath) => {
     try {
         const { username, email, password, age, gender, disease, bio, city, country, state, district } = req.body;
@@ -51,6 +53,8 @@ const registerUser = async (req, res, role, redirectPath) => {
     }
 };
 
+
+// helper login handler
 const loginUser = async (req, res, allowedRoles, redirectPath) => {
     try {
         const { email, password } = req.body;
@@ -84,17 +88,22 @@ const loginUser = async (req, res, allowedRoles, redirectPath) => {
     }
 };
 
+
 // register
 const register = (req, res) => registerUser(req, res, "user", "/login");
+
 
 // login
 const login = (req, res) => loginUser(req, res, ["user", "admin"], "/dashboard");
 
+
 // doctor register
 const registerDoctor = (req, res) => registerUser(req, res, "doctor", "/doctor/login");
 
+
 // doctor login
 const loginDoctor = (req, res) => loginUser(req, res, ["doctor"], "/doctor/dashboard");
+
 
 // logout
 const logout = (req, res) => {

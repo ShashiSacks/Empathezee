@@ -1,9 +1,9 @@
 const Post = require("../models/Post");
 
+
 // get all pending posts for doctor
 const getPendingPosts = async (req, res) => {
     try {
-
         const posts = await Post.find({ status: "PENDING" })
             .populate("author", "username email")
             .populate("community", "name disease")
@@ -21,10 +21,10 @@ const getPendingPosts = async (req, res) => {
     }
 };
 
+
 // verify / review post (doctor action)
 const reviewPost = async (req, res) => {
     try {
-
         const doctorId = req.session.user?.id;
 
         if (!doctorId) {
@@ -67,13 +67,13 @@ const reviewPost = async (req, res) => {
 
         await post.save();
 
-        // real-time update (important upgrade)
+        // real-time update
         const io = req.app.get("io");
         if (io) {
             io.emit("post-updated", post);
         }
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/doctor/dashboard");
         }
 

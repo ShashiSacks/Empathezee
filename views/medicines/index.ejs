@@ -1,269 +1,135 @@
-<%- include('../includes/header', { title: 'Medicines Directory' }) %>
+<%- include('../includes/header', { title: 'Medicine Search' }) %>
 <%- include('../includes/navbar') %>
 <script src="https://js.stripe.com/v3/"></script>
 
-<style>
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-</style>
+<main>
+    <!-- Hero Banner -->
+    <div style="
+        background: linear-gradient(145deg, var(--secondary-50) 0%, var(--primary-50) 100%);
+        padding: 60px 24px 48px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+    ">
+        <div aria-hidden="true" style="position:absolute;top:-30px;right:-20px;width:200px;height:200px;background:radial-gradient(circle,rgba(16,185,129,0.07),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+        <div aria-hidden="true" style="position:absolute;bottom:-50px;left:-20px;width:180px;height:180px;background:radial-gradient(circle,rgba(37,99,235,0.06),transparent 70%);border-radius:50%;pointer-events:none;"></div>
 
-<main class="page-container" style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
-    <div style="text-align: center; margin-bottom: 36px; margin-top: 20px;">
-        <h1 class="title" style="font-size: 2.2rem; margin-bottom: 8px; font-family: 'Outfit', sans-serif; font-weight: 800; letter-spacing: -1px; color: var(--primary);">💊 Medicine Search</h1>
-        <p style="color: var(--text-secondary); font-size: 1rem; max-width: 550px; margin: 0 auto; line-height: 1.6;">Search verified medical databases (Mayo Clinic, WebMD, NIH, Wikipedia) for instant drug guides, dosages, and book orders.</p>
-    </div>
-
-    <!-- google programmable search engine (interactive hero panel) -->
-    <div class="google-cse-section card" style="margin-bottom: 40px; padding: 32px; box-shadow: var(--shadow-md); border-radius: var(--radius-lg); background: var(--surface); border: 1.5px solid var(--line); text-align: left;">
-        <script async src="https://cse.google.com/cse.js?cx=b1c032ebe988b40d9"></script>
-        <div class="gcse-search"></div>
-    </div>
-
-    <!-- Direct Medicine Order System -->
-    <div class="card" style="margin-bottom: 40px; padding: 32px; box-shadow: var(--shadow-md); border-radius: var(--radius-lg); background: var(--surface); border: 1.5px solid var(--line); text-align: left;">
-        <h3 style="margin-top: 0; color: var(--primary); font-family: 'Outfit', sans-serif;">🛒 Quick Medicine Booking</h3>
-        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px;">Found the medicine you need in the search results? Enter its name below to order it instantly for a flat rate of ₹150.</p>
-        <div style="display: flex; gap: 12px; align-items: center;">
-            <input type="text" id="quickOrderMedName" placeholder="Enter medicine name (e.g. Dolutegravir, Paracetamol)..." style="flex: 1; font-size: 0.95rem; padding: 12px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--bg-warm); outline: none; color: var(--text);" />
-            <button onclick="triggerQuickOrder()" class="btn-primary" style="padding: 12px 28px; font-weight: 600; font-size: 0.95rem; border-radius: var(--radius-sm); border: none; cursor: pointer;">Book & Pay</button>
+        <div style="position:relative;z-index:2;max-width:640px;margin:0 auto;">
+            <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:999px;font-size:0.78rem;font-weight:600;color:var(--secondary-dark);margin-bottom:20px;">
+                <i class="fa-solid fa-pills" aria-hidden="true"></i> Verified Medicine Database
+            </div>
+            <h1 class="title" style="font-size:clamp(1.75rem,4vw,2.5rem);margin-bottom:10px;">
+                <span style="background:linear-gradient(135deg,var(--secondary),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Medicine</span> Search & Order
+            </h1>
+            <p style="color:var(--text-secondary);font-size:0.95rem;line-height:1.7;margin-bottom:0;">
+                Search verified medical databases (Mayo Clinic, WebMD, NIH, Wikipedia) for instant drug guides, dosages, and book orders.
+            </p>
         </div>
     </div>
-</main>
 
-<script>
-function triggerQuickOrder() {
-    const medName = document.getElementById("quickOrderMedName").value.trim();
-    if (!medName) {
-        alert("Please enter a medicine name to book.");
-        return;
-    }
-    openCheckoutModal(medName);
-}
+    <div class="page-container" style="max-width:860px;padding-top:40px;">
 
+        <!-- Google CSE Panel -->
+        <div class="card" style="padding:32px;margin-bottom:32px;border-top:3px solid var(--secondary);" aria-label="Search medicines">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+                <div style="width:40px;height:40px;border-radius:var(--radius-lg);background:var(--secondary-50);display:flex;align-items:center;justify-content:center;font-size:1.1rem;" aria-hidden="true">🔍</div>
+                <div>
+                    <h2 style="text-align:left;font-size:1.1rem;font-weight:700;margin:0;color:var(--text);">Medicine Information Search</h2>
+                    <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">Searches Mayo Clinic, WebMD, NIH &amp; Wikipedia</p>
+                </div>
+            </div>
+            <script async src="https://cse.google.com/cse.js?cx=b1c032ebe988b40d9"></script>
+            <div class="gcse-search"></div>
+        </div>
 
-// checkout modal actions
-const userCity = "<%= user?.city || '' %>";
-const modal = document.getElementById("checkout-modal");
-const modalMedName = document.getElementById("modal-med-name");
-const modalMedQty = document.getElementById("modal-med-qty");
-const modalDeliveryAddr = document.getElementById("modal-delivery-addr");
-const modalTotalAmt = document.getElementById("modal-total-amt");
-const checkoutForm = document.getElementById("checkout-form");
-const paymentProcessing = document.getElementById("payment-processing");
-const paymentSuccess = document.getElementById("payment-success");
-
-// initialize stripe elements
-const stripeKey = "<%= stripePublishableKey %>";
-let stripe = null;
-let elements = null;
-let cardElement = null;
-
-if (stripeKey) {
-    stripe = Stripe(stripeKey);
-    elements = stripe.elements();
-    
-    const style = {
-        base: {
-            color: "#1c1917",
-            fontFamily: "Inter, system-ui, sans-serif",
-            fontSmoothing: "antialiased",
-            fontSize: "14px",
-            "::placeholder": {
-                color: "#a8a29e"
-            }
-        },
-        invalid: {
-            color: "#dc2626",
-            iconColor: "#dc2626"
-        }
-    };
-    
-    cardElement = elements.create("card", { style });
-    cardElement.mount("#card-element");
-    
-    cardElement.on("change", function(event) {
-        const displayError = document.getElementById("card-errors");
-        if (event.error) {
-            displayError.textContent = event.error.message;
-            displayError.style.display = "block";
-        } else {
-            displayError.textContent = "";
-            displayError.style.display = "none";
-        }
-    });
-}
-
-function openCheckoutModal(medicineName) {
-    modalMedName.value = medicineName;
-    modalMedQty.value = "1";
-    modalDeliveryAddr.value = userCity ? userCity + ", India" : "";
-    modalTotalAmt.textContent = "₹150.00";
-    
-    // reset views
-    checkoutForm.style.display = "flex";
-    paymentProcessing.style.display = "none";
-    paymentSuccess.style.display = "none";
-    
-    // clear card inputs if stripe is loaded
-    if (cardElement) {
-        cardElement.clear();
-        document.getElementById("card-errors").style.display = "none";
-    }
-    
-    modal.style.display = "flex";
-}
-
-function closeCheckoutModal() {
-    modal.style.display = "none";
-}
-
-document.getElementById("close-modal-btn").addEventListener("click", closeCheckoutModal);
-document.getElementById("success-close-btn").addEventListener("click", closeCheckoutModal);
-
-// toggle dynamic payment inputs
-document.querySelectorAll('input[name="paymentOption"]').forEach(radio => {
-    radio.addEventListener("change", function() {
-        const upiGroup = document.getElementById("payment-upi-group");
-        const cardGroup = document.getElementById("payment-card-group");
-        
-        if (this.value === "upi") {
-            upiGroup.style.display = "flex";
-            cardGroup.style.display = "none";
-        } else if (this.value === "card") {
-            upiGroup.style.display = "none";
-            cardGroup.style.display = "flex";
-        } else {
-            upiGroup.style.display = "none";
-            cardGroup.style.display = "none";
-        }
-    });
-});
-
-// update dynamic price
-modalMedQty.addEventListener("change", function() {
-    const qty = parseInt(this.value, 10);
-    modalTotalAmt.textContent = "₹" + (qty * 150) + ".00";
-});
-
-// submit payment order
-checkoutForm.addEventListener("submit", async function(e) {
-    e.preventDefault();
-    
-    const medicineName = modalMedName.value.trim();
-    const quantity = modalMedQty.value;
-    const address = modalDeliveryAddr.value.trim();
-    const paymentMethod = document.querySelector('input[name="paymentOption"]:checked').value;
-    
-    // hide form, show processing spinner
-    checkoutForm.style.display = "none";
-    paymentProcessing.style.display = "block";
-    
-    try {
-        const response = await fetch("/api/medicine/order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                medicineName,
-                quantity,
-                address,
-                paymentMethod
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            alert(data.message || "Checkout failed. Please try again.");
-            checkoutForm.style.display = "flex";
-            paymentProcessing.style.display = "none";
-            return;
-        }
-
-        if (data.requiresAction && paymentMethod === "card") {
-            // stripe payment validation
-            const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
-                payment_method: {
-                    card: cardElement,
-                    billing_details: {
-                        name: "<%= user?.username %>",
-                        email: "<%= user?.email %>"
-                    }
-                }
-            });
-
-            if (error) {
-                // show card confirmation errors
-                const errorDiv = document.getElementById("card-errors");
-                errorDiv.textContent = error.message;
-                errorDiv.style.display = "block";
-                
-                checkoutForm.style.display = "flex";
-                paymentProcessing.style.display = "none";
-            } else if (paymentIntent.status === "succeeded") {
-                // confirm paid order status in database
-                const confirmRes = await fetch("/api/medicine/confirm-payment", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        orderId: data.orderId,
-                        paymentIntentId: paymentIntent.id
-                    })
-                });
-
-                if (confirmRes.ok) {
-                    document.getElementById("success-order-id").textContent = data.orderId;
-                    document.getElementById("success-med-name").textContent = medicineName;
-                    document.getElementById("success-med-qty").textContent = quantity + " Pack(s)";
-                    document.getElementById("success-med-addr").textContent = address;
-                    paymentSuccess.style.display = "block";
-                } else {
-                    alert("Order booked, but payment confirmation failed in database.");
-                    checkoutForm.style.display = "flex";
-                }
-                paymentProcessing.style.display = "none";
-            }
-        } else {
-            // for upi or cod
-            document.getElementById("success-order-id").textContent = data.orderId;
-            document.getElementById("success-med-name").textContent = medicineName;
-            document.getElementById("success-med-qty").textContent = quantity + " Pack(s)";
-            document.getElementById("success-med-addr").textContent = address;
-            paymentSuccess.style.display = "block";
-            paymentProcessing.style.display = "none";
-        }
-        
-    } catch (err) {
-        console.error(err);
-        paymentProcessing.style.display = "none";
-        checkoutForm.style.display = "flex";
-        alert("An error occurred during payment processing. Please try again.");
-    }
-});
-</script>
-
-<!-- checkout & booking modal -->
-<div id="checkout-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 10000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(4px);">
-    <div class="card" style="width: 100%; max-width: 500px; background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); padding: 30px; text-align: left; position: relative;">
-        <button id="close-modal-btn" style="position: absolute; top: 15px; right: 15px; border: none; background: transparent; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
-        
-        <h2 style="margin-top: 0; color: var(--primary); font-size: 1.4rem; text-align: left; margin-bottom: 20px; letter-spacing: -0.5px;">💳 Book & Pay for Medicine</h2>
-        
-        <!-- step 1: form -->
-        <form id="checkout-form" style="display: flex; flex-direction: column; gap: 16px;">
-            <div class="form-group">
-                <label for="modal-med-name" style="text-align: left;">Medicine Name</label>
-                <input type="text" id="modal-med-name" required placeholder="Enter medicine name" style="font-size: 0.9rem;" />
+        <!-- Quick Order Panel -->
+        <div class="card" style="padding:32px;margin-bottom:40px;border-top:3px solid var(--primary);" aria-label="Quick medicine booking">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div style="width:40px;height:40px;border-radius:var(--radius-lg);background:var(--primary-50);display:flex;align-items:center;justify-content:center;font-size:1.1rem;" aria-hidden="true">🛒</div>
+                <div>
+                    <h2 style="text-align:left;font-size:1.1rem;font-weight:700;margin:0;color:var(--text);">Quick Medicine Booking</h2>
+                    <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">Found the medicine above? Order it instantly for ₹150 flat rate.</p>
+                </div>
             </div>
 
+            <!-- Feature Badges -->
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+                <span class="badge badge-green"><i class="fa-solid fa-truck-fast" aria-hidden="true"></i> Fast Delivery</span>
+                <span class="badge badge-blue"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Secure Checkout</span>
+                <span class="badge badge-teal"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Easy Returns</span>
+            </div>
+
+            <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+                <div style="flex:1;min-width:220px;" class="form-group">
+                    <label for="quickOrderMedName" style="font-size:0.78rem;text-align:left;">Medicine Name</label>
+                    <input type="text" id="quickOrderMedName" placeholder="e.g. Dolutegravir, Paracetamol, Metformin..." aria-label="Medicine name for quick order">
+                </div>
+                <button onclick="triggerQuickOrder()" class="btn-gradient" style="padding:11px 24px;flex-shrink:0;" id="quick-order-btn" aria-label="Book and pay for medicine">
+                    <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Book &amp; Pay
+                </button>
+            </div>
+
+            <!-- Price info -->
+            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding:12px 14px;background:var(--bg-warm);border-radius:var(--radius-lg);font-size:0.8rem;">
+                <span><i class="fa-solid fa-indian-rupee-sign" style="color:var(--secondary);" aria-hidden="true"></i> <strong>₹150</strong> per pack</span>
+                <span><i class="fa-solid fa-truck" style="color:var(--accent);" aria-hidden="true"></i> <strong style="color:var(--secondary);">Free</strong> delivery</span>
+                <span><i class="fa-solid fa-credit-card" style="color:var(--primary);" aria-hidden="true"></i> UPI · Card · COD</span>
+                <span><i class="fa-solid fa-clock" style="color:var(--warning);" aria-hidden="true"></i> 2–4 day delivery</span>
+            </div>
+        </div>
+
+        <!-- Info Cards Row -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:40px;" role="complementary">
+            <div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--secondary);">
+                <div style="font-size:1.8rem;margin-bottom:8px;" aria-hidden="true">💊</div>
+                <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:4px;">10,000+ Medicines</h3>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">Verified drug database</p>
+            </div>
+            <div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--primary);">
+                <div style="font-size:1.8rem;margin-bottom:8px;" aria-hidden="true">🔒</div>
+                <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:4px;">100% Secure</h3>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">Stripe-secured payments</p>
+            </div>
+            <div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--accent);">
+                <div style="font-size:1.8rem;margin-bottom:8px;" aria-hidden="true">🚚</div>
+                <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:4px;">Free Delivery</h3>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">On all orders</p>
+            </div>
+            <div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--warning);">
+                <div style="font-size:1.8rem;margin-bottom:8px;" aria-hidden="true">⚡</div>
+                <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:4px;">2–4 Day Delivery</h3>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">Pan-India coverage</p>
+            </div>
+        </div>
+
+    </div><!-- /page-container -->
+</main>
+
+<!-- Checkout Modal -->
+<div id="checkout-modal" role="dialog" aria-modal="true" aria-label="Medicine checkout" style="display:none;">
+    <div style="width:100%;max-width:520px;background:var(--surface);border-radius:var(--radius-2xl);box-shadow:var(--shadow-2xl);padding:32px;text-align:left;position:relative;animation:slideUp 0.3s var(--ease-spring);">
+        <button id="close-modal-btn" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border:none;background:var(--bg-warm);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:var(--text-secondary);transition:all 0.2s;" aria-label="Close checkout">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+            <div style="width:40px;height:40px;background:var(--grad-primary);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:1rem;color:white;" aria-hidden="true">💊</div>
+            <div>
+                <h2 style="font-size:1.2rem;font-weight:800;margin:0;color:var(--text);text-align:left;letter-spacing:-0.02em;">Book &amp; Pay for Medicine</h2>
+                <p style="font-size:0.75rem;color:var(--text-secondary);margin:0;">Secure checkout powered by Stripe</p>
+            </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <form id="checkout-form" style="display:flex;flex-direction:column;gap:14px;">
             <div class="form-group">
-                <label for="modal-med-qty" style="text-align: left;">Select Quantity</label>
-                <select id="modal-med-qty" style="font-size: 0.9rem;">
+                <label for="modal-med-name" style="text-align:left;">Medicine Name</label>
+                <input type="text" id="modal-med-name" required placeholder="Enter medicine name">
+            </div>
+            <div class="form-group">
+                <label for="modal-med-qty" style="text-align:left;">Quantity</label>
+                <select id="modal-med-qty">
                     <option value="1">1 Pack / Bottle</option>
                     <option value="2">2 Packs / Bottles</option>
                     <option value="3">3 Packs / Bottles</option>
@@ -271,82 +137,235 @@ checkoutForm.addEventListener("submit", async function(e) {
                     <option value="10">10 Packs / Bottles</option>
                 </select>
             </div>
-
             <div class="form-group">
-                <label for="modal-delivery-addr" style="text-align: left;">Delivery Address</label>
-                <textarea id="modal-delivery-addr" required placeholder="Enter full delivery address..." style="font-size: 0.9rem; min-height: 60px;"></textarea>
+                <label for="modal-delivery-addr" style="text-align:left;">Delivery Address</label>
+                <textarea id="modal-delivery-addr" required placeholder="Enter full delivery address..." style="min-height:60px;"></textarea>
             </div>
 
             <div class="form-group">
-                <label style="text-align: left;">Payment Option</label>
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; text-transform: none; font-weight: 500; color: var(--text);">
-                        <input type="radio" name="paymentOption" value="upi" checked style="width: auto; height: auto; -webkit-appearance: radio; appearance: radio;" /> UPI Payment (GPay, PhonePe, Paytm)
+                <label style="text-align:left;">Payment Method</label>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.88rem;font-weight:500;color:var(--text);text-transform:none;letter-spacing:0;">
+                        <input type="radio" name="paymentOption" value="upi" checked style="width:auto;-webkit-appearance:radio;appearance:radio;"> 📱 UPI (GPay, PhonePe, Paytm)
                     </label>
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; text-transform: none; font-weight: 500; color: var(--text);">
-                        <input type="radio" name="paymentOption" value="card" style="width: auto; height: auto; -webkit-appearance: radio; appearance: radio;" /> Credit / Debit Card
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.88rem;font-weight:500;color:var(--text);text-transform:none;letter-spacing:0;">
+                        <input type="radio" name="paymentOption" value="card" style="width:auto;-webkit-appearance:radio;appearance:radio;"> 💳 Credit / Debit Card
                     </label>
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; text-transform: none; font-weight: 500; color: var(--text);">
-                        <input type="radio" name="paymentOption" value="cod" style="width: auto; height: auto; -webkit-appearance: radio; appearance: radio;" /> Cash on Delivery (COD)
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.88rem;font-weight:500;color:var(--text);text-transform:none;letter-spacing:0;">
+                        <input type="radio" name="paymentOption" value="cod" style="width:auto;-webkit-appearance:radio;appearance:radio;"> 💵 Cash on Delivery (COD)
                     </label>
                 </div>
             </div>
 
-            <!-- dynamic payment fields -->
             <div id="payment-upi-group" class="form-group">
-                <label for="modal-upi-id" style="text-align: left;">UPI ID</label>
-                <input type="text" id="modal-upi-id" placeholder="e.g. user@okhdfcbank" style="font-size: 0.9rem;" />
+                <label for="modal-upi-id" style="text-align:left;">UPI ID</label>
+                <input type="text" id="modal-upi-id" placeholder="e.g. user@okhdfcbank">
             </div>
 
-            <div id="payment-card-group" class="form-group" style="display: none;">
-                <label style="text-align: left;">Stripe Secure Card Payment</label>
-                <div id="card-element" style="padding: 12px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: var(--surface);"></div>
-                <div id="card-errors" role="alert" style="color: var(--danger); font-size: 0.8rem; margin-top: 4px; display: none;"></div>
+            <div id="payment-card-group" class="form-group" style="display:none;">
+                <label style="text-align:left;">Card Details (Stripe Secured)</label>
+                <div id="card-element" style="padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);"></div>
+                <div id="card-errors" role="alert" style="color:var(--danger);font-size:0.78rem;margin-top:4px;display:none;"></div>
             </div>
 
-            <!-- price breakdown -->
-            <div style="background: var(--bg-warm); padding: 14px; border-radius: var(--radius); border: 1px solid var(--line); font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span>Unit Price:</span>
-                    <span style="font-weight: 600;">₹150.00</span>
+            <!-- Price Breakdown -->
+            <div style="background:var(--bg-warm);padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);font-size:0.85rem;display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="color:var(--text-secondary);">Unit Price:</span>
+                    <span style="font-weight:600;">₹150.00</span>
                 </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span>Delivery Charge:</span>
-                    <span style="font-weight: 600; color: var(--success);">FREE</span>
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="color:var(--text-secondary);">Delivery:</span>
+                    <span style="font-weight:700;color:var(--secondary);">FREE</span>
                 </div>
-                <div style="border-top: 1px solid var(--line); margin: 4px 0; padding-top: 4px; display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; color: var(--primary);">
+                <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border);font-weight:800;font-size:0.95rem;color:var(--text);">
                     <span>Total Amount:</span>
-                    <span id="modal-total-amt">₹150.00</span>
+                    <span id="modal-total-amt" style="color:var(--primary);">₹150.00</span>
                 </div>
             </div>
 
-            <button type="submit" class="btn-primary-block" style="margin-top: 10px;">💳 Pay & Confirm Booking</button>
+            <button type="submit" class="btn-gradient btn-block" style="margin-top:4px;" id="checkout-submit-btn">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i> Pay &amp; Confirm Order
+            </button>
         </form>
 
-        <!-- step 2: processing spinner -->
-        <div id="payment-processing" style="display: none; text-align: center; padding: 40px 0;">
-            <div class="spinner" style="margin: 0 auto 20px; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite;"></div>
-            <h3 style="margin-bottom: 8px;">Processing Payment...</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Please do not close or refresh this page.</p>
+        <!-- Processing -->
+        <div id="payment-processing" style="display:none;text-align:center;padding:40px 0;">
+            <div class="spinner" style="margin:0 auto 20px;width:44px;height:44px;border-top-color:var(--primary);"></div>
+            <h3 style="margin-bottom:6px;font-size:1.05rem;">Processing Payment...</h3>
+            <p style="color:var(--text-secondary);font-size:0.85rem;">Please don't close or refresh this page.</p>
         </div>
 
-        <!-- step 3: success invoice -->
-        <div id="payment-success" style="display: none; text-align: center; padding: 20px 0;">
-            <span style="font-size: 4rem; display: block; margin-bottom: 12px;">✅</span>
-            <h3 style="color: var(--success); font-size: 1.35rem; margin-bottom: 8px;">Booking Confirmed!</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">Your payment was successful. The medicine has been ordered and will be delivered shortly.</p>
-            
-            <div style="background: var(--bg-warm); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; text-align: left; font-size: 0.88rem; display: flex; flex-direction: column; gap: 8px;">
-                <div><b>Order ID:</b> <span id="success-order-id" style="font-family: monospace; font-weight: 600; color: var(--primary);"></span></div>
-                <div><b>Medicine:</b> <span id="success-med-name" style="font-weight: 600;"></span></div>
-                <div><b>Quantity:</b> <span id="success-med-qty"></span></div>
-                <div><b>Delivery to:</b> <span id="success-med-addr"></span></div>
-                <div><b>Status:</b> <span class="badge status-confirmed">Processing</span></div>
+        <!-- Success -->
+        <div id="payment-success" style="display:none;text-align:center;padding:16px 0;">
+            <div style="width:72px;height:72px;background:var(--secondary-50);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 16px;" aria-hidden="true">✅</div>
+            <h3 style="color:var(--secondary-dark);font-size:1.2rem;font-weight:800;margin-bottom:6px;">Booking Confirmed!</h3>
+            <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:20px;">Your payment was successful. Your medicine is on its way!</p>
+
+            <div style="background:var(--bg-warm);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;text-align:left;font-size:0.85rem;display:flex;flex-direction:column;gap:8px;">
+                <div><strong>Order ID:</strong> <span id="success-order-id" style="font-family:monospace;color:var(--primary);font-weight:700;"></span></div>
+                <div><strong>Medicine:</strong> <span id="success-med-name"></span></div>
+                <div><strong>Quantity:</strong> <span id="success-med-qty"></span></div>
+                <div><strong>Deliver to:</strong> <span id="success-med-addr"></span></div>
+                <div><strong>Status:</strong> <span class="badge badge-green"><i class="fa-solid fa-circle-check"></i> Processing</span></div>
             </div>
-            
-            <button id="success-close-btn" class="btn-primary" style="margin-top: 24px; padding: 10px 24px;">Close Checkout</button>
+
+            <button id="success-close-btn" class="btn-gradient btn-block" style="margin-top:20px;">
+                <i class="fa-solid fa-check" aria-hidden="true"></i> Close Checkout
+            </button>
         </div>
     </div>
 </div>
+
+<style>
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+</style>
+
+<script>
+function triggerQuickOrder() {
+    const medName = document.getElementById("quickOrderMedName").value.trim();
+    if (!medName) {
+        document.getElementById("quickOrderMedName").focus();
+        return;
+    }
+    openCheckoutModal(medName);
+}
+
+const userCity = "<%= user?.city || '' %>";
+const modal    = document.getElementById("checkout-modal");
+const modalMedName    = document.getElementById("modal-med-name");
+const modalMedQty     = document.getElementById("modal-med-qty");
+const modalDeliveryAddr = document.getElementById("modal-delivery-addr");
+const modalTotalAmt   = document.getElementById("modal-total-amt");
+const checkoutForm    = document.getElementById("checkout-form");
+const paymentProcessing = document.getElementById("payment-processing");
+const paymentSuccess  = document.getElementById("payment-success");
+
+const stripeKey = "<%= stripePublishableKey %>";
+let stripe = null, elements = null, cardElement = null;
+
+if (stripeKey) {
+    stripe   = Stripe(stripeKey);
+    elements = stripe.elements();
+    const style = {
+        base: {
+            color: "#1E293B",
+            fontFamily: "Inter, system-ui, sans-serif",
+            fontSmoothing: "antialiased",
+            fontSize: "14px",
+            "::placeholder": { color: "#94A3B8" }
+        },
+        invalid: { color: "#EF4444", iconColor: "#EF4444" }
+    };
+    cardElement = elements.create("card", { style });
+    cardElement.mount("#card-element");
+    cardElement.on("change", function(e) {
+        const d = document.getElementById("card-errors");
+        if (e.error) { d.textContent = e.error.message; d.style.display = "block"; }
+        else { d.textContent = ""; d.style.display = "none"; }
+    });
+}
+
+function openCheckoutModal(medicineName) {
+    modalMedName.value = medicineName;
+    modalMedQty.value  = "1";
+    modalDeliveryAddr.value = userCity ? userCity + ", India" : "";
+    modalTotalAmt.textContent = "₹150.00";
+    checkoutForm.style.display = "flex";
+    paymentProcessing.style.display = "none";
+    paymentSuccess.style.display = "none";
+    if (cardElement) { cardElement.clear(); document.getElementById("card-errors").style.display = "none"; }
+    modal.style.display = "flex";
+}
+
+function closeCheckoutModal() { modal.style.display = "none"; }
+
+document.getElementById("close-modal-btn").addEventListener("click", closeCheckoutModal);
+document.getElementById("success-close-btn").addEventListener("click", closeCheckoutModal);
+modal.addEventListener("click", function(e) { if (e.target === modal) closeCheckoutModal(); });
+
+document.querySelectorAll('input[name="paymentOption"]').forEach(function(radio) {
+    radio.addEventListener("change", function() {
+        document.getElementById("payment-upi-group").style.display = this.value === "upi" ? "flex" : "none";
+        document.getElementById("payment-card-group").style.display = this.value === "card" ? "block" : "none";
+    });
+});
+
+modalMedQty.addEventListener("change", function() {
+    modalTotalAmt.textContent = "₹" + (parseInt(this.value, 10) * 150) + ".00";
+});
+
+checkoutForm.addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const medicineName   = modalMedName.value.trim();
+    const quantity       = modalMedQty.value;
+    const address        = modalDeliveryAddr.value.trim();
+    const paymentMethod  = document.querySelector('input[name="paymentOption"]:checked').value;
+
+    checkoutForm.style.display = "none";
+    paymentProcessing.style.display = "block";
+
+    try {
+        const response = await fetch("/api/medicine/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ medicineName, quantity, address, paymentMethod })
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Checkout failed.");
+            checkoutForm.style.display = "flex";
+            paymentProcessing.style.display = "none";
+            return;
+        }
+
+        if (data.requiresAction && paymentMethod === "card") {
+            const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
+                payment_method: { card: cardElement, billing_details: { name: "<%= user?.username %>", email: "<%= user?.email %>" } }
+            });
+            if (error) {
+                const errorDiv = document.getElementById("card-errors");
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = "block";
+                checkoutForm.style.display = "flex";
+                paymentProcessing.style.display = "none";
+            } else if (paymentIntent.status === "succeeded") {
+                const confirmRes = await fetch("/api/medicine/confirm-payment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ orderId: data.orderId, paymentIntentId: paymentIntent.id })
+                });
+                if (confirmRes.ok) {
+                    showSuccess(data.orderId, medicineName, quantity, address);
+                } else {
+                    alert("Order booked but confirmation failed.");
+                    checkoutForm.style.display = "flex";
+                }
+                paymentProcessing.style.display = "none";
+            }
+        } else {
+            showSuccess(data.orderId, medicineName, quantity, address);
+            paymentProcessing.style.display = "none";
+        }
+    } catch (err) {
+        console.error(err);
+        paymentProcessing.style.display = "none";
+        checkoutForm.style.display = "flex";
+        alert("Payment error. Please try again.");
+    }
+});
+
+function showSuccess(orderId, medicineName, quantity, address) {
+    document.getElementById("success-order-id").textContent = orderId;
+    document.getElementById("success-med-name").textContent = medicineName;
+    document.getElementById("success-med-qty").textContent  = quantity + " Pack(s)";
+    document.getElementById("success-med-addr").textContent = address;
+    paymentSuccess.style.display = "block";
+}
+</script>
 
 <%- include('../includes/footer') %>

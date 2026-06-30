@@ -2,6 +2,7 @@ const Community = require("../models/Community");
 const Post = require("../models/Post");
 const User = require("../models/User");
 
+
 // create community
 const createCommunity = async (req, res, next) => {
     try {
@@ -9,19 +10,17 @@ const createCommunity = async (req, res, next) => {
 
         if (!location || !location.trim()) {
             const err = new Error("Location / City is required.");
-            if (req.accepts('html')) {
+            if (req.accepts("html")) {
                 return next(err);
             }
             return res.status(400).json({ message: err.message });
         }
 
-
-
         const existing = await Community.findOne({ name: { $regex: new RegExp(`^${name.trim()}$`, "i") } });
 
         if (existing) {
             const err = new Error("A community with this name already exists.");
-            if (req.accepts('html')) {
+            if (req.accepts("html")) {
                 return next(err);
             }
             return res.status(400).json({
@@ -42,19 +41,20 @@ const createCommunity = async (req, res, next) => {
             location: location ? location.trim() : ""
         });
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/communities");
         }
 
         res.status(201).json(community);
 
     } catch (error) {
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return next(error);
         }
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // get all communities
 const getCommunities = async (req, res) => {
@@ -68,6 +68,7 @@ const getCommunities = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // get community by id
 const getCommunityById = async (req, res) => {
@@ -87,6 +88,7 @@ const getCommunityById = async (req, res) => {
     }
 };
 
+
 // get posts of community
 const getCommunityPosts = async (req, res) => {
     try {
@@ -103,6 +105,7 @@ const getCommunityPosts = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // join community
 const joinCommunity = async (req, res) => {
@@ -132,7 +135,7 @@ const joinCommunity = async (req, res) => {
             await user.save();
         }
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/communities");
         }
 
@@ -145,6 +148,7 @@ const joinCommunity = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // leave community
 const leaveCommunity = async (req, res) => {
@@ -167,7 +171,7 @@ const leaveCommunity = async (req, res) => {
 
         await user.save();
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect("/communities");
         }
 
@@ -180,6 +184,7 @@ const leaveCommunity = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // get community members
 const getCommunityMembers = async (req, res) => {
@@ -197,6 +202,7 @@ const getCommunityMembers = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // get community stats
 const getCommunityStats = async (req, res) => {
@@ -229,6 +235,7 @@ const getCommunityStats = async (req, res) => {
     }
 };
 
+
 // search communities
 const searchCommunities = async (req, res) => {
     try {
@@ -247,6 +254,7 @@ const searchCommunities = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // delete community
 const deleteCommunity = async (req, res) => {

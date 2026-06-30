@@ -1,10 +1,10 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 
+
 // create post
 const createPost = async (req, res) => {
     try {
-
         const userId = req.session.user?.id;
 
         if (!userId) {
@@ -43,7 +43,7 @@ const createPost = async (req, res) => {
             io.emit("new-post", post);
         }
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect(`/community/${community}`);
         }
 
@@ -59,10 +59,10 @@ const createPost = async (req, res) => {
     }
 };
 
+
 // get all posts (ai ranked feed)
 const getPosts = async (req, res) => {
     try {
-
         const userId = req.session.user?.id;
 
         const user = await User.findById(userId);
@@ -77,7 +77,6 @@ const getPosts = async (req, res) => {
 
         const rankedPosts = validPosts
             .map(post => {
-
                 const postDisease = (post.disease || "").toLowerCase();
 
                 let score = 0;
@@ -122,10 +121,10 @@ const getPosts = async (req, res) => {
     }
 };
 
+
 // like post
 const likePost = async (req, res) => {
     try {
-
         const userId = req.session.user?.id;
 
         if (!userId) {
@@ -156,7 +155,7 @@ const likePost = async (req, res) => {
             });
         }
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect(`/community/${post.community}`);
         }
 
@@ -172,10 +171,10 @@ const likePost = async (req, res) => {
     }
 };
 
+
 // unlike post
 const unlikePost = async (req, res) => {
     try {
-
         const userId = req.session.user?.id;
 
         if (!userId) {
@@ -204,7 +203,7 @@ const unlikePost = async (req, res) => {
             });
         }
 
-        if (req.accepts('html')) {
+        if (req.accepts("html")) {
             return res.redirect(`/community/${post.community}`);
         }
 
@@ -220,10 +219,10 @@ const unlikePost = async (req, res) => {
     }
 };
 
+
 // update post
 const updatePost = async (req, res) => {
     try {
-
         const userId = req.session.user?.id;
 
         if (!userId) {
@@ -266,10 +265,10 @@ const updatePost = async (req, res) => {
     }
 };
 
+
 // delete post
 const deletePost = async (req, res) => {
     try {
-
         const userId = req.session.user?.id;
 
         if (!userId) {

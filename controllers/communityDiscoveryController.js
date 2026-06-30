@@ -1,11 +1,11 @@
 const Community = require("../models/Community");
 const User = require("../models/User");
 
+
 // get recommended communities based on user disease
 const getRecommendedCommunities = async (req, res) => {
     try {
-
-        // fix: session-based auth (not jwt)
+        // session-based auth
         const userId = req.session.user?.id;
 
         if (!userId) {
@@ -22,7 +22,7 @@ const getRecommendedCommunities = async (req, res) => {
             });
         }
 
-        // normalize disease (important fix)
+        // normalize disease
         const disease = user.disease?.trim();
 
         if (!disease) {

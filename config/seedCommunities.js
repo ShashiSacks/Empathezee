@@ -4,6 +4,8 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const User = require("../models/User");
 
+
+// seed communities and initial posts
 const seedCommunities = async () => {
     try {
         const communityCount = await Community.countDocuments();

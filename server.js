@@ -7,14 +7,12 @@ const { Server } = require("socket.io");
 
 // app setup
 
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
 
 // middleware
-
 
 const sessionMiddleware = require("./middleware/sessionMiddleware");
 const { protectUser, protectDoctor, protect } = require("./middleware/sessionMiddleware");
@@ -24,7 +22,6 @@ const morgan = require("morgan");
 
 // security + logging
 
-
 app.use(helmet({
     contentSecurityPolicy: false
 }));
@@ -33,19 +30,16 @@ app.use(morgan("dev"));
 
 // body parsers
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
 // session middleware
 
-
 app.use(sessionMiddleware);
 
 
 // passport initialization
-
 
 const passport = require("passport");
 app.use(passport.initialize());
@@ -53,7 +47,6 @@ app.use(passport.session());
 
 
 // expose session user context to all views globally
-
 
 app.use((req, res, next) => {
     res.locals.user = req.session?.user || null;
@@ -67,12 +60,10 @@ app.use((req, res, next) => {
 
 // static files
 
-
 app.use(express.static(path.join(__dirname, "public")));
 
 
 // view engine
-
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -80,13 +71,11 @@ app.set("views", path.join(__dirname, "views"));
 
 // db connection
 
-
 const connectDB = require("./config/db");
 connectDB();
 
 
 // models
-
 
 const Community = require("./models/Community");
 const Post = require("./models/Post");
@@ -95,8 +84,7 @@ const Appointment = require("./models/Appointment");
 const Medicine = require("./models/Medicine");
 
 
-// Passport configuration
-
+// passport configuration
 
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
@@ -163,8 +151,8 @@ passport.use(
     )
 );
 
-// routes
 
+// routes
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -186,7 +174,6 @@ const { googleLogin } = require("./controllers/authController");
 
 // api routes
 
-
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
@@ -204,8 +191,7 @@ app.use("/", searchRoutes);
 app.use("/", doctorSearchRoutes);
 
 
-// Google Auth Routes
-
+// google auth routes
 
 app.get(
     "/auth/google",
@@ -218,7 +204,6 @@ app.get(
     "/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
     (req, res) => {
-
         // sync Passport authenticated user with existing session-based middleware
         req.session.user = {
             id: req.user._id.toString(),
@@ -232,8 +217,7 @@ app.get(
 );
 
 
-// platform analytics dashboard route
-
+// analytics dashboard
 
 app.get("/analytics", protect, async (req, res) => {
     try {
@@ -288,12 +272,10 @@ app.get("/analytics", protect, async (req, res) => {
 
 // attach socket.io
 
-
 app.set("io", io);
 
 
 // socket session support
-
 
 io.use((socket, next) => {
     sessionMiddleware(socket.request, {}, next);
@@ -301,7 +283,6 @@ io.use((socket, next) => {
 
 
 // socket connection
-
 
 io.on("connection", (socket) => {
     const user = socket.request.session?.user;
@@ -346,14 +327,9 @@ io.on("connection", (socket) => {
 });
 
 
-
-// ======================
 // ui routes
-// ======================
 
-// home (fixed clean flow)
-
-
+// home
 app.get("/", (req, res) => {
     if (!req.session.user) {
         return res.redirect("/login");
@@ -365,10 +341,7 @@ app.get("/", (req, res) => {
 });
 
 
-
 // communities page
-
-
 app.get("/communities", protectUser, async (req, res) => {
     try {
         const communities = await Community.find();
@@ -393,10 +366,7 @@ app.get("/communities", protectUser, async (req, res) => {
 });
 
 
-
-// community page
-
-
+// community show page
 app.get("/community/:id", protectUser, async (req, res) => {
     try {
         const community = await Community.findById(req.params.id);
@@ -425,10 +395,13 @@ app.get("/community/:id", protectUser, async (req, res) => {
 });
 
 
+// mental wellness page
+app.get("/wellness", protectUser, (req, res) => {
+    res.render("users/wellness", { title: "Mental Wellness" });
+});
+
 
 // login page
-
-
 app.get("/login", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
@@ -437,10 +410,7 @@ app.get("/login", (req, res) => {
 });
 
 
-
 // register page
-
-
 app.get("/register", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
@@ -448,9 +418,8 @@ app.get("/register", (req, res) => {
     res.render("users/register");
 });
 
+
 // doctor login page
-
-
 app.get("/doctor/login", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
@@ -458,9 +427,8 @@ app.get("/doctor/login", (req, res) => {
     res.render("doctors/login");
 });
 
+
 // doctor register page
-
-
 app.get("/doctor/register", (req, res) => {
     if (req.session.user) {
         return res.redirect("/");
@@ -468,9 +436,8 @@ app.get("/doctor/register", (req, res) => {
     res.render("doctors/register");
 });
 
+
 // doctor moderation dashboard
-
-
 app.get("/doctor/dashboard", protectDoctor, async (req, res) => {
     try {
         const posts = await Post.find({ status: "PENDING" })
@@ -490,8 +457,6 @@ app.get("/doctor/dashboard", protectDoctor, async (req, res) => {
 
 
 // profile page
-
-
 app.get("/profile", protectUser, async (req, res) => {
     try {
         const user = await User.findById(req.user.id)
@@ -507,15 +472,12 @@ app.get("/profile", protectUser, async (req, res) => {
 
 
 // dashboard
-
-
 app.get("/dashboard", protectUser, (req, res) => {
     res.render("users/dashboard");
 });
 
+
 // appointments ui
-
-
 app.get("/appointments-ui", protectUser, async (req, res) => {
     try {
         const appointments = await Appointment.find({ patient: req.user._id })
@@ -529,9 +491,8 @@ app.get("/appointments-ui", protectUser, async (req, res) => {
     }
 });
 
-// medicine UI
 
-
+// medicine ui
 app.get("/medicine", protectUser, async (req, res) => {
     try {
         const searchQuery = req.query.search || "";
@@ -551,14 +512,12 @@ app.get("/medicine", protectUser, async (req, res) => {
 
 // error handling middlewares
 
-
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 app.use(notFound);
 app.use(errorHandler);
 
 
 // start server
-
 
 const PORT = process.env.PORT || 3000;
 

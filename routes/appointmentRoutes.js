@@ -16,11 +16,11 @@ router.get("/", protect, getMyAppointments);
 // book a new appointment
 router.post("/", protect, bookAppointment);
 
-// update/cancel appointment (supports both put for api and post for standard html forms)
+// update appointment (supports PUT for API and POST for HTML forms)
 router.put("/:id", protect, updateAppointment);
 router.post("/:id/update", protect, updateAppointment);
 
-// delete/cancel appointment (supports both delete for api and post for standard html forms)
+// delete / cancel appointment (supports DELETE for API and POST for HTML forms)
 router.delete("/:id", protect, deleteAppointment);
 router.post("/:id/delete", protect, deleteAppointment);
 

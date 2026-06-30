@@ -1,11 +1,10 @@
 const Post = require("../models/Post");
 
+
 // doctor verifies a post
 const verifyPost = async (req, res) => {
     try {
-
         const postId = req.params.id;
-
         const { verdict, comment } = req.body;
 
         // check session user
