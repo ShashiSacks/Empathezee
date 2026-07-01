@@ -2006,7 +2006,7 @@ body.auth-page .auth-left {
   flex-direction: column;
   align-items: center;
   padding: 60px 40px;
-  background: var(--surface);
+  background: var(--bg);
   overflow-y: auto;
   z-index: 5;
   min-height: 100vh;
@@ -2032,11 +2032,7 @@ body.auth-page .auth-left form select {
 }
 
 body.auth-page .auth-right {
-  flex: 1.2;
-  display: block;
-  background: url("/peer-discussion.jpg") center/cover no-repeat;
-  position: relative;
-  min-height: 100vh;
+  display: none;
 }
 
 body.auth-page .auth-right::before {
