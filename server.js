@@ -132,3 +132,5 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
+
+module.exports = app;
