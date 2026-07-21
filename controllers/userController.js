@@ -106,8 +106,19 @@ const getUserCommunities = async (req, res) => {
     }
 };
 
+// get all doctors
+const getDoctors = async (req, res) => {
+    try {
+        const doctors = await User.find({ role: "doctor" }).select("username email disease city");
+        res.status(200).json(doctors);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getProfile,
     updateProfile,
-    getUserCommunities
+    getUserCommunities,
+    getDoctors
 };

@@ -3,7 +3,7 @@
 
         <!-- Logo -->
         <a href="/" class="nav-logo" aria-label="Empathezee Home">
-            <div class="nav-logo-icon" aria-hidden="true">💙</div>
+            <%- include('logo', { size: '28' }) %>
             <span class="nav-logo-text">Empathezee</span>
         </a>
 
@@ -23,15 +23,18 @@
                     <a href="/wellness" id="nav-wellness">Wellness</a>
                     <a href="/analytics" id="nav-analytics">Analytics</a>
                 <% } %>
-            <% } else { %>
-                <a href="/login" id="nav-login">Login</a>
-                <a href="/register" id="nav-register">Register</a>
-                <a href="/doctor/login" id="nav-doctor-login">Doctor Login</a>
             <% } %>
         </div>
 
         <!-- Right Actions -->
         <div class="nav-actions">
+            <% if (!user) { %>
+                <a href="/doctor/login" id="nav-doctor-login" style="margin-right: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">For Doctors</a>
+                <a href="/login" id="nav-login" class="btn-outline btn-sm" style="border-radius: 999px; padding: 8px 16px;">Log In</a>
+                <a href="/register" id="nav-register" class="btn-primary btn-sm" style="border-radius: 999px; padding: 8px 16px;">Sign Up</a>
+                <div style="width: 1px; height: 24px; background: var(--border); margin: 0 8px;"></div>
+            <% } %>
+
             <!-- Language Selector -->
             <div class="lang-selector-container notranslate" role="navigation" aria-label="Language selection">
                 <span class="lang-icon" aria-hidden="true">🌐</span>
@@ -103,8 +106,8 @@
     </button>
 
     <div style="margin-bottom: 12px;">
-        <div class="nav-logo" style="text-decoration: none; margin-bottom: 20px; display: flex;">
-            <div class="nav-logo-icon" style="width: 28px; height: 28px; font-size: 0.8rem; flex-shrink:0;">💙</div>
+        <div class="nav-logo" style="text-decoration: none; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+            <%- include('logo', { size: '28' }) %>
             <span class="nav-logo-text" style="font-size: 1rem;">Empathezee</span>
         </div>
     </div>
@@ -130,7 +133,7 @@
         </div>
     <% } else { %>
         <a href="/login" id="mob-nav-login"><i class="fa-solid fa-arrow-right-to-bracket" style="width:18px;"></i> Login</a>
-        <a href="/register" id="mob-nav-register"><i class="fa-solid fa-user-plus" style="width:18px;"></i> Register</a>
+        <a href="/register" id="mob-nav-register"><i class="fa-solid fa-user-plus" style="width:18px;"></i> Sign Up</a>
         <a href="/doctor/login" id="mob-nav-doctor-login"><i class="fa-solid fa-stethoscope" style="width:18px;"></i> Doctor Login</a>
     <% } %>
 

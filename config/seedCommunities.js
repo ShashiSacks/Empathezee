@@ -38,7 +38,8 @@ const seedCommunities = async () => {
             description: "A safe, secure, and compassionate space for patients living with HIV/AIDS to share experiences, support each other, and discuss antiretroviral treatments.",
             disease: "Aids",
             type: "online",
-            paymentType: "free"
+            paymentType: "free",
+            location: "Global"
         });
 
         // create cardiology forum
@@ -50,7 +51,8 @@ const seedCommunities = async () => {
             meetingDate: "2026-07-15",
             meetingTime: "10:00 AM",
             meetingPlace: "Kadapa Cardiac Center Hall",
-            paymentType: "free"
+            paymentType: "free",
+            location: "Kadapa"
         });
 
         // create orthopedics group
@@ -59,7 +61,8 @@ const seedCommunities = async () => {
             description: "Discussion on joint replacements, physiotherapy, bone health, and injury recovery.",
             disease: "Orthopedics",
             type: "online",
-            paymentType: "free"
+            paymentType: "free",
+            location: "Global"
         });
 
         console.log("Seeded communities: AIDS Support Group, Cardiology Health Meetup, Orthopedics & Joint Care Forum");
@@ -70,7 +73,8 @@ const seedCommunities = async () => {
             content: "Hello everyone! This is a secure, welcoming space for patients and caregivers to connect. Please feel free to introduce yourself or ask any questions about antiretroviral treatments (ART), nutrition, or general wellness. We are in this together.",
             author: defaultAuthor._id,
             community: aidsGroup._id,
-            status: "VERIFIED",
+            status: "SAFE",
+            disease: "Aids",
             aiReason: "Constructive support content.",
             riskScore: 0.05
         });
@@ -89,7 +93,8 @@ const seedCommunities = async () => {
             content: "I started my new antiretroviral medication last week. I am experiencing minor fatigue. Has anyone else gone through this, and what are your best tips for managing daily side effects?",
             author: defaultAuthor._id,
             community: aidsGroup._id,
-            status: "VERIFIED",
+            status: "SAFE",
+            disease: "Aids",
             aiReason: "Inquiry about medical management.",
             riskScore: 0.1
         });

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Empathezee — A premium healthcare community platform connecting people with chronic illnesses to support communities, doctors, and mental wellness resources.">
+    <meta name="theme-color" content="#2563EB">
+    <title>Empathezee</title>
+    
+    <!-- Inter & Outfit fonts from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <script src="/js/locationData.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+          new google.translate.TranslateElement({
+              pageLanguage: 'en',
+              layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+              autoDisplay: false
+          }, 'google_translate_element');
+      }
+
+      function getLanguageFromCookie() {
+          const match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
+          return match ? match[1] : 'en';
+      }
+
+      window.changeLanguage = function(lang) {
+          if (lang === 'en') {
+              document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+              document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+              document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost";
+          } else {
+              document.cookie = "googtrans=/en/" + lang + "; path=/;";
+              document.cookie = "googtrans=/en/" + lang + "; path=/; domain=" + window.location.hostname;
+              if (window.location.hostname === 'localhost') {
+                  document.cookie = "googtrans=/en/" + lang + "; path=/; domain=localhost";
+              }
+          }
+          location.reload();
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+          const currentLang = getLanguageFromCookie();
+          const selector = document.getElementById('language-selector');
+          if (selector) selector.value = currentLang;
+      });
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  </body>
+</html>

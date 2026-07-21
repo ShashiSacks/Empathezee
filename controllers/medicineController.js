@@ -33,6 +33,7 @@ const orderMedicine = async (req, res) => {
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: totalAmount * 100,
                 currency: "inr",
+                payment_method_types: ['card'],
                 metadata: {
                     orderId: order._id.toString(),
                     patientId: req.user._id.toString(),
@@ -99,3 +100,8 @@ module.exports = {
     orderMedicine,
     confirmPayment
 };
+const getStripeKey = (req, res) => {
+    res.json({ stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || "" });
+};
+
+module.exports.getStripeKey = getStripeKey;

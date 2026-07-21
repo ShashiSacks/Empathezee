@@ -44,24 +44,25 @@
     <!-- right side image -->
     <div class="auth-right">
         <div class="auth-right-content-wrapper">
-            <div class="auth-right-logo">
-                <span class="auth-logo-icon"><i class="fa-solid fa-heart-pulse"></i></span>
-                <span class="auth-logo-text">Empathezee Pro</span>
+            <div class="auth-right-logo" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                <%- include('../includes/logo', { size: '36' }) %>
+                <span class="auth-logo-text" style="font-size: 1.5rem; font-weight: 700; color: white;">Empathezee Pro</span>
             </div>
             <h2 class="auth-right-title">Empower patients, guide support groups.</h2>
             <p class="auth-right-subtitle">Join our verified network of medical specialists. Moderate discussions, host online consultations, and help patients manage chronic conditions.</p>
-            <div class="auth-right-stats">
-                <div class="auth-stat-item">
-                    <span class="auth-stat-num">24/7</span>
-                    <span class="auth-stat-lbl">Care Guidance</span>
+            
+            <div class="auth-feature-list" style="display: flex; flex-direction: column; gap: 16px; margin-top: 32px;">
+                <div class="auth-feature-item" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                    <div style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-users" style="font-size: 1.1rem;"></i></div>
+                    <span style="font-weight: 500; font-size: 1.05rem; color: white;">Patient Interactions</span>
                 </div>
-                <div class="auth-stat-item">
-                    <span class="auth-stat-num">15k+</span>
-                    <span class="auth-stat-lbl">Patient Interactions</span>
+                <div class="auth-feature-item" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                    <div style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-video" style="font-size: 1.1rem;"></i></div>
+                    <span style="font-weight: 500; font-size: 1.05rem; color: white;">Secure Telehealth</span>
                 </div>
-                <div class="auth-stat-item">
-                    <span class="auth-stat-num">100%</span>
-                    <span class="auth-stat-lbl">Verified Specialists</span>
+                <div class="auth-feature-item" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                    <div style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-calendar-check" style="font-size: 1.1rem;"></i></div>
+                    <span style="font-weight: 500; font-size: 1.05rem; color: white;">Practice Management</span>
                 </div>
             </div>
         </div>
