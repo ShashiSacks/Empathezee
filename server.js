@@ -112,9 +112,9 @@ app.use("/api/medicine", medicineRoutes);
 app.use("/api/doctor-posts", doctorPostRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/communities", communityRoutes);
-app.use("/", chatRoutes);
-app.use("/", searchRoutes);
-app.use("/", doctorSearchRoutes);
+app.use("/api", chatRoutes);
+app.use("/api", searchRoutes);
+app.use("/api", doctorSearchRoutes);
 
 // All EJS UI routes have been removed for the API-first architecture.
 
