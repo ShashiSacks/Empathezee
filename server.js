@@ -18,13 +18,30 @@ const sessionMiddleware = require("./middleware/sessionMiddleware");
 const { protectUser, protectDoctor, protect } = require("./middleware/sessionMiddleware");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const logger = require("./utils/logger");
 
 
 // security + logging
 
-app.use(helmet({
-    contentSecurityPolicy: false
+const rateLimit = require("express-rate-limit");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
 }));
+
+app.use(helmet());
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false
+});
+app.use(limiter);
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 
@@ -34,7 +51,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// session middleware
+// session middleware removed for JWT api architecture
 
 app.use(sessionMiddleware);
 
@@ -53,15 +70,7 @@ app.use((req, res, next) => {
 });
 
 
-// static files
-
-app.use(express.static(path.join(__dirname, "public")));
-
-
-// view engine
-
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+// view engine and static files removed for API-first architecture
 
 
 // db connection
@@ -206,5 +215,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
-    console.log("server running on port", PORT);
+    logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
+
+module.exports = app;

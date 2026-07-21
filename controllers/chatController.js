@@ -32,12 +32,7 @@ const renderAppointmentChat = async (req, res) => {
 
         const otherUser = isPatient ? appointment.doctor : appointment.patient;
 
-        res.render("chats/index", {
-            appointment,
-            messages,
-            otherUser,
-            title: `Consultation with Dr. ${appointment.doctor.username}`
-        });
+        res.json({ success: true, appointment, messages, otherUser, title: `Consultation with Dr. ${appointment.doctor.username}` });
 
     } catch (error) {
         console.error(error);
