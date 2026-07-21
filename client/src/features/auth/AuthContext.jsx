@@ -53,16 +53,6 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  const loginWithGoogle = async (tokenId) => {
-    const res = await axios.post('/api/auth/google', { tokenId });
-    if (res.data.success) {
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      setToken(res.data.accessToken);
-      setUser(res.data.user);
-    }
-    return res.data;
-  };
-
   const logout = async () => {
     try {
       await axios.post('/api/auth/logout');
@@ -74,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, loginWithGoogle, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { Button } from '../../components/ui/Button';
 import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
+
 
 export function LoginForm({ onToggleMode }) {
   const [email, setEmail] = useState('');
@@ -28,19 +28,6 @@ export function LoginForm({ onToggleMode }) {
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid email or password.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setError('');
-    setIsSubmitting(true);
-    try {
-      await loginWithGoogle(credentialResponse.credential);
-      navigate('/');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Google login failed.');
     } finally {
       setIsSubmitting(false);
     }
@@ -110,22 +97,6 @@ export function LoginForm({ onToggleMode }) {
         </Button>
       </form>
 
-      <div className="mt-6 flex items-center justify-center">
-        <div className="border-t w-full border-border"></div>
-        <span className="bg-card px-3 text-secondary-foreground/50 text-sm">Or</span>
-        <div className="border-t w-full border-border"></div>
-      </div>
-
-      <div className="mt-6 flex justify-center">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={() => setError('Google Login Failed')}
-          theme="filled_blue"
-          size="large"
-          text="continue_with"
-          width="100%"
-        />
-      </div>
 
       <div className="mt-8 text-center text-secondary-foreground/60">
         Don't have an account?{' '}

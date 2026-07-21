@@ -3,11 +3,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const RefreshToken = require("../models/RefreshToken");
-const { OAuth2Client } = require('google-auth-library');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh_secret';
 
@@ -144,36 +142,6 @@ const logout = catchAsync(async (req, res, next) => {
     res.status(200).json({ success: true, message: "Logged out successfully" });
 });
 
-const googleLogin = catchAsync(async (req, res, next) => {
-    const { tokenId } = req.body;
-    
-    if (!tokenId) return next(new AppError('Missing Google tokenId', 400));
-
-    const ticket = await client.verifyIdToken({
-        idToken: tokenId,
-        audience: process.env.GOOGLE_CLIENT_ID
-    });
-    
-    const { email, name, sub: googleId } = ticket.getPayload();
-
-    let user = await User.findOne({ email });
-    if (!user) {
-        user = await User.create({
-            username: name.replace(/\s/g, '').toLowerCase() + Math.floor(Math.random() * 1000),
-            email,
-            googleId,
-            password: crypto.randomBytes(16).toString('hex'),
-            isVerified: true 
-        });
-    } else if (!user.googleId) {
-        user.googleId = googleId;
-        user.isVerified = true;
-        await user.save();
-    }
-
-    await sendTokenResponse(user, 200, req, res);
-});
-
 const forgotPassword = catchAsync(async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email.toLowerCase() });
     if (!user) return next(new AppError('No user found with that email', 404));
@@ -206,4 +174,4 @@ const resetPassword = catchAsync(async (req, res, next) => {
     await sendTokenResponse(user, 200, req, res);
 });
 
-module.exports = { register, verifyEmail, login, refreshToken, logout, googleLogin, forgotPassword, resetPassword };
+module.exports = { register, verifyEmail, login, refreshToken, logout, forgotPassword, resetPassword };

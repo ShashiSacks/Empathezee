@@ -95,7 +95,7 @@ const communityRoutes = require("./routes/communityRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const doctorSearchRoutes = require("./routes/doctorSearchRoutes");
-const { googleLogin } = require("./controllers/authController");
+
 
 
 // api routes

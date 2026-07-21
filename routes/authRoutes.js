@@ -15,7 +15,6 @@ const {
     login,
     refreshToken,
     logout,
-    googleLogin,
     forgotPassword,
     resetPassword
 } = require("../controllers/authController");
@@ -25,7 +24,7 @@ router.post("/verify-email", validate(verifyEmailSchema), verifyEmail);
 router.post("/login", validate(loginSchema), login);
 router.post("/refresh-token", refreshToken); // No complex body to validate
 router.post("/logout", logout);
-router.post("/google", googleLogin); // Simple tokenId object, no strict complex schema needed
+
 router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
 router.put("/reset-password/:token", validate(resetPasswordSchema), resetPassword);
 
