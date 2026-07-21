@@ -6,10 +6,10 @@ const sessionMiddleware = session({
     resave: false,
     saveUninitialized: false,
 
-    store: MongoStore.create({
+    store: process.env.MONGO_URI ? MongoStore.create({
         mongoUrl: process.env.MONGO_URI,
         ttl: 24 * 60 * 60
-    }),
+    }) : undefined,
 
     cookie: {
         httpOnly: true,
