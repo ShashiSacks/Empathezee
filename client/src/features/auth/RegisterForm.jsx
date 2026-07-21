@@ -33,7 +33,7 @@ export function RegisterForm({ onToggleMode }) {
     setIsSubmitting(true);
     try {
       await register({ ...formData, role: 'user' });
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create account.');
     } finally {

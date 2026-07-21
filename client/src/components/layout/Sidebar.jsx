@@ -6,7 +6,7 @@ import { useAuth } from '../../features/auth/AuthContext';
 import { useTheme } from '../ThemeProvider';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: Activity, label: 'My Health', path: '/health' },
   { icon: Calendar, label: 'Appointments', path: '/appointments' },
   { icon: Users, label: 'Community', path: '/community' },

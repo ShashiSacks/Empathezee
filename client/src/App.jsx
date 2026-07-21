@@ -4,6 +4,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { Dashboard } from './pages/Dashboard';
 import { AuthLayout } from './features/auth/AuthLayout';
 import { useAuth } from './features/auth/AuthContext';
+import { Landing } from './pages/Landing';
 
 function App() {
   const { user, isLoading } = useAuth();
@@ -14,9 +15,10 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/auth" element={user ? <Navigate to="/" /> : <AuthLayout />} />
+      <Route path="/" element={<Landing />} />
+      <Route path="/auth" element={user ? <Navigate to="/dashboard" /> : <AuthLayout />} />
       
-      <Route path="/" element={user ? <AppLayout /> : <Navigate to="/auth" />}>
+      <Route path="/dashboard" element={user ? <AppLayout /> : <Navigate to="/auth" />}>
         <Route index element={<Dashboard />} />
         {/* Placeholder routes for the sidebar links */}
         <Route path="health" element={<div className="p-8"><h1 className="text-3xl font-display font-bold">My Health</h1></div>} />
