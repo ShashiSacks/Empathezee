@@ -95,14 +95,14 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-
-            callbackURL: process.env.GOOGLE_CALLBACK_URL
-        },
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    passport.use(
+        new GoogleStrategy(
+            {
+                clientID: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback"
+            },
         async (accessToken, refreshToken, profile, done) => {
             try {
                 // 1. Existing Google User
@@ -143,6 +143,7 @@ passport.use(
         }
     )
 );
+}
 
 
 // routes
@@ -504,7 +505,7 @@ app.get("/medicine", protectUser, async (req, res) => {
 
 
 // SPA fallback for React frontend routes
-app.get("*", (req, res, next) => {
+app.use((req, res, next) => {
     if (req.path.startsWith("/api") || req.path.startsWith("/auth")) return next();
     const indexPath = path.join(__dirname, "client/dist/index.html");
     const fs = require("fs");
