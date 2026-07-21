@@ -251,7 +251,7 @@ const findDoctors = async (req, res) => {
 
 // doctor search UI page handler
 const getDoctorSearchUi = (req, res) => {
-    res.render("doctorSearch");
+    res.json({ success: true, message: "Doctor search API endpoint ready." });
 };
 
 module.exports = {

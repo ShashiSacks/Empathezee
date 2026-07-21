@@ -75,7 +75,18 @@ const userSchema = new mongoose.Schema({
     googleId: {
         type: String,
         default: null
-    }
+    },
+    
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    
+    otp: String,
+    otpExpire: Date,
+    
+    passwordResetToken: String,
+    passwordResetExpires: Date
 }, {
     timestamps: true
 });

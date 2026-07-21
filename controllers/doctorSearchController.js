@@ -64,7 +64,7 @@ const searchDoctors = async (req, res) => {
         }
 
         // render default search view
-        return res.render("doctors/search");
+        return res.json({ success: true, message: "Doctor search API endpoint ready." });
 
     } catch (err) {
         console.error("Doctor Search Error:", err);
