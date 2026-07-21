@@ -1,232 +1,155 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { 
-  Users, Stethoscope, Pill, Sparkles, ArrowRight, Search, 
-  CalendarPlus, ShieldHalf, Phone, Ambulance, Brain
-} from 'lucide-react';
 
-const Dashboard = () => {
+export default function Dashboard() {
   const { user } = useAuth();
-  const [greeting, setGreeting] = useState('');
-  const [upcomingAppointment, setUpcomingAppointment] = useState(null);
-  const [wellnessTip, setWellnessTip] = useState('');
-  const [communityCount, setCommunityCount] = useState(0);
 
-  const tips = [
-    "Drink at least 8 glasses of water today.",
-    "Take a 5-minute break to stretch your legs.",
-    "Focus on deep breathing for 60 seconds.",
-    "A quick walk can boost your energy levels.",
-    "Remember to take your prescribed medicines on time."
-  ];
-
-  useEffect(() => {
+  const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting('🌅 Good morning');
-    else if (hour < 17) setGreeting('☀️ Good afternoon');
-    else if (hour < 21) setGreeting('🌆 Good evening');
-    else setGreeting('🌙 Good night');
-    
-    setWellnessTip(tips[Math.floor(Math.random() * tips.length)]);
-
-    // Fetch functional data silently
-    const fetchData = async () => {
-      try {
-        const [appRes, comRes] = await Promise.all([
-          axios.get('/api/appointments').catch(() => ({ data: [] })),
-          axios.get('/api/communities').catch(() => ({ data: [] }))
-        ]);
-        
-        if (appRes.data && appRes.data.length > 0) {
-          // Sort to find the nearest upcoming appointment
-          const upcoming = appRes.data
-            .filter(a => new Date(a.date) >= new Date() && a.status === 'confirmed')
-            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
-          setUpcomingAppointment(upcoming);
-        }
-        
-        if (comRes.data) {
-          setCommunityCount(comRes.data.length);
-        }
-      } catch (error) {
-        console.error("Failed to load dashboard widgets", error);
-      }
-    };
-    fetchData();
-  }, []);
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
 
   return (
     <main className="page-container">
       {/* Personalized Greeting Banner */}
-      <div className="dashboard-greeting animate-fade-up card" id="greeting-banner" style={{ border: 'none', background: 'var(--grad-hero)', padding: '48px 32px', marginBottom: '32px' }}>
+      <div className="dashboard-greeting animate-fade-up" id="greeting-banner" style={{ position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'relative', zIndex: 2 }}>
-          <p className="greeting-time" id="greeting-time-label" style={{ fontWeight: 600, color: 'var(--primary)', marginBottom: '8px' }}>{greeting}</p>
-          <h1 className="greeting-title" style={{ fontSize: '2.5rem', marginTop: '0', marginBottom: '16px' }}>
-            Welcome back, <span className="highlight" style={{ background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{user?.username}</span> 👋
+          <p className="greeting-time" id="greeting-time-label">{getGreeting()}</p>
+          <h1 className="greeting-title">
+            Welcome back, <span style={{ background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{user?.username || 'User'}</span> 👋
           </h1>
-          <p className="greeting-subtitle" style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-            You are signed in as a <strong>{user?.role}</strong>.
+          <p className="greeting-subtitle">
+            You are signed in as a <strong>{user?.role || 'user'}</strong>.
             {user?.disease && (
-              <> Your community focus: <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{user.disease}</span></>
+              <> Your community: <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{user.disease}</span></>
             )}
           </p>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '24px' }}>
-            <Link to="/communities" className="btn-primary" id="dash-cta-communities">
-              <Users size={18} /> Find Your Community
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '20px' }}>
+            <Link to="/communities" className="btn-primary btn-sm" id="dash-cta-communities">
+              <i className="fa-solid fa-people-group"></i> Find Your Community
             </Link>
-            <Link to="/doctor/search" className="btn-outline" id="dash-cta-doctors">
-              <Stethoscope size={18} /> Book a Doctor
+            <Link to="/doctor/search" className="btn-outline btn-sm" id="dash-cta-doctors" style={{ borderRadius: '999px' }}>
+              <i className="fa-solid fa-user-doctor"></i> Book a Doctor
             </Link>
           </div>
+        </div>
+
+        {/* Decorative blob */}
+        <div aria-hidden="true" style={{
+          position: 'absolute',
+          right: '32px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '120px',
+          height: '120px',
+          background: 'var(--grad-primary)',
+          borderRadius: '50%',
+          opacity: 0.08,
+          pointerEvents: 'none'
+        }}></div>
+      </div>
+
+      {/* Quick Stats Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '32px' }} aria-label="Health stats overview">
+        <div className="card animate-fade-up" style={{ padding: '20px', textAlign: 'center', animationDelay: '0.05s' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>👥</div>
+          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '-0.02em' }}>Join a Group</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Connect with peers</div>
+        </div>
+        <div className="card animate-fade-up" style={{ padding: '20px', textAlign: 'center', animationDelay: '0.10s' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>🩺</div>
+          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-dark)', letterSpacing: '-0.02em' }}>Book a Doc</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Expert guidance</div>
+        </div>
+        <div className="card animate-fade-up" style={{ padding: '20px', textAlign: 'center', animationDelay: '0.15s' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>💊</div>
+          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--secondary-dark)', letterSpacing: '-0.02em' }}>Order Meds</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Fast delivery</div>
+        </div>
+        <div className="card animate-fade-up" style={{ padding: '20px', textAlign: 'center', animationDelay: '0.20s' }}>
+          <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>🧘</div>
+          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--warning)', letterSpacing: '-0.02em' }}>Wellness</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Mind & body</div>
         </div>
       </div>
 
-      {/* Functional Dynamic Widgets Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '40px' }}>
-        
-        {/* Appointment Widget */}
-        <div className="card animate-fade-up" style={{ padding: '24px', borderTop: '4px solid var(--primary)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-            <div style={{ padding: '10px', background: 'var(--primary-50)', borderRadius: '12px', color: 'var(--primary)' }}>
-              <CalendarPlus size={24} />
-            </div>
-            <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text)' }}>Next Appointment</h3>
-          </div>
-          {upcomingAppointment ? (
-            <div>
-              <p style={{ fontWeight: 600, color: 'var(--text)', margin: '0 0 4px 0' }}>
-                Dr. {upcomingAppointment.doctor?.username || 'Specialist'}
-              </p>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
-                {new Date(upcomingAppointment.date).toLocaleDateString()} at {upcomingAppointment.time}
-              </p>
-            </div>
-          ) : (
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
-              No upcoming appointments. <Link to="/doctor/search" style={{ color: 'var(--primary)', fontWeight: 600 }}>Book now</Link>.
-            </p>
-          )}
-        </div>
-
-        {/* Wellness Tip Widget */}
-        <div className="card animate-fade-up" style={{ padding: '24px', borderTop: '4px solid var(--secondary)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-            <div style={{ padding: '10px', background: 'var(--secondary-50)', borderRadius: '12px', color: 'var(--secondary)' }}>
-              <Sparkles size={24} />
-            </div>
-            <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text)' }}>Daily Wellness Tip</h3>
-          </div>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', margin: 0, lineHeight: 1.5 }}>
-            "{wellnessTip}"
-          </p>
-        </div>
-
-        {/* Community Activity Widget */}
-        <div className="card animate-fade-up" style={{ padding: '24px', borderTop: '4px solid var(--accent)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-            <div style={{ padding: '10px', background: 'var(--accent-50)', borderRadius: '12px', color: 'var(--accent-dark)' }}>
-              <Users size={24} />
-            </div>
-            <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text)' }}>Active Communities</h3>
-          </div>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', margin: 0 }}>
-            <strong style={{ color: 'var(--text)' }}>{communityCount > 0 ? communityCount : 'Several'}</strong> support groups are active right now. <Link to="/communities" style={{ color: 'var(--accent-dark)', fontWeight: 600 }}>Join the conversation</Link>.
-          </p>
-        </div>
-
-      </div>
-
-      <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '24px' }}>Quick Access</h2>
-      
       {/* Main Dashboard Cards */}
-      <div className="container" style={{ marginBottom: '40px' }}>
-        
+      <div className="dashboard-grid" id="dashboard-main-grid">
         {/* Communities */}
-        <div className="card animate-fade-up">
-          <div className="card-body">
-            <div style={{ padding: '12px', background: 'var(--primary-50)', borderRadius: '12px', display: 'inline-flex', marginBottom: '16px', color: 'var(--primary)' }}>
-              <Users size={28} />
-            </div>
-            <h2 style={{ textAlign: 'left', fontSize: '1.25rem', color: 'var(--text)', marginBottom: '8px' }}>Communities</h2>
+        <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.05s' }} id="dash-card-communities">
+          <div>
+            <span className="card-icon" aria-hidden="true">👥</span>
+            <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Communities</h2>
             <p>Join disease-based support communities, share discussions, and connect with others who truly understand your journey.</p>
-            <Link to="/communities" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: 'auto' }}>
-              <ArrowRight size={18} /> Open Directory
-            </Link>
           </div>
+          <Link to="/communities" className="btn-primary btn-sm" style={{ alignSelf: 'flex-start' }} id="dash-btn-communities">
+            <i className="fa-solid fa-arrow-right" aria-hidden="true"></i> Open Directory
+          </Link>
         </div>
 
         {/* Find Doctors */}
-        <div className="card animate-fade-up">
-          <div className="card-body">
-            <div style={{ padding: '12px', background: 'var(--accent-50)', borderRadius: '12px', display: 'inline-flex', marginBottom: '16px', color: 'var(--accent-dark)' }}>
-              <Search size={28} />
-            </div>
-            <h2 style={{ textAlign: 'left', fontSize: '1.25rem', color: 'var(--text)', marginBottom: '8px' }}>Find Doctors</h2>
+        <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.10s', borderTop: '3px solid var(--accent)' }} id="dash-card-doctors">
+          <div>
+            <span className="card-icon" aria-hidden="true">🩺</span>
+            <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Find Doctors</h2>
             <p>Locate verified medical specialists nearby using symptom-based location search. Book consultations in seconds.</p>
-            <Link to="/doctor/search" className="btn-teal" style={{ alignSelf: 'flex-start', marginTop: 'auto' }}>
-              <Search size={18} /> Search Directory
-            </Link>
           </div>
+          <Link to="/doctor/search" className="btn-teal btn-sm" style={{ alignSelf: 'flex-start', borderRadius: '999px' }} id="dash-btn-doctors">
+            <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Search Directory
+          </Link>
+        </div>
+
+        {/* Appointments */}
+        <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.15s', borderTop: '3px solid var(--secondary)' }} id="dash-card-appointments">
+          <div>
+            <span className="card-icon" aria-hidden="true">📅</span>
+            <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Appointments</h2>
+            <p>Schedule virtual consultations and direct chat sessions with verified doctors at your convenience.</p>
+          </div>
+          <Link to="/appointments-ui" className="btn-success btn-sm" style={{ alignSelf: 'flex-start', borderRadius: '999px' }} id="dash-btn-appointments">
+            <i className="fa-solid fa-calendar-plus" aria-hidden="true"></i> Book Consultation
+          </Link>
         </div>
 
         {/* Medicines */}
-        <div className="card animate-fade-up">
-          <div className="card-body">
-            <div style={{ padding: '12px', background: 'var(--warning-bg)', borderRadius: '12px', display: 'inline-flex', marginBottom: '16px', color: 'var(--warning)' }}>
-              <Pill size={28} />
-            </div>
-            <h2 style={{ textAlign: 'left', fontSize: '1.25rem', color: 'var(--text)', marginBottom: '8px' }}>Medicine Directory</h2>
-            <p>Browse verified medicine catalogs, search drug information, and order prescribed medicines with fast delivery.</p>
-            <Link to="/medicine" className="btn-warning" style={{ alignSelf: 'flex-start', marginTop: 'auto' }}>
-              <Pill size={18} /> Open Catalog
-            </Link>
+        <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.20s', borderTop: '3px solid var(--purple)' }} id="dash-card-medicines">
+          <div>
+            <span className="card-icon" aria-hidden="true">💊</span>
+            <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Medicines</h2>
+            <p>Search prescribed medications, compare dosages, and order medicines from verified online pharmacy partners.</p>
           </div>
+          <Link to="/medicine" className="btn-purple btn-sm" style={{ alignSelf: 'flex-start', borderRadius: '999px' }} id="dash-btn-medicines">
+            <i className="fa-solid fa-pills" aria-hidden="true"></i> Search Medicines
+          </Link>
         </div>
 
-        {/* Doctor Panel (only for doctor role) */}
-        {user?.role === "doctor" && (
-          <div className="card animate-fade-up" style={{ border: '1.5px solid var(--primary)' }}>
-            <div className="card-body">
-              <div style={{ padding: '12px', background: 'var(--primary-50)', borderRadius: '12px', display: 'inline-flex', marginBottom: '16px', color: 'var(--primary)' }}>
-                <ShieldHalf size={28} />
-              </div>
-              <h2 style={{ textAlign: 'left', fontSize: '1.25rem', color: 'var(--text)', marginBottom: '8px' }}>Doctor Moderation</h2>
-              <p>Review reported community posts, verify medical information, view patient consultations, and manage your dashboard.</p>
-              <Link to="/doctor/dashboard" className="btn-gradient" style={{ alignSelf: 'flex-start', marginTop: 'auto' }}>
-                <ShieldHalf size={18} /> Open Moderator Panel
-              </Link>
-            </div>
+        {/* Mental Wellness */}
+        <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.25s', borderTop: '3px solid var(--warning)' }} id="dash-card-wellness">
+          <div>
+            <span className="card-icon" aria-hidden="true">🧘</span>
+            <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Mental Wellness</h2>
+            <p>Access meditation guides, mood trackers, stress management tools, and professional wellness advice.</p>
           </div>
-        )}
-      </div>
-
-      {/* Emergency Support Section */}
-      <div className="card animate-fade-up" style={{ background: 'var(--danger-bg)', border: '1px solid rgba(239, 68, 68, 0.2)', display: 'flex', flexDirection: 'row', gap: '24px', alignItems: 'center' }}>
-        <div style={{ padding: '16px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '50%', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Phone size={32} />
+          <Link to="/wellness" className="btn-warning btn-sm" style={{ alignSelf: 'flex-start', borderRadius: '999px' }} id="dash-btn-wellness">
+            <i className="fa-solid fa-seedling" aria-hidden="true"></i> Explore Tools
+          </Link>
         </div>
-        <div style={{ flex: 1 }}>
-          <h3 style={{ textAlign: 'left', color: 'var(--danger)', fontSize: '1.1rem', marginBottom: '8px' }}>Need Immediate Help?</h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '16px', lineHeight: 1.5 }}>
-            If you are experiencing a medical emergency, please contact emergency services immediately.
-          </p>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <a href="tel:112" className="btn-danger">
-              <Phone size={18} /> Call 112
-            </a>
-            <a href="tel:102" className="btn-danger-outline">
-              <Ambulance size={18} /> Ambulance 102
-            </a>
-            <a href="tel:1800111565" className="btn-danger-outline">
-              <Brain size={18} /> Mental Health Helpline
-            </a>
+
+        {/* Health Analytics */}
+        <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.30s', borderTop: '3px solid var(--danger)' }} id="dash-card-analytics">
+          <div>
+            <span className="card-icon" aria-hidden="true">📊</span>
+            <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Platform Analytics</h2>
+            <p>View real-time safety stats, verified discussion metrics, disease prevalence insights, and medical trust scores.</p>
           </div>
+          <Link to="/analytics" className="btn-danger btn-sm" style={{ alignSelf: 'flex-start', borderRadius: '999px' }} id="dash-btn-analytics">
+            <i className="fa-solid fa-chart-line" aria-hidden="true"></i> View Platform Stats
+          </Link>
         </div>
       </div>
     </main>
   );
-};
-
-export default Dashboard;
+}

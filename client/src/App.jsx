@@ -1,78 +1,69 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Layout from './components/Layout';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import DoctorLogin from './pages/DoctorLogin';
+import Register from './pages/Register';
 import DoctorRegister from './pages/DoctorRegister';
 import Dashboard from './pages/Dashboard';
 import DoctorDashboard from './pages/DoctorDashboard';
-import Profile from './pages/Profile';
 import Communities from './pages/Communities';
-import CommunityDetails from './pages/CommunityDetails';
-import Appointments from './pages/Appointments';
-import Medicine from './pages/Medicine';
-import Wellness from './pages/Wellness';
-import Analytics from './pages/Analytics';
+import CommunityDetail from './pages/CommunityDetail';
 import DoctorSearch from './pages/DoctorSearch';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import Appointments from './pages/Appointments';
+import Medicines from './pages/Medicines';
+import Wellness from './pages/Wellness';
+import Profile from './pages/Profile';
+import Analytics from './pages/Analytics';
 
-// Protected Route Wrapper for Users
-const ProtectedRoute = ({ children }) => {
+function AppRoutes() {
   const { user, loading } = useAuth();
-  
-  if (loading) return <div>Loading...</div>;
-  if (!user) return <Navigate to="/login" replace />;
-  if (user.role === 'doctor') return <Navigate to="/doctor/dashboard" replace />;
-  
-  return children;
-};
 
-// Protected Route Wrapper for Doctors
-const DoctorProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  
-  if (loading) return <div>Loading...</div>;
-  if (!user) return <Navigate to="/doctor/login" replace />;
-  if (user.role !== 'doctor') return <Navigate to="/dashboard" replace />;
-  
-  return children;
-};
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <div className="spinner" style={{ width: '40px', height: '40px', border: '4px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+      </div>
+    );
+  }
 
-function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Navbar />
+      <div style={{ flex: 1 }}>
         <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Landing />} />
-            
-            {/* Auth Routes */}
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="doctor/login" element={<DoctorLogin />} />
-            <Route path="doctor/register" element={<DoctorRegister />} />
-            
-            {/* User Protected Routes */}
-            <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="communities" element={<ProtectedRoute><Communities /></ProtectedRoute>} />
-            <Route path="community/:id" element={<ProtectedRoute><CommunityDetails /></ProtectedRoute>} />
-            <Route path="doctor/search" element={<ProtectedRoute><DoctorSearch /></ProtectedRoute>} />
-            <Route path="appointments-ui" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
-            <Route path="medicine" element={<ProtectedRoute><Medicine /></ProtectedRoute>} />
-            <Route path="wellness" element={<ProtectedRoute><Wellness /></ProtectedRoute>} />
-            <Route path="analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
-            <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-
-            {/* Doctor Protected Routes */}
-            <Route path="doctor/dashboard" element={<DoctorProtectedRoute><DoctorDashboard /></DoctorProtectedRoute>} />
-            
-          </Route>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/doctor/login" element={<DoctorLogin />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/doctor/register" element={<DoctorRegister />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+          <Route path="/communities" element={<Communities />} />
+          <Route path="/community/:id" element={<CommunityDetail />} />
+          <Route path="/doctor/search" element={<DoctorSearch />} />
+          <Route path="/appointments-ui" element={<Appointments />} />
+          <Route path="/medicine" element={<Medicines />} />
+          <Route path="/wellness" element={<Wellness />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </div>
+      <Footer />
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </Router>
+  );
+}

@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../services/api';
 
 const AuthContext = createContext();
 
@@ -7,23 +7,15 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const checkAuth = async () => {
+  const fetchUser = async () => {
     try {
-      const response = await axios.get('/api/users/profile', {
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      
-      // If the backend middleware redirects to /login, axios might follow it and return HTML
-      if (typeof response.data === 'string' && response.data.includes('<!DOCTYPE html>')) {
-        setUser(null);
-      } else if (response.data && response.data.user) {
-        setUser(response.data.user);
+      const res = await api.get('/api/users/profile');
+      if (res.data && res.data.user) {
+        setUser(res.data.user);
       } else {
         setUser(null);
       }
-    } catch (error) {
+    } catch (err) {
       setUser(null);
     } finally {
       setLoading(false);
@@ -31,25 +23,22 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    checkAuth();
+    fetchUser();
   }, []);
-
-  const login = (userData) => {
-    setUser(userData);
-  };
 
   const logout = async () => {
     try {
-      await axios.get('/api/auth/logout');
+      await api.get('/api/auth/logout');
+    } catch (err) {
+      console.error(err);
+    } finally {
       setUser(null);
-      window.location.href = '/';
-    } catch (error) {
-      console.error('Logout error', error);
+      window.location.href = '/login';
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, setUser, loading, logout, fetchUser }}>
       {children}
     </AuthContext.Provider>
   );
