@@ -6,8 +6,8 @@ const sessionMiddleware = session({
     resave: false,
     saveUninitialized: false,
 
-    store: process.env.MONGO_URI ? MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
+    store: (process.env.MONGODB_URI || process.env.MONGO_URI) ? MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI || process.env.MONGO_URI,
         ttl: 24 * 60 * 60
     }) : undefined,
 
