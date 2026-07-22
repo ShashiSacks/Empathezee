@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import LOCATION_DATA from '../utils/locationData';
 import Logo from '../components/Logo';
 import { Button, Alert } from '../components/ui';
@@ -32,6 +33,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const { fetchUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -109,7 +111,8 @@ export default function Register() {
 
     try {
       await api.post('/api/auth/register', payload);
-      navigate('/login');
+      await fetchUser();
+      navigate('/dashboard');
     } catch (err) {
       if (err.response && err.response.data) {
         const msg = typeof err.response.data === 'string' 
@@ -149,6 +152,7 @@ export default function Register() {
                 name="username"
                 placeholder="Choose a username"
                 required
+                autoComplete="name"
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               />
@@ -162,6 +166,7 @@ export default function Register() {
                 name="email"
                 placeholder="you@example.com"
                 required
+                autoComplete="username"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -176,6 +181,7 @@ export default function Register() {
                   name="password"
                   placeholder="Min. 6 characters"
                   required
+                  autoComplete="new-password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   style={{ paddingRight: '44px' }}

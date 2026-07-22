@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import LOCATION_DATA from '../utils/locationData';
 import Logo from '../components/Logo';
 
@@ -32,6 +33,7 @@ export default function DoctorRegister() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const { fetchUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -109,7 +111,8 @@ export default function DoctorRegister() {
 
     try {
       await api.post('/api/auth/doctor/register', payload);
-      navigate('/doctor/login');
+      await fetchUser();
+      navigate('/doctor/dashboard');
     } catch (err) {
       if (err.response && err.response.data) {
         const msg = typeof err.response.data === 'string'
@@ -155,7 +158,7 @@ export default function DoctorRegister() {
               name="email"
               placeholder="Doctor email"
               required
-              autoComplete="email"
+              autoComplete="username"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />

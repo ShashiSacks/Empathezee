@@ -90,7 +90,7 @@ const register = catchAsync(async (req, res, next) => {
         isVerified: true
     });
 
-    res.status(201).json({ success: true, message: "User registered successfully.", userId: user._id });
+    await sendTokenResponse(user, 201, req, res);
 });
 
 const verifyEmail = catchAsync(async (req, res, next) => {

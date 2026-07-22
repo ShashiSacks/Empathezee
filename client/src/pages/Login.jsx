@@ -71,7 +71,7 @@ export default function Login() {
                 name="email"
                 placeholder="you@example.com"
                 required
-                autoComplete="email"
+                autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />

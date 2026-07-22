@@ -83,7 +83,7 @@ export default function DoctorLogin() {
                 name="email"
                 placeholder="doctor@hospital.com"
                 required
-                autoComplete="email"
+                autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
