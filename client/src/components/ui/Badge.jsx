@@ -48,8 +48,8 @@ export function Badge({
   style = {},
 }) {
   const v = VARIANTS[variant] || VARIANTS.primary;
-  const fontSize = size === 'sm' ? '0.68rem' : size === 'lg' ? '0.82rem' : '0.73rem';
-  const padding  = size === 'sm' ? '2px 7px'  : size === 'lg' ? '5px 13px' : '3px 9px';
+  const fontSize = size === 'sm' ? '0.7rem' : size === 'lg' ? '0.8125rem' : '0.75rem';
+  const padding  = size === 'sm' ? '2px 8px' : size === 'lg' ? '5px 14px' : '3px 10px';
 
   return (
     <span
@@ -57,15 +57,16 @@ export function Badge({
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '4px',
+        gap: '5px',
         padding,
         fontSize,
-        fontWeight: 700,
+        fontFamily: 'var(--font-sans)',
+        fontWeight: 'var(--font-weight-semibold)',
         borderRadius: 'var(--radius-full)',
         background: v.bg,
         color: v.color,
         border: `1px solid ${v.border}`,
-        letterSpacing: '0.3px',
+        letterSpacing: '0.01em',
         whiteSpace: 'nowrap',
         ...style,
       }}

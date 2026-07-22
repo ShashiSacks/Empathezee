@@ -18,6 +18,26 @@ import Medicines from './pages/Medicines';
 import Wellness from './pages/Wellness';
 import Profile from './pages/Profile';
 import Analytics from './pages/Analytics';
+import Terms from './pages/Terms';
+
+// ProtectedRoute component to enforce authentication for all app features
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <div className="spinner" style={{ width: '36px', height: '36px', border: '3px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/register" replace />;
+  }
+
+  return children;
+}
 
 function AppRoutes() {
   const { user, loading } = useAuth();
@@ -48,21 +68,27 @@ function AppRoutes() {
       <Navbar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/doctor/login" element={<DoctorLogin />} />
           <Route path="/register" element={<Register />} />
           <Route path="/doctor/register" element={<DoctorRegister />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-          <Route path="/communities" element={<Communities />} />
-          <Route path="/community/:id" element={<CommunityDetail />} />
-          <Route path="/doctor/search" element={<DoctorSearch />} />
-          <Route path="/appointments-ui" element={<Appointments />} />
-          <Route path="/medicine" element={<Medicines />} />
-          <Route path="/wellness" element={<Wellness />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/terms" element={<Terms />} />
+
+          {/* Protected Routes (Require Signup/Login) */}
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/doctor/dashboard" element={<ProtectedRoute><DoctorDashboard /></ProtectedRoute>} />
+          <Route path="/communities" element={<ProtectedRoute><Communities /></ProtectedRoute>} />
+          <Route path="/community/:id" element={<ProtectedRoute><CommunityDetail /></ProtectedRoute>} />
+          <Route path="/doctor/search" element={<ProtectedRoute><DoctorSearch /></ProtectedRoute>} />
+          <Route path="/appointments-ui" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
+          <Route path="/medicine" element={<ProtectedRoute><Medicines /></ProtectedRoute>} />
+          <Route path="/wellness" element={<ProtectedRoute><Wellness /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+
+          {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

@@ -50,7 +50,6 @@ export function Card({
     boxShadow: 'var(--shadow-sm)',
     padding: getPadding(),
     transition: hover ? 'all var(--duration) var(--ease)' : undefined,
-    borderTop: accentColor ? `3px solid ${accentColor}` : undefined,
     ...style,
   };
 

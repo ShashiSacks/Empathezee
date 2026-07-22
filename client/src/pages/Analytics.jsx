@@ -53,25 +53,25 @@ export default function Analytics() {
       <Container size="xl">
         {/* General Summary Widgets */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-5)', marginBottom: 'var(--space-8)' }}>
-          <Card padding="md" style={{ textAlign: 'center', borderLeft: '4px solid var(--primary)' }}>
+          <Card padding="md" style={{ textAlign: 'center' }}>
             <span style={{ fontSize: '2.2rem', display: 'block', marginBottom: 'var(--space-1)' }}>💬</span>
             <h3 style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 'var(--space-1)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'center' }}>Total Discussions</h3>
             <p style={{ fontSize: '2.2rem', fontWeight: 850, color: 'var(--text)', margin: 0 }}>{totalPosts}</p>
           </Card>
 
-          <Card padding="md" style={{ textAlign: 'center', borderLeft: '4px solid var(--secondary)' }}>
+          <Card padding="md" style={{ textAlign: 'center' }}>
             <span style={{ fontSize: '2.2rem', display: 'block', marginBottom: 'var(--space-1)' }}>🩺</span>
             <h3 style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 'var(--space-1)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'center' }}>Doctor Reviews</h3>
             <p style={{ fontSize: '2.2rem', fontWeight: 850, color: 'var(--secondary)', margin: 0 }}>{doctorVerified + doctorRejected}</p>
           </Card>
 
-          <Card padding="md" style={{ textAlign: 'center', borderLeft: '4px solid var(--danger)' }}>
+          <Card padding="md" style={{ textAlign: 'center' }}>
             <span style={{ fontSize: '2.2rem', display: 'block', marginBottom: 'var(--space-1)' }}>🛡️</span>
-            <h3 style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 'var(--space-1)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'center' }}>Fake Post Filters</h3>
+            <h3 style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 'var(--space-1)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'center' }}>Flagged Post Filters</h3>
             <p style={{ fontSize: '2.2rem', fontWeight: 850, color: 'var(--danger)', margin: 0 }}>{fakePosts}</p>
           </Card>
 
-          <Card padding="md" style={{ textAlign: 'center', borderLeft: '4px solid var(--warning)' }}>
+          <Card padding="md" style={{ textAlign: 'center' }}>
             <span style={{ fontSize: '2.2rem', display: 'block', marginBottom: 'var(--space-1)' }}>👥</span>
             <h3 style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 'var(--space-1)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'center' }}>Active Members</h3>
             <p style={{ fontSize: '2.2rem', fontWeight: 850, color: 'var(--text)', margin: 0 }}>{totalUsers}</p>
@@ -99,7 +99,7 @@ export default function Analytics() {
                   <td style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)' }}>Verified medical information</td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
-                  <td style={{ padding: 'var(--space-3) var(--space-3)' }}>🔴 Fake Content</td>
+                  <td style={{ padding: 'var(--space-3) var(--space-3)' }}>🔴 Flagged Content</td>
                   <td style={{ padding: 'var(--space-3) var(--space-3)', fontWeight: 700 }}>{fakePosts}</td>
                   <td style={{ padding: 'var(--space-3) var(--space-3)', color: 'var(--text-secondary)' }}>Flagged as misleading by doctors</td>
                 </tr>

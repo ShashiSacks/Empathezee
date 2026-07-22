@@ -44,26 +44,26 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Quick Stats Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-4)', marginBottom: 'var(--space-8)' }} aria-label="Health stats overview">
+        {/* Quick Actions Row */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-4)', marginBottom: 'var(--space-8)' }} aria-label="Health overview">
           <Card padding="md" style={{ textAlign: 'center' }} hover>
             <div style={{ fontSize: '1.8rem', marginBottom: 'var(--space-1)' }}>👥</div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '-0.02em' }}>Join a Group</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '-0.02em' }}>Join Community</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Connect with peers</div>
           </Card>
           <Card padding="md" style={{ textAlign: 'center' }} hover>
             <div style={{ fontSize: '1.8rem', marginBottom: 'var(--space-1)' }}>🩺</div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-dark)', letterSpacing: '-0.02em' }}>Book a Doc</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-dark)', letterSpacing: '-0.02em' }}>Book Doctor</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Expert guidance</div>
           </Card>
           <Card padding="md" style={{ textAlign: 'center' }} hover>
             <div style={{ fontSize: '1.8rem', marginBottom: 'var(--space-1)' }}>💊</div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--secondary-dark)', letterSpacing: '-0.02em' }}>Order Meds</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--secondary-dark)', letterSpacing: '-0.02em' }}>Order Medicines</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Fast delivery</div>
           </Card>
           <Card padding="md" style={{ textAlign: 'center' }} hover>
             <div style={{ fontSize: '1.8rem', marginBottom: 'var(--space-1)' }}>🧘</div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--warning)', letterSpacing: '-0.02em' }}>Wellness</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--warning)', letterSpacing: '-0.02em' }}>Mental Wellness</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Mind & body</div>
           </Card>
         </div>
@@ -85,7 +85,7 @@ export default function Dashboard() {
           </div>
 
           {/* Find Doctors */}
-          <div className="dashboard-card animate-fade-up" style={{ borderTop: '3px solid var(--accent)' }} id="dash-card-doctors">
+          <div className="dashboard-card animate-fade-up" id="dash-card-doctors">
             <div>
               <span className="card-icon" aria-hidden="true">🩺</span>
               <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Find Doctors</h2>
@@ -99,7 +99,7 @@ export default function Dashboard() {
           </div>
 
           {/* Appointments */}
-          <div className="dashboard-card animate-fade-up" style={{ borderTop: '3px solid var(--secondary)' }} id="dash-card-appointments">
+          <div className="dashboard-card animate-fade-up" id="dash-card-appointments">
             <div>
               <span className="card-icon" aria-hidden="true">📅</span>
               <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Appointments</h2>
@@ -113,7 +113,7 @@ export default function Dashboard() {
           </div>
 
           {/* Medicines */}
-          <div className="dashboard-card animate-fade-up" style={{ borderTop: '3px solid var(--accent)' }} id="dash-card-medicines">
+          <div className="dashboard-card animate-fade-up" id="dash-card-medicines">
             <div>
               <span className="card-icon" aria-hidden="true">💊</span>
               <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Medicines</h2>
@@ -127,7 +127,7 @@ export default function Dashboard() {
           </div>
 
           {/* Mental Wellness */}
-          <div className="dashboard-card animate-fade-up" style={{ borderTop: '3px solid var(--warning)' }} id="dash-card-wellness">
+          <div className="dashboard-card animate-fade-up" id="dash-card-wellness">
             <div>
               <span className="card-icon" aria-hidden="true">🧘</span>
               <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Mental Wellness</h2>
@@ -141,7 +141,7 @@ export default function Dashboard() {
           </div>
 
           {/* Health Analytics */}
-          <div className="dashboard-card animate-fade-up" style={{ borderTop: '3px solid var(--danger)' }} id="dash-card-analytics">
+          <div className="dashboard-card animate-fade-up" id="dash-card-analytics">
             <div>
               <span className="card-icon" aria-hidden="true">📊</span>
               <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Platform Analytics</h2>

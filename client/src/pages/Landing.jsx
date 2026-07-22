@@ -13,7 +13,7 @@ export default function Landing() {
           </div>
 
           <h1 className="hero-title">
-            You don’t have to fight your illness <span className="highlight">alone.</span>
+            You don't have to fight your illness <span className="highlight">alone.</span>
           </h1>
 
           <p className="hero-subtitle">
@@ -28,105 +28,93 @@ export default function Landing() {
             <Link to="/login" className="btn btn-outline btn-lg" style={{ borderRadius: '999px' }}>
               <i className="fa-solid fa-right-to-bracket"></i> Member Login
             </Link>
-            <Link to="/doctor/login" className="btn btn-ghost btn-lg" style={{ borderRadius: '999px', color: 'var(--text-secondary)', border: '1.5px solid var(--border)' }}>
+            <Link to="/doctor/login" className="btn btn-ghost btn-lg" style={{ borderRadius: '999px' }}>
               <i className="fa-solid fa-stethoscope"></i> Doctor Portal
             </Link>
-          </div>
-
-          <div className="hero-stats">
-            <div className="hero-stat">
-              <div className="hero-stat-number">10k+</div>
-              <div className="hero-stat-label">Active Peers</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat-number">250+</div>
-              <div className="hero-stat-label">Verified Doctors</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat-number">50+</div>
-              <div className="hero-stat-label">Support Groups</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat-number">24/7</div>
-              <div className="hero-stat-label">Emergency & SOS</div>
-            </div>
           </div>
         </div>
       </section>
 
       {/* Feature Highlights Grid */}
-      <section className="page-container" style={{ paddingTop: '64px', paddingBottom: '64px' }}>
-        <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 48px' }}>
-          <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Comprehensive Care</span>
-          <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em' }}>
+      <section className="page-container" style={{ paddingTop: '32px', paddingBottom: '64px' }}>
+        <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 40px' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', textAlign: 'center' }}>
             Everything you need in one compassionate space
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', marginTop: '8px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', marginTop: '8px', textAlign: 'center' }}>
             Designed alongside patients and doctors to provide complete physical, mental, and social support.
           </p>
         </div>
 
-        <div className="dashboard-grid">
+        <div className="landing-features-grid">
           {/* Card 1: Peer Communities */}
           <div className="dashboard-card animate-fade-up">
-            <span className="card-icon" aria-hidden="true">👥</span>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--primary-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', marginBottom: '16px' }}>
+              👥
+            </div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text)', marginBottom: '8px', textAlign: 'left' }}>
               Disease-Specific Communities
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, flexGrow: 1 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6, flexGrow: 1, textAlign: 'left', margin: 0 }}>
               Share stories, exchange advice, and discuss treatment plans with peers who truly understand living with your condition.
             </p>
-            <Link to="/register" className="btn btn-primary btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start' }}>
+            <Link to="/register" className="btn btn-primary btn-sm" style={{ marginTop: '20px', alignSelf: 'flex-start', borderRadius: '999px' }}>
               Explore Groups <i className="fa-solid fa-arrow-right"></i>
             </Link>
           </div>
 
           {/* Card 2: Verified Doctors */}
-          <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.1s', borderTop: '3px solid var(--accent)' }}>
-            <span className="card-icon" aria-hidden="true">🩺</span>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>
+          <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--accent-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', marginBottom: '16px' }}>
+              🩺
+            </div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text)', marginBottom: '8px', textAlign: 'left' }}>
               Verified Doctors Directory
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, flexGrow: 1 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6, flexGrow: 1, textAlign: 'left', margin: 0 }}>
               Find experienced specialists nearby by location and disease focus. Book instant virtual consultations.
             </p>
-            <Link to="/register" className="btn btn-teal btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start', borderRadius: '999px' }}>
+            <Link to="/register" className="btn btn-teal btn-sm" style={{ marginTop: '20px', alignSelf: 'flex-start', borderRadius: '999px' }}>
               Find Doctors <i className="fa-solid fa-magnifying-glass"></i>
             </Link>
           </div>
 
           {/* Card 3: Mental Wellness */}
-          <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.2s', borderTop: '3px solid var(--secondary)' }}>
-            <span className="card-icon" aria-hidden="true">🧘</span>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>
+          <div className="dashboard-card animate-fade-up" style={{ animationDelay: '0.2s' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--secondary-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', marginBottom: '16px' }}>
+              🧘
+            </div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text)', marginBottom: '8px', textAlign: 'left' }}>
               Mental Wellness & Tracking
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, flexGrow: 1 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6, flexGrow: 1, textAlign: 'left', margin: 0 }}>
               Access guided meditations, mood logs, medication reminders, and mental health tools tailored for chronic illness care.
             </p>
-            <Link to="/register" className="btn btn-success btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start', borderRadius: '999px' }}>
+            <Link to="/register" className="btn btn-success btn-sm" style={{ marginTop: '20px', alignSelf: 'flex-start', borderRadius: '999px' }}>
               Start Wellness <i className="fa-solid fa-heart"></i>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Emergency CTA Banner */}
-      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', padding: '48px 24px' }}>
-        <div className="page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '24px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--danger)', fontWeight: 700, fontSize: '0.9rem', marginBottom: '6px' }}>
-              <i className="fa-solid fa-shield-halved"></i> 24/7 EMERGENCY HELPLINE INTEGRATED
+      {/* Emergency CTA Banner — compact */}
+      <section style={{ background: 'var(--danger-bg)', borderTop: '1px solid rgba(239,68,68,0.15)', borderBottom: '1px solid rgba(239,68,68,0.15)', padding: '28px 24px' }}>
+        <div className="page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ width: '40px', height: '40px', background: 'var(--danger)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <i className="fa-solid fa-phone" style={{ color: 'white', fontSize: '0.95rem' }}></i>
             </div>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)' }}>
-              Need urgent medical help?
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
-              Connect immediately to local emergency services directly through Empathezee.
-            </p>
+            <div>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--danger)', letterSpacing: '0.5px', textTransform: 'uppercase', marginBottom: '2px' }}>
+                24/7 Emergency Helpline
+              </p>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                Need urgent help? Connect immediately to emergency services.
+              </p>
+            </div>
           </div>
-          <a href="tel:112" className="btn-danger btn-lg" style={{ borderRadius: '999px', gap: '10px' }}>
-            <i className="fa-solid fa-phone-volume"></i> Emergency Call 112
+          <a href="tel:112" className="btn btn-danger btn-sm" style={{ borderRadius: '999px', gap: '8px', flexShrink: 0 }}>
+            <i className="fa-solid fa-phone-volume"></i> Call 112
           </a>
         </div>
       </section>

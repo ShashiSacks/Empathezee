@@ -82,7 +82,7 @@ export default function Login() {
                 <span>Password</span>
                 <a href="#" style={{ fontSize: '0.78rem', fontWeight: 600, letterSpacing: 0 }}>Forgot password?</a>
               </label>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative', width: '100%' }}>
                 <input
                   id="login-password"
                   type={showPassword ? 'text' : 'password'}
@@ -96,20 +96,9 @@ export default function Login() {
                 />
                 <button
                   type="button"
+                  className="password-toggle-btn"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword((p) => !p)}
-                  style={{
-                    position: 'absolute',
-                    right: '14px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--text-muted)',
-                    fontSize: '0.9rem',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 0,
-                  }}
                 >
                   <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} />
                 </button>

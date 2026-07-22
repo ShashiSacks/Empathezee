@@ -224,7 +224,7 @@ const Medicine = () => {
       <div className="page-container" style={{ maxWidth: '860px', paddingTop: '40px' }}>
         
         {/* Google CSE Panel */}
-        <div className="card" style={{ padding: '32px', marginBottom: '32px', borderTop: '3px solid var(--secondary)' }}>
+        <div className="card" style={{ padding: '32px', marginBottom: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--secondary-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--secondary)' }}>
               <Search size={24} />
@@ -238,7 +238,7 @@ const Medicine = () => {
         </div>
 
         {/* Quick Order Panel */}
-        <div className="card" style={{ padding: '32px', marginBottom: '40px', borderTop: '3px solid var(--primary)' }}>
+        <div className="card" style={{ padding: '32px', marginBottom: '40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--primary-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
               <ShoppingCart size={24} />
@@ -275,22 +275,22 @@ const Medicine = () => {
 
         {/* Info Cards Row */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: '20px', marginBottom: '40px' }}>
-          <div className="card" style={{ padding: '24px', textAlign: 'center', borderTop: '3px solid var(--secondary)' }}>
+          <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--secondary)' }}><Pill size={36} /></div>
             <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>10,000+ Medicines</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Verified drug database</p>
           </div>
-          <div className="card" style={{ padding: '24px', textAlign: 'center', borderTop: '3px solid var(--primary)' }}>
+          <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--primary)' }}><ShieldCheck size={36} /></div>
             <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>100% Secure</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Stripe-secured payments</p>
           </div>
-          <div className="card" style={{ padding: '24px', textAlign: 'center', borderTop: '3px solid var(--accent)' }}>
+          <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--accent)' }}><Truck size={36} /></div>
             <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>Free Delivery</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>On all orders</p>
           </div>
-          <div className="card" style={{ padding: '24px', textAlign: 'center', borderTop: '3px solid var(--warning)' }}>
+          <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--warning)' }}><Clock size={36} /></div>
             <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>2–4 Day Delivery</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Pan-India coverage</p>

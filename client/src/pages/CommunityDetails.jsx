@@ -226,7 +226,7 @@ const CommunityDetails = () => {
 
           {/* Left: Post Feed */}
           <div>
-            <div className="card" style={{ padding: '24px', marginBottom: '20px', borderTop: '3px solid var(--primary)' }}>
+            <div className="card" style={{ padding: '24px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
                 <div className="feed-avatar" style={{ fontSize: '0.9rem', flexShrink: 0 }}>
                   {(user?.username || 'A').charAt(0).toUpperCase()}
@@ -348,7 +348,7 @@ const CommunityDetails = () => {
 
           {/* Right: Live Chat */}
           <div style={{ position: 'sticky', top: 'calc(var(--nav-h) + 16px)' }}>
-            <div className="card" style={{ padding: 0, overflow: 'hidden', height: '580px', display: 'flex', flexDirection: 'column', borderTop: '3px solid var(--accent)' }}>
+            <div className="card" style={{ padding: 0, overflow: 'hidden', height: '580px', display: 'flex', flexDirection: 'column' }}>
               
               <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span style={{ fontSize: '1.1rem' }}>💬</span>

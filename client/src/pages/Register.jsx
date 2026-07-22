@@ -30,6 +30,7 @@ export default function Register() {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -168,15 +169,26 @@ export default function Register() {
 
             <div className="form-group">
               <label htmlFor="reg-password">Password</label>
-              <input
-                id="reg-password"
-                type="password"
-                name="password"
-                placeholder="Min. 6 characters"
-                required
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              />
+              <div style={{ position: 'relative', width: '100%' }}>
+                <input
+                  id="reg-password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Min. 6 characters"
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  style={{ paddingRight: '44px' }}
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowPassword((p) => !p)}
+                >
+                  <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} />
+                </button>
+              </div>
             </div>
 
             <div className="form-group">

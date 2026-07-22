@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Logo from './Logo';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -51,7 +52,7 @@ export default function Navbar() {
         <div className="nav-container">
           {/* Logo */}
           <Link to="/" className="nav-logo" aria-label="Empathezee Home">
-            <div className="nav-logo-icon" aria-hidden="true">💙</div>
+            <Logo size="32" />
             <span className="nav-logo-text">Empathezee</span>
           </Link>
 
@@ -170,8 +171,8 @@ export default function Navbar() {
         </button>
 
         <div style={{ marginBottom: '12px' }}>
-          <div className="nav-logo" style={{ textDecoration: 'none', marginBottom: '20px', display: 'flex' }}>
-            <div className="nav-logo-icon" style={{ width: '28px', height: '28px', fontSize: '0.8rem', flexShrink: 0 }}>💙</div>
+          <div className="nav-logo" style={{ textDecoration: 'none', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Logo size="28" />
             <span className="nav-logo-text" style={{ fontSize: '1rem' }}>Empathezee</span>
           </div>
         </div>
@@ -241,7 +242,7 @@ export default function Navbar() {
           </Link>
           <Link to="/appointments-ui" className={`mobile-nav-item ${isActive('/appointments-ui') ? 'active' : ''}`} id="mob-bottom-appts">
             <span className="mobile-nav-icon"><i className="fa-solid fa-calendar-check"></i></span>
-            <span>Appts</span>
+            <span>Appointments</span>
           </Link>
         </nav>
       )}

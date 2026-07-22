@@ -91,7 +91,7 @@ export default function DoctorLogin() {
 
             <div className="form-group">
               <label htmlFor="doctor-login-password">Password</label>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative', width: '100%' }}>
                 <input
                   id="doctor-login-password"
                   type={showPassword ? 'text' : 'password'}
@@ -105,9 +105,9 @@ export default function DoctorLogin() {
                 />
                 <button
                   type="button"
+                  className="password-toggle-btn"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword((p) => !p)}
-                  style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.9rem' }}
                 >
                   <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} />
                 </button>
