@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { Container, Card, Button, PageHeader } from '../components/ui';
 
 export default function DoctorDashboard() {
   const { user } = useAuth();
@@ -58,127 +59,163 @@ export default function DoctorDashboard() {
   };
 
   return (
-    <main className="page-container">
-      <div className="dashboard-header" style={{ textAlign: 'center', marginBottom: '40px', marginTop: '20px' }}>
-        <h1 className="title">Doctor Workspace</h1>
-        <h2>Welcome, Dr. {user?.username} 🩺</h2>
-        <p className="section-desc">Manage medical verification requests and schedule consultations with patients.</p>
-      </div>
+    <main style={{ flex: 1 }}>
+      <PageHeader
+        badge={<><i className="fa-solid fa-user-doctor"></i> Doctor Pro Portal</>}
+        title="Welcome, Dr."
+        highlight={user?.username || 'Specialist'}
+        subtitle="Manage medical verification requests and schedule consultations with patients."
+        gradient="accent"
+      />
 
-      {/* tab selectors */}
-      <div className="tabs-container" style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
-        <button
-          id="tab-posts-btn"
-          className={`tab-btn ${activeTab === 'posts' ? 'active-tab' : ''}`}
-          onClick={() => setActiveTab('posts')}
-        >
-          📋 Post Verification Queue ({posts.length})
-        </button>
-        <button
-          id="tab-apps-btn"
-          className={`tab-btn ${activeTab === 'apps' ? 'active-tab' : ''}`}
-          onClick={() => setActiveTab('apps')}
-        >
-          📅 Appointments Hub ({appointments.length})
-        </button>
-      </div>
-
-      {/* posts moderation tab */}
-      {activeTab === 'posts' && (
-        <div id="posts-tab" className="tab-content active-content">
-          <h2>📋 Pending Verification Queue</h2>
-          <p className="section-desc" style={{ marginBottom: '25px' }}>
-            Review medical queries and advice to tag them as Safe, Misleading/Fake, or Suspicious.
-          </p>
-
-          {posts.length === 0 ? (
-            <div className="empty-state">
-              <span className="empty-icon">✅</span>
-              <h3>Inbox Zero!</h3>
-              <p>No medical posts are currently pending review. Thank you for keeping the community safe!</p>
-            </div>
-          ) : (
-            <div className="moderation-list">
-              {posts.map((post) => (
-                <div key={post._id} className="card moderation-card" style={{ textAlign: 'left', alignItems: 'stretch', marginBottom: '20px' }}>
-                  <div className="post-details">
-                    <h3 style={{ textAlign: 'left' }}>{post.title}</h3>
-                    <p className="post-content" style={{ color: 'var(--text)', fontStyle: 'italic', marginTop: '10px', marginBottom: '15px', padding: '12px', background: 'rgba(0, 0, 0, 0.02)', borderLeft: '3px solid var(--blue)', borderRadius: '4px' }}>
-                      "{post.content}"
-                    </p>
-                    <p className="post-meta" style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '15px' }}>
-                      <b>Author:</b> {post.author?.username || 'Anonymous'} &nbsp;|&nbsp;
-                      <b>Target Disease:</b> <span style={{ background: 'rgba(79, 70, 229, 0.05)', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>{post.disease}</span>
-                    </p>
-                  </div>
-
-                  {/* verify actions */}
-                  <div className="moderation-form" style={{ marginTop: '10px' }}>
-                    <div className="moderation-actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                      <button onClick={() => handleReview(post._id, 'SAFE', '')} className="btn-success" style={{ flex: 1, minWidth: '140px', padding: '8px 16px', fontSize: '0.88rem' }}>
-                        ✔ Approve (Safe)
-                      </button>
-                      <button onClick={() => handleReview(post._id, 'FAKE', '')} className="btn-danger" style={{ flex: 1, minWidth: '140px', padding: '8px 16px', fontSize: '0.88rem' }}>
-                        ❌ Reject (Fake)
-                      </button>
-                      <button onClick={() => handleReview(post._id, 'SUSPICIOUS', '')} className="btn-warning" style={{ flex: 1, minWidth: '140px', padding: '8px 16px', fontSize: '0.88rem' }}>
-                        ⚠ Tag Suspicious
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+      <Container size="xl">
+        {/* Tab Selectors */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-4)', marginBottom: 'var(--space-8)' }}>
+          <Button
+            onClick={() => setActiveTab('posts')}
+            variant={activeTab === 'posts' ? 'primary' : 'outline'}
+            size="md"
+            icon={<i className="fa-solid fa-clipboard-check"></i>}
+          >
+            Verification Queue ({posts.length})
+          </Button>
+          <Button
+            onClick={() => setActiveTab('apps')}
+            variant={activeTab === 'apps' ? 'primary' : 'outline'}
+            size="md"
+            icon={<i className="fa-solid fa-calendar-days"></i>}
+          >
+            Appointments Hub ({appointments.length})
+          </Button>
         </div>
-      )}
 
-      {/* appointments tab */}
-      {activeTab === 'apps' && (
-        <div id="apps-tab" className="tab-content active-content">
-          <h2>📅 Booked Consultations</h2>
-          <p className="section-desc" style={{ marginBottom: '25px' }}>
-            Accept new requests, manage schedule, and launch Telehealth chat sessions with your patients.
-          </p>
+        {/* Posts Moderation Tab */}
+        {activeTab === 'posts' && (
+          <div>
+            <h2 style={{ textAlign: 'left', fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)', color: 'var(--text)' }}>
+              📋 Pending Verification Queue
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 'var(--space-6)' }}>
+              Review medical queries and advice to tag them as Safe, Misleading/Fake, or Suspicious.
+            </p>
 
-          {appointments.length === 0 ? (
-            <div className="empty-state">
-              <span className="empty-icon">📅</span>
-              <h3>No Appointments</h3>
-              <p>You do not have any patient appointments booked with you yet.</p>
-            </div>
-          ) : (
-            <div className="appointment-grid">
-              {appointments.map((app) => (
-                <div key={app._id} className="card appointment-card" style={{ textAlign: 'left', alignItems: 'stretch' }}>
-                  <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                    <span className={`badge status-${app.status?.toLowerCase()}`}>{app.status}</span>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Booked {new Date(app.createdAt).toLocaleDateString()}</span>
-                  </div>
-                  <h3 style={{ textAlign: 'left', fontSize: '1.2rem', marginBottom: '10px' }}>Patient: {app.patient?.username || 'Anonymous User'}</h3>
-                  <p className="app-detail" style={{ textAlign: 'left', marginBottom: '8px', fontSize: '0.92rem' }}><b>Email:</b> {app.patient?.email}</p>
-                  <p className="app-detail" style={{ textAlign: 'left', marginBottom: '8px', fontSize: '0.92rem' }}><b>Date:</b> {app.date}</p>
-                  <p className="app-detail" style={{ textAlign: 'left', marginBottom: '15px', fontSize: '0.92rem' }}><b>Time Slot:</b> {app.time}</p>
-
-                  <div className="appointment-card-actions" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto' }}>
-                    {app.status === 'PENDING' ? (
-                      <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
-                        <button onClick={() => handleAccept(app._id)} className="btn-success" style={{ flex: 1, padding: '8px 12px', fontSize: '0.85rem' }}>Accept</button>
-                        <button onClick={() => handleReject(app._id)} className="btn-danger-outline" style={{ flex: 1, padding: '8px 12px', fontSize: '0.85rem' }}>Reject</button>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: 'var(--space-10)' }}>
+                <div className="spinner"></div>
+              </div>
+            ) : posts.length === 0 ? (
+              <Card padding="lg" style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-3)' }}>✅</div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 var(--space-2)' }}>Inbox Zero!</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                  No medical posts are currently pending review. Thank you for keeping the community safe!
+                </p>
+              </Card>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                {posts.map((post) => (
+                  <Card key={post._id} padding="lg">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-3)' }}>
+                      <div>
+                        <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--primary)', textAlign: 'left' }}>{post.title}</h3>
+                        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: '4px 0 0' }}>
+                          Author: {post.author?.username || 'Patient'} | Community: {post.community?.name || 'General'}
+                        </p>
                       </div>
-                    ) : app.status === 'CONFIRMED' ? (
-                      <>
-                        <Link to={`/chat/appointment/${app._id}`} className="btn-primary" style={{ textAlign: 'center', textDecoration: 'none', width: '100%', padding: '8px 12px', fontSize: '0.85rem', fontWeight: 700 }}>💬 Join Telehealth Chat</Link>
-                        <button onClick={() => handleReject(app._id)} className="btn-danger-outline" style={{ width: '100%', padding: '8px 12px', fontSize: '0.85rem' }}>Cancel Appointment</button>
-                      </>
-                    ) : null}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+                      <span className="badge badge-yellow">Pending Review</span>
+                    </div>
+
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 'var(--space-5)' }}>
+                      {post.content}
+                    </p>
+
+                    <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
+                      <Button onClick={() => handleReview(post._id, 'SAFE', 'Medically verified')} variant="secondary" size="sm" icon={<i className="fa-solid fa-check"></i>}>
+                        Tag Safe
+                      </Button>
+                      <Button onClick={() => handleReview(post._id, 'FAKE', 'Misleading content')} variant="danger" size="sm" icon={<i className="fa-solid fa-triangle-exclamation"></i>}>
+                        Tag Misleading
+                      </Button>
+                      <Button onClick={() => handleReview(post._id, 'SUSPICIOUS', 'Requires warning')} variant="warning" size="sm" icon={<i className="fa-solid fa-flag"></i>}>
+                        Tag Suspicious
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Appointments Tab */}
+        {activeTab === 'apps' && (
+          <div>
+            <h2 style={{ textAlign: 'left', fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)', color: 'var(--text)' }}>
+              📅 Patient Consultation Requests
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 'var(--space-6)' }}>
+              Accept or reject incoming appointment requests from patients.
+            </p>
+
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: 'var(--space-10)' }}>
+                <div className="spinner"></div>
+              </div>
+            ) : appointments.length === 0 ? (
+              <Card padding="lg" style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-3)' }}>📅</div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 var(--space-2)' }}>No Requests</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                  You have no pending appointment requests at this time.
+                </p>
+              </Card>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                {appointments.map((app) => (
+                  <Card key={app._id} padding="lg">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+                      <div>
+                        <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text)', textAlign: 'left' }}>
+                          Patient: {app.user?.username || 'Anonymous Patient'}
+                        </h3>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+                          🗓️ <b>Date:</b> {app.date} | 🕒 <b>Time:</b> {app.time}
+                        </p>
+                        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: '2px 0 0' }}>
+                          ✉️ <b>Email:</b> {app.user?.email}
+                        </p>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
+                        {app.status === 'PENDING' ? (
+                          <>
+                            <Button onClick={() => handleAccept(app._id)} variant="secondary" size="sm" icon={<i className="fa-solid fa-check"></i>}>
+                              Accept
+                            </Button>
+                            <Button onClick={() => handleReject(app._id)} variant="danger" size="sm" icon={<i className="fa-solid fa-xmark"></i>}>
+                              Reject
+                            </Button>
+                          </>
+                        ) : (
+                          <span className={`badge status-${app.status?.toLowerCase()}`}>{app.status}</span>
+                        )}
+
+                        {app.status === 'CONFIRMED' && (
+                          <Link to={`/chat/appointment/${app._id}`} style={{ textDecoration: 'none' }}>
+                            <Button variant="primary" size="sm" icon={<i className="fa-solid fa-comments"></i>}>
+                              Start Chat
+                            </Button>
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </Container>
     </main>
   );
 }

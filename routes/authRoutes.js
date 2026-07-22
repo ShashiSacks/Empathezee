@@ -20,8 +20,10 @@ const {
 } = require("../controllers/authController");
 
 router.post("/register", validate(registerSchema), register);
+router.post("/doctor/register", validate(registerSchema), register);
 router.post("/verify-email", validate(verifyEmailSchema), verifyEmail);
 router.post("/login", validate(loginSchema), login);
+router.post("/doctor/login", validate(loginSchema), login);
 router.post("/refresh-token", refreshToken); // No complex body to validate
 router.post("/logout", logout);
 

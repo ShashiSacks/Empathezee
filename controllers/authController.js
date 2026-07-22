@@ -31,6 +31,14 @@ const sendTokenResponse = async (user, statusCode, req, res) => {
     const accessToken = signAccessToken(user._id, user.role);
     const refreshToken = await generateRefreshToken(user, req.ip);
 
+    if (req.session) {
+        req.session.user = {
+            id: user._id.toString(),
+            username: user.username,
+            role: user.role
+        };
+    }
+
     const cookieOptions = {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         httpOnly: true,
@@ -50,7 +58,7 @@ const sendTokenResponse = async (user, statusCode, req, res) => {
 };
 
 const register = catchAsync(async (req, res, next) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, age, gender, disease, country, state, district, city, bio, role } = req.body;
     
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {
@@ -58,6 +66,7 @@ const register = catchAsync(async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const userRole = role || (req.path.includes('doctor') ? 'doctor' : 'user');
     
     // Generate 6 digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -67,14 +76,21 @@ const register = catchAsync(async (req, res, next) => {
         username,
         email: email.toLowerCase(),
         password: hashedPassword,
+        age: age ? Number(age) : null,
+        gender: gender || null,
+        disease: disease || "",
+        country: country || "",
+        state: state || "",
+        district: district || "",
+        city: city || "",
+        bio: bio || "",
+        role: userRole,
         otp,
         otpExpire,
-        isVerified: false
+        isVerified: true
     });
 
-    // TODO: Use nodemailer to send OTP via email here
-
-    res.status(201).json({ success: true, message: "User registered. Please verify your email with the OTP sent.", userId: user._id });
+    res.status(201).json({ success: true, message: "User registered successfully.", userId: user._id });
 });
 
 const verifyEmail = catchAsync(async (req, res, next) => {
@@ -102,7 +118,8 @@ const login = catchAsync(async (req, res, next) => {
     }
 
     if (!user.isVerified) {
-        return next(new AppError('Please verify your email first', 403));
+        user.isVerified = true;
+        await user.save();
     }
 
     await sendTokenResponse(user, 200, req, res);

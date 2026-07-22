@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../services/api';
+import { Container, Card, FormGroup, Input, Button, PageHeader } from '../components/ui';
 
 export default function Medicines() {
   const [medName, setMedName] = useState('');
@@ -38,103 +39,98 @@ export default function Medicines() {
   };
 
   return (
-    <main>
-      {/* Hero Banner */}
-      <div style={{ background: 'linear-gradient(145deg, var(--secondary-50) 0%, var(--primary-50) 100%)', padding: '60px 24px 48px', textAlign: 'center', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '640px', margin: '0 auto' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '999px', fontSize: '0.78rem', fontWeight: 600, color: 'var(--secondary-dark)', marginBottom: '20px' }}>
-            <i className="fa-solid fa-pills"></i> Verified Medicine Database
-          </div>
-          <h1 className="title" style={{ fontSize: 'clamp(1.75rem,4vw,2.5rem)', marginBottom: '10px' }}>
-            <span style={{ background: 'linear-gradient(135deg,var(--secondary),var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Medicine</span> Search & Order
-          </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: 0 }}>
-            Search verified medical databases for instant drug guides, dosages, and book orders.
-          </p>
-        </div>
-      </div>
+    <main style={{ flex: 1 }}>
+      <PageHeader
+        badge={<><i className="fa-solid fa-pills"></i> Verified Medicine Database</>}
+        title=""
+        highlight="Medicine Search & Order"
+        subtitle="Search verified medical databases for instant drug guides, dosages, and book orders."
+        gradient="secondary"
+      />
 
-      <div className="page-container" style={{ maxWidth: '860px', paddingTop: '40px' }}>
+      <Container size="md">
         {/* Search Panel */}
-        <div className="card" style={{ padding: '32px', marginBottom: '32px', borderTop: '3px solid var(--secondary)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+        <Card accentBorder="secondary" padding="lg" style={{ marginBottom: 'var(--space-8)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-5)' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-lg)', background: 'var(--secondary-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>🔍</div>
             <div>
               <h2 style={{ textAlign: 'left', fontSize: '1.1rem', fontWeight: 700, margin: 0, color: 'var(--text)' }}>Medicine Information Search</h2>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0 }}>Search verified medical guides</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>Search verified medical guides</p>
             </div>
           </div>
 
-          <form onSubmit={handleSearch} style={{ display: 'flex', gap: '10px' }}>
-            <input
-              type="text"
-              placeholder="Search medicine name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ flex: 1 }}
-            />
-            <button type="submit" className="btn-primary" disabled={loading}>
-              <i className="fa-solid fa-magnifying-glass"></i> Search
-            </button>
+          <form onSubmit={handleSearch} style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center' }}>
+            <div style={{ flex: 1 }}>
+              <Input
+                type="text"
+                placeholder="Search medicine name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Button type="submit" variant="secondary" loading={loading} icon={<i className="fa-solid fa-magnifying-glass"></i>}>
+              Search
+            </Button>
           </form>
 
           {loading && (
-            <div style={{ textAlign: 'center', padding: '20px' }}>
+            <div style={{ textAlign: 'center', padding: 'var(--space-6)' }}>
               <div className="spinner"></div>
             </div>
           )}
 
           {searchResults.length > 0 && (
-            <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ marginTop: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
               {searchResults.map((item, idx) => (
-                <div key={idx} style={{ padding: '12px', background: 'var(--bg-warm)', borderRadius: 'var(--radius)' }}>
-                  <h4 style={{ margin: '0 0 4px', color: 'var(--primary)' }}>{item.title}</h4>
+                <div key={idx} style={{ padding: 'var(--space-3) var(--space-4)', background: 'var(--bg-warm)', borderRadius: 'var(--radius)' }}>
+                  <h4 style={{ margin: '0 0 4px', color: 'var(--primary)', fontSize: '0.95rem' }}>{item.title}</h4>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>{item.snippet}</p>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </Card>
 
         {/* Quick Order Panel */}
-        <div className="card" style={{ padding: '32px', marginBottom: '40px', borderTop: '3px solid var(--primary)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+        <Card accentBorder="primary" padding="lg" style={{ marginBottom: 'var(--space-10)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-lg)', background: 'var(--primary-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>🛒</div>
             <div>
               <h2 style={{ textAlign: 'left', fontSize: '1.1rem', fontWeight: 700, margin: 0, color: 'var(--text)' }}>Quick Medicine Booking</h2>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0 }}>Order instantly for ₹150 flat rate.</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>Order instantly for ₹150 flat rate.</p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap', marginBottom: 'var(--space-5)' }}>
             <span className="badge badge-green"><i className="fa-solid fa-truck-fast"></i> Fast Delivery</span>
             <span className="badge badge-blue"><i className="fa-solid fa-shield-halved"></i> Secure Checkout</span>
             <span className="badge badge-teal"><i className="fa-solid fa-rotate-left"></i> Easy Returns</span>
           </div>
 
           {orderStatus && (
-            <div style={{ padding: '10px 14px', borderRadius: 'var(--radius)', background: 'var(--secondary-50)', color: 'var(--secondary-dark)', marginBottom: '16px', fontSize: '0.88rem' }}>
+            <div style={{ padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius)', background: 'var(--secondary-50)', color: 'var(--secondary-dark)', marginBottom: 'var(--space-4)', fontSize: '0.88rem' }}>
               {orderStatus}
             </div>
           )}
 
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, minWidth: '220px' }} className="form-group">
-              <label htmlFor="quickOrderMedName" style={{ fontSize: '0.78rem', textAlign: 'left' }}>Medicine Name</label>
-              <input
-                type="text"
-                id="quickOrderMedName"
-                placeholder="e.g. Paracetamol, Metformin..."
-                value={medName}
-                onChange={(e) => setMedName(e.target.value)}
-              />
+          <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: '220px' }}>
+              <FormGroup label="Medicine Name" htmlFor="quickOrderMedName" style={{ marginBottom: 0 }}>
+                <Input
+                  type="text"
+                  id="quickOrderMedName"
+                  placeholder="e.g. Paracetamol, Metformin..."
+                  value={medName}
+                  onChange={(e) => setMedName(e.target.value)}
+                />
+              </FormGroup>
             </div>
-            <button onClick={handleOrder} className="btn-gradient" style={{ padding: '11px 24px', flexShrink: 0 }}>
-              <i className="fa-solid fa-bag-shopping"></i> Book & Pay (₹150)
-            </button>
+            <Button onClick={handleOrder} variant="primary" icon={<i className="fa-solid fa-bag-shopping"></i>}>
+              Book & Pay (₹150)
+            </Button>
           </div>
-        </div>
-      </div>
+        </Card>
+      </Container>
     </main>
   );
 }

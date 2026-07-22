@@ -1,16 +1,26 @@
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const mongoose = require("mongoose");
+
+const getMongoUrl = () => {
+    return process.env.MONGO_URL || process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://127.0.0.1:27017/empathezee";
+};
 
 const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET || "empathezee_secret",
     resave: false,
     saveUninitialized: false,
-
-    store: (process.env.MONGODB_URI || process.env.MONGO_URI) ? MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI || process.env.MONGO_URI,
+    store: MongoStore.create({
+        clientPromise: new Promise((resolve) => {
+            if (mongoose.connection.readyState === 1) {
+                return resolve(mongoose.connection.getClient());
+            }
+            mongoose.connection.once("open", () => {
+                resolve(mongoose.connection.getClient());
+            });
+        }),
         ttl: 24 * 60 * 60
-    }) : undefined,
-
+    }),
     cookie: {
         httpOnly: true,
         secure: false,

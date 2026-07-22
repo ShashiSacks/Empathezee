@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import LOCATION_DATA from '../utils/locationData';
+import Logo from '../components/Logo';
 
 export default function DoctorRegister() {
   const [formData, setFormData] = useState({
@@ -110,7 +111,10 @@ export default function DoctorRegister() {
       navigate('/doctor/login');
     } catch (err) {
       if (err.response && err.response.data) {
-        setError(typeof err.response.data === 'string' ? err.response.data : 'Registration failed');
+        const msg = typeof err.response.data === 'string'
+          ? err.response.data
+          : err.response.data.message || 'Registration failed';
+        setError(msg);
       } else {
         setError('Doctor registration failed. Please check your details.');
       }
@@ -124,7 +128,7 @@ export default function DoctorRegister() {
   return (
     <div className="auth-container">
       {/* left side (form area) */}
-      <div className="auth-left" style={{ overflowY: 'auto', paddingTop: '60px', paddingBottom: '60px' }}>
+      <div className="auth-left">
         <div className="auth-left-content">
           <h1 className="title">Doctor Register</h1>
 
@@ -318,24 +322,48 @@ export default function DoctorRegister() {
       {/* right side image */}
       <div className="auth-right">
         <div className="auth-right-content-wrapper">
-          <div className="auth-right-logo">
-            <span className="auth-logo-icon"><i className="fa-solid fa-heart-pulse"></i></span>
-            <span className="auth-logo-text">Empathezee Pro</span>
+          <div className="auth-right-logo" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+            <Logo size="36" />
+            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: '700', color: 'white' }}>Empathezee Pro</span>
           </div>
           <h2 className="auth-right-title">Empower patients, guide support groups.</h2>
           <p className="auth-right-subtitle">Join our verified network of medical specialists. Moderate discussions, host online consultations, and help patients manage chronic conditions.</p>
-          <div className="auth-right-stats">
-            <div className="auth-stat-item">
-              <span className="auth-stat-num">24/7</span>
-              <span className="auth-stat-lbl">Care Guidance</span>
+
+          <div className="auth-feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '32px' }}>
+            <div
+              className="auth-feature-item"
+              style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 16px', background: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.3s' }}
+              onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+            >
+              <div style={{ background: 'rgba(255,255,255,0.15)', padding: '10px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <i className="fa-solid fa-users" style={{ fontSize: '1.1rem' }}></i>
+              </div>
+              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Patient Interactions</span>
             </div>
-            <div className="auth-stat-item">
-              <span className="auth-stat-num">15k+</span>
-              <span className="auth-stat-lbl">Patient Interactions</span>
+
+            <div
+              className="auth-feature-item"
+              style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 16px', background: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.3s' }}
+              onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+            >
+              <div style={{ background: 'rgba(255,255,255,0.15)', padding: '10px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <i className="fa-solid fa-video" style={{ fontSize: '1.1rem' }}></i>
+              </div>
+              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Secure Telehealth</span>
             </div>
-            <div className="auth-stat-item">
-              <span className="auth-stat-num">100%</span>
-              <span className="auth-stat-lbl">Verified Specialists</span>
+
+            <div
+              className="auth-feature-item"
+              style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 16px', background: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.3s' }}
+              onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+            >
+              <div style={{ background: 'rgba(255,255,255,0.15)', padding: '10px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <i className="fa-solid fa-calendar-check" style={{ fontSize: '1.1rem' }}></i>
+              </div>
+              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Practice Management</span>
             </div>
           </div>
         </div>

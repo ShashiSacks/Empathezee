@@ -1,30 +1,81 @@
 import React from 'react';
-import { cn } from '../../lib/utils';
 
-export const Button = React.forwardRef(
-  ({ className, variant = 'primary', size = 'md', ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-xl font-medium transition-spring active:scale-97 disabled:opacity-50 disabled:pointer-events-none';
-    
-    const variants = {
-      primary: 'bg-primary text-primary-foreground shadow-sm hover:opacity-90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]',
-      secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-      outline: 'border border-border bg-transparent hover:bg-secondary',
-      ghost: 'bg-transparent hover:bg-secondary text-secondary-foreground',
-    };
+export function Button({
+  children,
+  variant = 'primary',
+  size = 'md',
+  fullWidth = false,
+  loading = false,
+  disabled = false,
+  icon = null,
+  className = '',
+  style = {},
+  type = 'button',
+  ...props
+}) {
+  const getVariantClass = () => {
+    switch (variant) {
+      case 'secondary':
+        return 'btn-secondary';
+      case 'outline':
+        return 'btn-outline';
+      case 'accent':
+      case 'teal':
+        return 'btn-teal';
+      case 'warning':
+        return 'btn-warning';
+      case 'danger':
+        return 'btn-danger';
+      case 'ghost':
+        return 'btn-ghost';
+      case 'primary':
+      default:
+        return 'btn-primary';
+    }
+  };
 
-    const sizes = {
-      sm: 'h-9 px-3 text-sm',
-      md: 'h-11 px-4 py-2',
-      lg: 'h-14 px-8 text-lg',
-    };
+  const getSizeClass = () => {
+    switch (size) {
+      case 'sm':
+        return 'btn-sm';
+      case 'lg':
+        return 'btn-lg';
+      case 'md':
+      default:
+        return '';
+    }
+  };
 
-    return (
-      <button
-        ref={ref}
-        className={cn(baseStyles, variants[variant], sizes[size], className)}
-        {...props}
-      />
-    );
-  }
-);
-Button.displayName = 'Button';
+  const buttonStyle = {
+    width: fullWidth ? '100%' : undefined,
+    borderRadius: 'var(--radius-full)',
+    opacity: disabled || loading ? 0.65 : 1,
+    pointerEvents: disabled || loading ? 'none' : 'auto',
+    cursor: disabled || loading ? 'not-allowed' : 'pointer',
+    ...style,
+  };
+
+  return (
+    <button
+      type={type}
+      disabled={disabled || loading}
+      className={`btn ${getVariantClass()} ${getSizeClass()} ${fullWidth ? 'btn-block' : ''} ${className}`}
+      style={buttonStyle}
+      {...props}
+    >
+      {loading ? (
+        <>
+          <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px', marginRight: '6px' }}></span>
+          <span>Loading...</span>
+        </>
+      ) : (
+        <>
+          {icon && <span className="btn-icon" style={{ display: 'inline-flex', alignItems: 'center' }}>{icon}</span>}
+          {children}
+        </>
+      )}
+    </button>
+  );
+}
+
+export default Button;

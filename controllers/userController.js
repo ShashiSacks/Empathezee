@@ -5,9 +5,11 @@ const Community = require("../models/Community");
 // get profile
 const getProfile = async (req, res) => {
     try {
+        const userId = req.user?.id || req.user?._id;
+        const dbUser = await User.findById(userId).select("-password").populate("communities");
         res.status(200).json({
             message: "Protected Profile Route",
-            user: req.user
+            user: dbUser || req.user
         });
     } catch (error) {
         res.status(500).json({

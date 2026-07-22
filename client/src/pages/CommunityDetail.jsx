@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { Container, Card, FormGroup, Input, Button } from '../components/ui';
 
 export default function CommunityDetail() {
   const { id } = useParams();
@@ -71,37 +72,41 @@ export default function CommunityDetail() {
 
   if (!community) {
     return (
-      <main className="page-container" style={{ textAlign: 'center', padding: '60px 20px' }}>
+      <Container size="md" style={{ textAlign: 'center', paddingTop: 'var(--space-12)' }}>
         <h2>Community Not Found</h2>
-        <Link to="/communities" className="btn-primary" style={{ marginTop: '16px' }}>Back to Communities</Link>
-      </main>
+        <Link to="/communities" style={{ textDecoration: 'none' }}>
+          <Button variant="primary" style={{ marginTop: 'var(--space-4)' }}>Back to Communities</Button>
+        </Link>
+      </Container>
     );
   }
 
   return (
-    <main>
+    <main style={{ flex: 1 }}>
       {/* Community Header Banner */}
-      <div style={{ background: 'linear-gradient(145deg, var(--primary-50) 0%, var(--accent-50) 100%)', borderBottom: '1px solid var(--border)', padding: '40px 24px 32px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ background: 'linear-gradient(145deg, var(--primary-50) 0%, var(--accent-50) 100%)', borderBottom: '1px solid var(--border)', padding: 'var(--space-8) var(--space-6)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
-          <Link to="/communities" className="btn-outline btn-sm" style={{ borderRadius: '999px', marginBottom: '20px', display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
-            <i className="fa-solid fa-arrow-left"></i> All Communities
+          <Link to="/communities" style={{ textDecoration: 'none' }}>
+            <Button variant="outline" size="sm" icon={<i className="fa-solid fa-arrow-left"></i>} style={{ marginBottom: 'var(--space-4)' }}>
+              All Communities
+            </Button>
           </Link>
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-5)', flexWrap: 'wrap' }}>
             <div style={{ width: '60px', height: '60px', borderRadius: 'var(--radius-xl)', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', flexShrink: 0, boxShadow: 'var(--shadow-blue)' }}>
               🏥
             </div>
             <div style={{ flex: 1 }}>
-              <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '6px', color: 'var(--text)' }}>
+              <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 'var(--space-2)', color: 'var(--text)' }}>
                 {community.name}
               </h1>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
                 <span className="badge badge-blue"><i className="fa-solid fa-virus"></i> {community.disease}</span>
                 <span className="badge badge-green"><span className="online-dot"></span> Active Community</span>
                 {community.type === 'online' ? <span className="badge badge-teal">🌐 Online</span> : <span className="badge badge-orange">🏢 In-Person</span>}
                 {community.paymentType === 'free' ? <span className="badge badge-green">Free</span> : <span className="badge badge-red">₹{community.price}</span>}
               </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, maxWidth: '640px', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, maxWidth: '640px', margin: 0 }}>
                 {community.description}
               </p>
             </div>
@@ -110,51 +115,68 @@ export default function CommunityDetail() {
       </div>
 
       {/* Main Content: Feed */}
-      <div className="page-container" style={{ paddingTop: '32px', maxWidth: '1000px' }}>
+      <Container size="lg">
         {/* Post Composer */}
-        <div className="card" style={{ padding: '24px', marginBottom: '24px', borderTop: '3px solid var(--primary)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+        <Card accentBorder="primary" padding="lg" style={{ marginBottom: 'var(--space-6)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-4)' }}>
             <div className="feed-avatar" style={{ fontSize: '0.9rem', flexShrink: 0 }}>
               {user?.username?.charAt(0).toUpperCase()}
             </div>
             <div>
               <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text)' }}>{user?.username}</div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Share with the community</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Share with the community</div>
             </div>
           </div>
 
-          <form onSubmit={handleCreatePost} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div className="form-group">
-              <label htmlFor="post-title">Post Title</label>
-              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="What's on your mind?" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="post-content">Share Your Experience</label>
-              <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Share a question, experience, or supportive message..." required style={{ minHeight: '100px' }}></textarea>
-            </div>
-            <button type="submit" className="btn-gradient btn-sm" style={{ alignSelf: 'flex-start' }}>
-              <i className="fa-solid fa-paper-plane"></i> Post to Community
-            </button>
+          <form onSubmit={handleCreatePost}>
+            <FormGroup label="Post Title" htmlFor="post-title" required>
+              <Input type="text" id="post-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="What's on your mind?" required />
+            </FormGroup>
+
+            <FormGroup label="Share Your Experience" htmlFor="post-content" required>
+              <textarea
+                id="post-content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Share a question, experience, or supportive message..."
+                required
+                style={{
+                  width: '100%',
+                  minHeight: '100px',
+                  padding: 'var(--space-3) var(--space-4)',
+                  borderRadius: 'var(--radius)',
+                  border: '1.5px solid var(--border)',
+                  fontFamily: 'inherit',
+                  fontSize: '0.9rem',
+                  color: 'var(--text)',
+                  outline: 'none',
+                }}
+              ></textarea>
+            </FormGroup>
+
+            <Button type="submit" variant="primary" size="sm" icon={<i className="fa-solid fa-paper-plane"></i>}>
+              Post to Community
+            </Button>
           </form>
-        </div>
+        </Card>
 
         {/* Feed Posts */}
-        <h2 style={{ textAlign: 'left', fontSize: '1.15rem', marginBottom: '16px', color: 'var(--text)', fontWeight: 700 }}>
+        <h2 style={{ textAlign: 'left', fontSize: '1.2rem', marginBottom: 'var(--space-4)', color: 'var(--text)', fontWeight: 700 }}>
           <i className="fa-solid fa-message" style={{ color: 'var(--primary)', marginRight: '6px' }}></i> Community Feed
         </h2>
 
         {posts.length === 0 ? (
-          <div className="empty-state">
-            <span className="empty-icon">💬</span>
-            <h3>No Posts Yet</h3>
-            <p>Start the discussion by creating the first post above!</p>
-          </div>
+          <Card padding="lg" style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-3)' }}>💬</div>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 var(--space-2)' }}>No Posts Yet</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Start the discussion by creating the first post above!</p>
+          </Card>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
             {posts.map((post) => (
-              <div key={post._id} className="card" style={{ padding: '24px', textAlign: 'left' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Card key={post._id} padding="lg">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-3)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
                     <div className="feed-avatar">{post.author?.username?.charAt(0).toUpperCase() || 'A'}</div>
                     <div>
                       <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{post.author?.username || 'Anonymous'}</div>
@@ -166,38 +188,39 @@ export default function CommunityDetail() {
                   )}
                 </div>
 
-                <h3 style={{ textAlign: 'left', fontSize: '1.15rem', fontWeight: 700, marginBottom: '8px' }}>{post.title}</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '16px' }}>{post.content}</p>
+                <h3 style={{ textAlign: 'left', fontSize: '1.15rem', fontWeight: 700, marginBottom: 'var(--space-2)', color: 'var(--text)' }}>{post.title}</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: 'var(--space-4)' }}>{post.content}</p>
 
                 {/* Comments Section */}
-                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '16px', marginTop: '16px' }}>
-                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '12px' }}>
+                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: 'var(--space-4)', marginTop: 'var(--space-4)' }}>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: 'var(--space-3)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Comments ({post.comments?.length || 0})
                   </h4>
 
                   {post.comments && post.comments.map((comm, cIdx) => (
-                    <div key={cIdx} style={{ background: 'var(--bg-warm)', padding: '10px 14px', borderRadius: 'var(--radius)', marginBottom: '8px' }}>
+                    <div key={cIdx} style={{ background: 'var(--bg-warm)', padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius)', marginBottom: 'var(--space-2)' }}>
                       <div style={{ fontWeight: 600, fontSize: '0.8rem', color: 'var(--primary)' }}>{comm.author?.username || 'User'}</div>
                       <div style={{ fontSize: '0.88rem', color: 'var(--text)' }}>{comm.text}</div>
                     </div>
                   ))}
 
-                  <form onSubmit={(e) => handleAddComment(e, post._id)} style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-                    <input
-                      type="text"
-                      placeholder="Write a comment..."
-                      value={commentText[post._id] || ''}
-                      onChange={(e) => setCommentText({ ...commentText, [post._id]: e.target.value })}
-                      style={{ flex: 1 }}
-                    />
-                    <button type="submit" className="btn-primary btn-sm">Comment</button>
+                  <form onSubmit={(e) => handleAddComment(e, post._id)} style={{ display: 'flex', gap: 'var(--space-2)', marginTop: 'var(--space-3)', alignItems: 'center' }}>
+                    <div style={{ flex: 1 }}>
+                      <Input
+                        type="text"
+                        placeholder="Write a comment..."
+                        value={commentText[post._id] || ''}
+                        onChange={(e) => setCommentText({ ...commentText, [post._id]: e.target.value })}
+                      />
+                    </div>
+                    <Button type="submit" variant="primary" size="sm">Comment</Button>
                   </form>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         )}
-      </div>
+      </Container>
     </main>
   );
 }
