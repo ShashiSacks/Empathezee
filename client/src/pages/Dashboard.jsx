@@ -113,14 +113,14 @@ export default function Dashboard() {
           </div>
 
           {/* Medicines */}
-          <div className="dashboard-card animate-fade-up" style={{ borderTop: '3px solid #8B5CF6' }} id="dash-card-medicines">
+          <div className="dashboard-card animate-fade-up" style={{ borderTop: '3px solid var(--accent)' }} id="dash-card-medicines">
             <div>
               <span className="card-icon" aria-hidden="true">💊</span>
               <h2 style={{ textAlign: 'left', fontSize: '1.2rem', color: 'var(--text)' }}>Medicines</h2>
               <p>Search prescribed medications, compare dosages, and order medicines from verified online pharmacy partners.</p>
             </div>
             <Link to="/medicine" style={{ textDecoration: 'none', alignSelf: 'flex-start' }}>
-              <Button variant="primary" size="sm" icon={<i className="fa-solid fa-pills"></i>} id="dash-btn-medicines" style={{ background: '#8B5CF6' }}>
+              <Button variant="accent" size="sm" icon={<i className="fa-solid fa-pills"></i>} id="dash-btn-medicines">
                 Search Medicines
               </Button>
             </Link>

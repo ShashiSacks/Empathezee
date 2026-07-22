@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from './ui';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -60,7 +61,7 @@ export default function Footer() {
         {/* Newsletter */}
         <div>
           <p className="footer-heading">Stay Updated</p>
-          <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.45)', marginBottom: '14px', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted, rgba(255,255,255,0.5))', marginBottom: '14px', lineHeight: 1.6 }}>
             Get wellness tips, community updates, and health resources delivered to your inbox.
           </p>
           <div className="footer-newsletter">
@@ -72,8 +73,9 @@ export default function Footer() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <button
-              className="btn-primary btn-sm btn-block"
+            <Button
+              variant="primary"
+              size="sm"
               id="footer-newsletter-btn"
               style={{ borderRadius: '999px', fontSize: '0.82rem', background: subscribed ? 'var(--secondary)' : '' }}
               onClick={handleSubscribe}
@@ -83,7 +85,7 @@ export default function Footer() {
               ) : (
                 <><i className="fa-solid fa-paper-plane" aria-hidden="true"></i> Subscribe</>
               )}
-            </button>
+            </Button>
           </div>
 
           {/* Emergency */}

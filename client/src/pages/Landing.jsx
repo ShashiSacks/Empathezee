@@ -22,13 +22,13 @@ export default function Landing() {
           </p>
 
           <div className="hero-cta">
-            <Link to="/register" className="btn-primary btn-lg" style={{ borderRadius: '999px' }}>
+            <Link to="/register" className="btn btn-primary btn-lg" style={{ borderRadius: '999px' }}>
               <i className="fa-solid fa-user-plus"></i> Join Empathezee Free
             </Link>
-            <Link to="/login" className="btn-outline btn-lg" style={{ borderRadius: '999px' }}>
+            <Link to="/login" className="btn btn-outline btn-lg" style={{ borderRadius: '999px' }}>
               <i className="fa-solid fa-right-to-bracket"></i> Member Login
             </Link>
-            <Link to="/doctor/login" className="btn-secondary btn-lg" style={{ borderRadius: '999px' }}>
+            <Link to="/doctor/login" className="btn btn-ghost btn-lg" style={{ borderRadius: '999px', color: 'var(--text-secondary)', border: '1.5px solid var(--border)' }}>
               <i className="fa-solid fa-stethoscope"></i> Doctor Portal
             </Link>
           </div>
@@ -76,7 +76,7 @@ export default function Landing() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, flexGrow: 1 }}>
               Share stories, exchange advice, and discuss treatment plans with peers who truly understand living with your condition.
             </p>
-            <Link to="/register" className="btn-primary btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start' }}>
+            <Link to="/register" className="btn btn-primary btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start' }}>
               Explore Groups <i className="fa-solid fa-arrow-right"></i>
             </Link>
           </div>
@@ -90,7 +90,7 @@ export default function Landing() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, flexGrow: 1 }}>
               Find experienced specialists nearby by location and disease focus. Book instant virtual consultations.
             </p>
-            <Link to="/register" className="btn-teal btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start', borderRadius: '999px' }}>
+            <Link to="/register" className="btn btn-teal btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start', borderRadius: '999px' }}>
               Find Doctors <i className="fa-solid fa-magnifying-glass"></i>
             </Link>
           </div>
@@ -104,7 +104,7 @@ export default function Landing() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, flexGrow: 1 }}>
               Access guided meditations, mood logs, medication reminders, and mental health tools tailored for chronic illness care.
             </p>
-            <Link to="/register" className="btn-success btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start', borderRadius: '999px' }}>
+            <Link to="/register" className="btn btn-success btn-sm" style={{ marginTop: '16px', alignSelf: 'flex-start', borderRadius: '999px' }}>
               Start Wellness <i className="fa-solid fa-heart"></i>
             </Link>
           </div>

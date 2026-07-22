@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import LOCATION_DATA from '../utils/locationData';
 import Logo from '../components/Logo';
+import { Button, Alert } from '../components/ui';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -129,51 +130,68 @@ export default function Register() {
       {/* left side (form) */}
       <div className="auth-left">
         <div className="auth-left-content">
-          <h1 className="title">Register</h1>
+          <h1 className="title" style={{ marginBottom: '6px' }}>Create your account</h1>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '24px' }}>Free forever — no credit card required</p>
 
           {error && (
-            <div style={{ padding: '10px 14px', borderRadius: 'var(--radius)', background: 'var(--danger-bg)', color: 'var(--danger)', marginBottom: '16px', fontSize: '0.88rem' }}>
+            <Alert type="error" onDismiss={() => setError('')} style={{ marginBottom: '20px' }}>
               {error}
-            </div>
+            </Alert>
           )}
 
           <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              required
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-            />
+            <div className="form-group">
+              <label htmlFor="reg-username">Username</label>
+              <input
+                id="reg-username"
+                type="text"
+                name="username"
+                placeholder="Choose a username"
+                required
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              />
+            </div>
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
+            <div className="form-group">
+              <label htmlFor="reg-email">Email address</label>
+              <input
+                id="reg-email"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            />
+            <div className="form-group">
+              <label htmlFor="reg-password">Password</label>
+              <input
+                id="reg-password"
+                type="password"
+                name="password"
+                placeholder="Min. 6 characters"
+                required
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              />
+            </div>
 
-            <input
-              type="number"
-              name="age"
-              placeholder="Age"
-              min="0"
-              max="120"
-              value={formData.age}
-              onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-            />
+            <div className="form-group">
+              <label htmlFor="reg-age">Age <span className="optional-tag">(optional)</span></label>
+              <input
+                id="reg-age"
+                type="number"
+                name="age"
+                placeholder="Your age"
+                min="0"
+                max="120"
+                value={formData.age}
+                onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+              />
+            </div>
 
             <div className="form-group">
               <label htmlFor="gender">Gender</label>
@@ -191,13 +209,17 @@ export default function Register() {
               </select>
             </div>
 
-            <input
-              type="text"
-              name="disease"
-              placeholder="Disease"
-              value={formData.disease}
-              onChange={(e) => setFormData({ ...formData, disease: e.target.value })}
-            />
+            <div className="form-group">
+              <label htmlFor="reg-disease">Health condition / Disease <span className="optional-tag">(optional)</span></label>
+              <input
+                id="reg-disease"
+                type="text"
+                name="disease"
+                placeholder="e.g. Diabetes, Lupus, MS…"
+                value={formData.disease}
+                onChange={(e) => setFormData({ ...formData, disease: e.target.value })}
+              />
+            </div>
 
             {/* cascading location picker */}
             <div className="location-picker">
@@ -291,20 +313,28 @@ export default function Register() {
               )}
             </div>
 
-            <button type="submit" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Create Account'}
-            </button>
+            <Button
+              type="submit"
+              variant="primary"
+              fullWidth
+              loading={loading}
+              id="register-submit-btn"
+              style={{ marginTop: '4px' }}
+            >
+              {loading ? 'Creating account…' : 'Create Account'}
+            </Button>
           </form>
 
-          <p>
-            Already have an account?{' '}
-            <Link to="/login">Login here</Link>
-          </p>
-
-          <p>
-            Registering as a doctor?{' '}
-            <Link to="/doctor/register">Doctor registration</Link>
-          </p>
+          <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <p>
+              Already have an account?{' '}
+              <Link to="/login" style={{ fontWeight: 700, color: 'var(--primary)' }}>Sign in</Link>
+            </p>
+            <p>
+              Registering as a doctor?{' '}
+              <Link to="/doctor/register" style={{ fontWeight: 600, color: 'var(--accent)' }}>Doctor registration</Link>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -318,42 +348,23 @@ export default function Register() {
           <h2 className="auth-right-title">You don't have to fight your illness alone.</h2>
           <p className="auth-right-subtitle">Connect with patients who understand, share experiences, consult verified doctors, and access curated health tracking tools.</p>
 
-          <div className="auth-feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '32px' }}>
-            <div
-              className="auth-feature-item"
-              style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 16px', background: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.3s' }}
-              onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
-              onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <div style={{ background: 'rgba(255,255,255,0.15)', padding: '10px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <i className="fa-solid fa-people-group" style={{ fontSize: '1.1rem' }}></i>
+          <div className="auth-feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '32px' }}>
+            {[
+              { icon: 'fa-solid fa-people-group',  label: 'Disease-Based Support Communities' },
+              { icon: 'fa-solid fa-user-doctor',    label: 'Verified Medical Specialists' },
+              { icon: 'fa-solid fa-shield-halved',  label: 'Private & Secure Platform' },
+            ].map(({ icon, label }) => (
+              <div
+                key={label}
+                className="auth-feature-item"
+                style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '12px 16px', background: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.08)' }}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.15)', padding: '9px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <i className={icon} style={{ fontSize: '1rem' }} />
+                </div>
+                <span style={{ fontWeight: 500, fontSize: '1rem', color: 'white' }}>{label}</span>
               </div>
-              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Support Communities</span>
-            </div>
-
-            <div
-              className="auth-feature-item"
-              style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 16px', background: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.3s' }}
-              onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
-              onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <div style={{ background: 'rgba(255,255,255,0.15)', padding: '10px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <i className="fa-solid fa-user-doctor" style={{ fontSize: '1.1rem' }}></i>
-              </div>
-              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Verified Doctors</span>
-            </div>
-
-            <div
-              className="auth-feature-item"
-              style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 16px', background: 'rgba(255,255,255,0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.3s' }}
-              onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
-              onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <div style={{ background: 'rgba(255,255,255,0.15)', padding: '10px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <i className="fa-solid fa-shield-halved" style={{ fontSize: '1.1rem' }}></i>
-              </div>
-              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Private & Secure</span>
-            </div>
+            ))}
           </div>
         </div>
       </div>
