@@ -1,28 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║       Empathezee — Premium Healthcare Community Design System     ║
+   ║       "You don't have to fight your illness alone."               ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
 
 /* ─────────────────────────────────────────────
-   DESIGN TOKENS — Healthcare SaaS Design System
+   DESIGN TOKENS
    ───────────────────────────────────────────── */
 :root {
-  /* Primary Palette - Deep Indigo & Royal Sapphire */
-  --primary:       #4F46E5;
-  --primary-hover: #4338CA;
-  --primary-light: #6366F1;
-  --primary-dark:  #3730A3;
-  --primary-50:    #EEF2FF;
-  --primary-100:   #E0E7FF;
+  /* Primary Palette - Royal Sapphire Blue */
+  --primary:       #2563EB;
+  --primary-light: #3B82F6;
+  --primary-dark:  #1E40AF;
+  --primary-50:    #EFF6FF;
+  --primary-100:   #DBEAFE;
 
-  /* Secondary — Royal Sapphire Blue */
-  --secondary:       #2563EB;
-  --secondary-light: #3B82F6;
-  --secondary-dark:  #1D4ED8;
-  --secondary-50:    #EFF6FF;
+  /* Secondary — Teal Emerald */
+  --secondary:       #0D9488;
+  --secondary-light: #14B8A6;
+  --secondary-dark:  #0F766E;
+  --secondary-50:    #F0FDFA;
 
-  /* Accent — Emerald Health & Teal */
-  --accent:       #0D9488;
-  --accent-light: #14B8A6;
-  --accent-dark:  #0F766E;
-  --accent-50:    #F0FDFA;
+  /* Accent — Sky Blue & Cyan Glow */
+  --accent:       #0284C7;
+  --accent-light: #38BDF8;
+  --accent-dark:  #0369A1;
+  --accent-50:    #F0F9FF;
 
   /* Background & Surfaces */
   --bg:           #F8FAFC;
@@ -31,14 +33,14 @@
   --surface-alt:  #FAFCFF;
   --surface-hover:#F8FAFC;
 
-  /* Text Tokens - Slate Palette */
+  /* Text Tokens - High Contrast & Crisp Accessibility */
   --text:           #0F172A; /* Slate 900 */
   --text-secondary: #475569; /* Slate 600 */
-  --text-muted:     #64748B; /* Slate 500 */
+  --text-muted:     #64748B; /* Slate 500 - Clear Muted Copy */
   --text-light:     #94A3B8; /* Slate 400 */
 
-  /* Standardized Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Pure Inter Typography System */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   
   /* Modular Scale (1.25 Major Third) */
   --font-size-xs:   0.75rem;   /* 12px - Captions, Badges, Micro-copy */

@@ -2,21 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Container, Card, Button, Badge } from '../components/ui';
-import {
-  Stethoscope,
-  Calendar,
-  ClipboardCheck,
-  CheckCircle2,
-  AlertTriangle,
-  Flag,
-  MessageSquare,
-  Clock,
-  User,
-  ShieldCheck,
-  XCircle,
-  Loader2
-} from 'lucide-react';
+import { Container, Card, Button, PageHeader } from '../components/ui';
 
 export default function DoctorDashboard() {
   const { user } = useAuth();
@@ -73,122 +59,85 @@ export default function DoctorDashboard() {
   };
 
   return (
-    <main style={{ flex: 1, paddingBottom: 'var(--space-12)' }}>
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-10 px-6 border-b border-indigo-900/30">
-        <Container size="xl">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold uppercase tracking-wider border border-indigo-500/30 mb-3">
-                <Stethoscope className="w-3.5 h-3.5" /> Clinical Provider Portal
-              </span>
-              <h1 className="text-2xl md:text-3xl font-bold mb-1">
-                Welcome, <span className="text-indigo-300">Dr. {user?.username || 'Specialist'}</span>
-              </h1>
-              <p className="text-slate-400 text-sm">
-                Manage medical verification queues and patient consultation schedules.
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 border border-white/10">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Verified Clinical Partner
-              </div>
-            </div>
-          </div>
-        </Container>
-      </div>
+    <main style={{ flex: 1 }}>
+      <PageHeader
+        badge={<><i className="fa-solid fa-user-doctor"></i> Doctor Pro Portal</>}
+        title="Welcome, Dr."
+        highlight={user?.username || 'Specialist'}
+        subtitle="Manage medical verification requests and schedule consultations with patients."
+        gradient="accent"
+      />
 
-      <Container size="xl" className="pt-8">
+      <Container size="xl">
         {/* Tab Selectors */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <button
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-4)', marginBottom: 'var(--space-8)' }}>
+          <Button
             onClick={() => setActiveTab('posts')}
-            className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${
-              activeTab === 'posts'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
-            }`}
+            variant={activeTab === 'posts' ? 'primary' : 'outline'}
+            size="md"
+            icon={<i className="fa-solid fa-clipboard-check"></i>}
           >
-            <ClipboardCheck className="w-4 h-4" /> Verification Queue ({posts.length})
-          </button>
-          <button
+            Verification Queue ({posts.length})
+          </Button>
+          <Button
             onClick={() => setActiveTab('apps')}
-            className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${
-              activeTab === 'apps'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
-            }`}
+            variant={activeTab === 'apps' ? 'primary' : 'outline'}
+            size="md"
+            icon={<i className="fa-solid fa-calendar-days"></i>}
           >
-            <Calendar className="w-4 h-4" /> Patient Appointments ({appointments.length})
-          </button>
+            Appointments Hub ({appointments.length})
+          </Button>
         </div>
 
         {/* Posts Moderation Tab */}
         {activeTab === 'posts' && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-1 flex items-center gap-2">
-                <ClipboardCheck className="w-5 h-5 text-indigo-600" /> Pending Medical Verification Queue
-              </h2>
-              <p className="text-sm text-slate-500">
-                Review community posts to verify medical advice as Safe, Misleading, or Suspicious.
-              </p>
-            </div>
+          <div>
+            <h2 style={{ textAlign: 'left', fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)', color: 'var(--text)' }}>
+              📋 Pending Verification Queue
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 'var(--space-6)' }}>
+              Review medical queries and advice to tag them as Safe, Misleading/Fake, or Suspicious.
+            </p>
 
             {loading ? (
-              <div className="py-16 text-center text-slate-400">
-                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-indigo-600" />
-                <p className="text-sm font-medium">Loading verification queue...</p>
+              <div style={{ textAlign: 'center', padding: 'var(--space-10)' }}>
+                <div className="spinner"></div>
               </div>
             ) : posts.length === 0 ? (
-              <Card padding="lg" className="text-center py-12 border border-slate-200">
-                <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
-                <h3 className="text-lg font-bold text-slate-900 mb-1">Queue Clear!</h3>
-                <p className="text-sm text-slate-500 max-w-md mx-auto">
-                  No patient queries are currently pending medical review. Thank you for keeping the community safe!
+              <Card padding="lg" style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-3)' }}>✅</div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 var(--space-2)' }}>Inbox Zero!</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                  No medical posts are currently pending review. Thank you for keeping the community safe!
                 </p>
               </Card>
             ) : (
-              <div className="space-y-4">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                 {posts.map((post) => (
-                  <Card key={post._id} padding="lg" className="border border-slate-200 shadow-sm">
-                    <div className="flex items-start justify-between gap-4 mb-3">
+                  <Card key={post._id} padding="lg">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-3)' }}>
                       <div>
-                        <h3 className="text-lg font-bold text-slate-900">{post.title}</h3>
-                        <p className="text-xs text-slate-500 mt-1 flex items-center gap-2">
-                          <span>Author: <strong>{post.author?.username || 'Patient'}</strong></span>
-                          <span>•</span>
-                          <span>Community: <strong>{post.community?.name || 'General'}</strong></span>
+                        <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--primary)', textAlign: 'left' }}>{post.title}</h3>
+                        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: '4px 0 0' }}>
+                          Author: {post.author?.username || 'Patient'} | Community: {post.community?.name || 'General'}
                         </p>
                       </div>
-                      <Badge variant="warning" size="sm">Pending Verification</Badge>
+                      <span className="badge badge-yellow">Pending Review</span>
                     </div>
 
-                    <p className="text-slate-700 text-sm leading-relaxed mb-5 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: 'var(--space-5)' }}>
                       {post.content}
                     </p>
 
-                    <div className="flex items-center gap-3 flex-wrap pt-1">
-                      <Button
-                        onClick={() => handleReview(post._id, 'SAFE', 'Medically verified')}
-                        variant="secondary"
-                        size="sm"
-                      >
-                        <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-500" /> Tag Safe
+                    <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
+                      <Button onClick={() => handleReview(post._id, 'SAFE', 'Medically verified')} variant="secondary" size="sm" icon={<i className="fa-solid fa-check"></i>}>
+                        Tag Safe
                       </Button>
-                      <Button
-                        onClick={() => handleReview(post._id, 'FAKE', 'Misleading content')}
-                        variant="danger"
-                        size="sm"
-                      >
-                        <AlertTriangle className="w-4 h-4 mr-1.5" /> Tag Misleading
+                      <Button onClick={() => handleReview(post._id, 'FAKE', 'Misleading content')} variant="danger" size="sm" icon={<i className="fa-solid fa-triangle-exclamation"></i>}>
+                        Tag Misleading
                       </Button>
-                      <Button
-                        onClick={() => handleReview(post._id, 'SUSPICIOUS', 'Requires warning')}
-                        variant="outline"
-                        size="sm"
-                      >
-                        <Flag className="w-4 h-4 mr-1.5 text-amber-500" /> Tag Suspicious
+                      <Button onClick={() => handleReview(post._id, 'SUSPICIOUS', 'Requires warning')} variant="warning" size="sm" icon={<i className="fa-solid fa-flag"></i>}>
+                        Tag Suspicious
                       </Button>
                     </div>
                   </Card>
@@ -200,70 +149,61 @@ export default function DoctorDashboard() {
 
         {/* Appointments Tab */}
         {activeTab === 'apps' && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-1 flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-indigo-600" /> Consultation Schedule
-              </h2>
-              <p className="text-sm text-slate-500">
-                Review and accept incoming appointment requests from patients.
-              </p>
-            </div>
+          <div>
+            <h2 style={{ textAlign: 'left', fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)', color: 'var(--text)' }}>
+              📅 Patient Consultation Requests
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 'var(--space-6)' }}>
+              Accept or reject incoming appointment requests from patients.
+            </p>
 
             {loading ? (
-              <div className="py-16 text-center text-slate-400">
-                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-indigo-600" />
-                <p className="text-sm font-medium">Loading appointment requests...</p>
+              <div style={{ textAlign: 'center', padding: 'var(--space-10)' }}>
+                <div className="spinner"></div>
               </div>
             ) : appointments.length === 0 ? (
-              <Card padding="lg" className="text-center py-12 border border-slate-200">
-                <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <h3 className="text-lg font-bold text-slate-900 mb-1">No Pending Requests</h3>
-                <p className="text-sm text-slate-500 max-w-md mx-auto">
-                  You currently have no new appointment requests from patients.
+              <Card padding="lg" style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-3)' }}>📅</div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 var(--space-2)' }}>No Requests</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                  You have no pending appointment requests at this time.
                 </p>
               </Card>
             ) : (
-              <div className="space-y-4">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                 {appointments.map((app) => (
-                  <Card key={app._id} padding="lg" className="border border-slate-200 shadow-sm">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <User className="w-4 h-4 text-slate-400" />
-                          <h3 className="text-base font-bold text-slate-900">
-                            Patient: {app.user?.username || 'Anonymous Patient'}
-                          </h3>
-                        </div>
-                        <div className="flex items-center gap-4 text-xs text-slate-600 pt-1">
-                          <span className="inline-flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-indigo-600" /> <strong>{app.date}</strong> at {app.time}
-                          </span>
-                          <span>•</span>
-                          <span>Email: {app.user?.email}</span>
-                        </div>
+                  <Card key={app._id} padding="lg">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+                      <div>
+                        <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text)', textAlign: 'left' }}>
+                          Patient: {app.user?.username || 'Anonymous Patient'}
+                        </h3>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+                          🗓️ <b>Date:</b> {app.date} | 🕒 <b>Time:</b> {app.time}
+                        </p>
+                        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: '2px 0 0' }}>
+                          ✉️ <b>Email:</b> {app.user?.email}
+                        </p>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
                         {app.status === 'PENDING' ? (
                           <>
-                            <Button onClick={() => handleAccept(app._id)} variant="secondary" size="sm">
-                              <CheckCircle2 className="w-4 h-4 mr-1.5" /> Accept
+                            <Button onClick={() => handleAccept(app._id)} variant="secondary" size="sm" icon={<i className="fa-solid fa-check"></i>}>
+                              Accept
                             </Button>
-                            <Button onClick={() => handleReject(app._id)} variant="danger" size="sm">
-                              <XCircle className="w-4 h-4 mr-1.5" /> Reject
+                            <Button onClick={() => handleReject(app._id)} variant="danger" size="sm" icon={<i className="fa-solid fa-xmark"></i>}>
+                              Reject
                             </Button>
                           </>
                         ) : (
-                          <Badge variant={app.status === 'CONFIRMED' ? 'success' : 'neutral'} size="sm">
-                            {app.status}
-                          </Badge>
+                          <span className={`badge status-${app.status?.toLowerCase()}`}>{app.status}</span>
                         )}
 
                         {app.status === 'CONFIRMED' && (
-                          <Link to={`/chat/appointment/${app._id}`}>
-                            <Button variant="primary" size="sm">
-                              <MessageSquare className="w-4 h-4 mr-1.5" /> Start Chat
+                          <Link to={`/chat/appointment/${app._id}`} style={{ textDecoration: 'none' }}>
+                            <Button variant="primary" size="sm" icon={<i className="fa-solid fa-comments"></i>}>
+                              Start Chat
                             </Button>
                           </Link>
                         )}

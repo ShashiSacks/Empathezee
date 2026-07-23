@@ -2,23 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
-import {
-  Home,
-  Users,
-  UserCheck,
-  Calendar,
-  Pill,
-  HeartPulse,
-  BarChart3,
-  Stethoscope,
-  LogOut,
-  LogIn,
-  UserPlus,
-  Globe,
-  PhoneCall,
-  Menu,
-  X
-} from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -69,7 +52,7 @@ export default function Navbar() {
         <div className="nav-container">
           {/* Logo */}
           <Link to="/" className="nav-logo" aria-label="Empathezee Home">
-            <Logo size={32} />
+            <Logo size="32" />
             <span className="nav-logo-text">Empathezee</span>
           </Link>
 
@@ -78,52 +61,26 @@ export default function Navbar() {
             {user ? (
               user.role === 'doctor' ? (
                 <>
-                  <Link to="/doctor/dashboard" id="nav-doctor-dashboard" className={isActive('/doctor/dashboard') ? 'active' : ''}>
-                    <Stethoscope className="w-4 h-4 mr-1.5 inline-block" /> Doctor Dashboard
-                  </Link>
-                  <Link to="/medicine" id="nav-medicines-dr" className={isActive('/medicine') ? 'active' : ''}>
-                    <Pill className="w-4 h-4 mr-1.5 inline-block" /> Medicines
-                  </Link>
-                  <Link to="/analytics" id="nav-analytics-dr" className={isActive('/analytics') ? 'active' : ''}>
-                    <BarChart3 className="w-4 h-4 mr-1.5 inline-block" /> Analytics
-                  </Link>
+                  <Link to="/doctor/dashboard" id="nav-doctor-dashboard" className={isActive('/doctor/dashboard') ? 'active' : ''}>Doctor Dashboard</Link>
+                  <Link to="/medicine" id="nav-medicines-dr" className={isActive('/medicine') ? 'active' : ''}>Medicines</Link>
+                  <Link to="/analytics" id="nav-analytics-dr" className={isActive('/analytics') ? 'active' : ''}>Analytics</Link>
                 </>
               ) : (
                 <>
-                  <Link to="/dashboard" id="nav-dashboard" className={isActive('/dashboard') ? 'active' : ''}>
-                    <Home className="w-4 h-4 mr-1.5 inline-block" /> Dashboard
-                  </Link>
-                  <Link to="/communities" id="nav-communities" className={isActive('/communities') ? 'active' : ''}>
-                    <Users className="w-4 h-4 mr-1.5 inline-block" /> Communities
-                  </Link>
-                  <Link to="/doctor/search" id="nav-doctors" className={isActive('/doctor/search') ? 'active' : ''}>
-                    <UserCheck className="w-4 h-4 mr-1.5 inline-block" /> Find Doctors
-                  </Link>
-                  <Link to="/appointments-ui" id="nav-appointments" className={isActive('/appointments-ui') ? 'active' : ''}>
-                    <Calendar className="w-4 h-4 mr-1.5 inline-block" /> Appointments
-                  </Link>
-                  <Link to="/medicine" id="nav-medicines" className={isActive('/medicine') ? 'active' : ''}>
-                    <Pill className="w-4 h-4 mr-1.5 inline-block" /> Medicines
-                  </Link>
-                  <Link to="/wellness" id="nav-wellness" className={isActive('/wellness') ? 'active' : ''}>
-                    <HeartPulse className="w-4 h-4 mr-1.5 inline-block" /> Wellness
-                  </Link>
-                  <Link to="/analytics" id="nav-analytics" className={isActive('/analytics') ? 'active' : ''}>
-                    <BarChart3 className="w-4 h-4 mr-1.5 inline-block" /> Analytics
-                  </Link>
+                  <Link to="/dashboard" id="nav-dashboard" className={isActive('/dashboard') ? 'active' : ''}>Dashboard</Link>
+                  <Link to="/communities" id="nav-communities" className={isActive('/communities') ? 'active' : ''}>Communities</Link>
+                  <Link to="/doctor/search" id="nav-doctors" className={isActive('/doctor/search') ? 'active' : ''}>Find Doctors</Link>
+                  <Link to="/appointments-ui" id="nav-appointments" className={isActive('/appointments-ui') ? 'active' : ''}>Appointments</Link>
+                  <Link to="/medicine" id="nav-medicines" className={isActive('/medicine') ? 'active' : ''}>Medicines</Link>
+                  <Link to="/wellness" id="nav-wellness" className={isActive('/wellness') ? 'active' : ''}>Wellness</Link>
+                  <Link to="/analytics" id="nav-analytics" className={isActive('/analytics') ? 'active' : ''}>Analytics</Link>
                 </>
               )
             ) : (
               <>
-                <Link to="/login" id="nav-login" className={isActive('/login') ? 'active' : ''}>
-                  <LogIn className="w-4 h-4 mr-1.5 inline-block" /> Login
-                </Link>
-                <Link to="/register" id="nav-register" className={isActive('/register') ? 'active' : ''}>
-                  <UserPlus className="w-4 h-4 mr-1.5 inline-block" /> Register
-                </Link>
-                <Link to="/doctor/login" id="nav-doctor-login" className={isActive('/doctor/login') ? 'active' : ''}>
-                  <Stethoscope className="w-4 h-4 mr-1.5 inline-block" /> Doctor Portal
-                </Link>
+                <Link to="/login" id="nav-login" className={isActive('/login') ? 'active' : ''}>Login</Link>
+                <Link to="/register" id="nav-register" className={isActive('/register') ? 'active' : ''}>Register</Link>
+                <Link to="/doctor/login" id="nav-doctor-login" className={isActive('/doctor/login') ? 'active' : ''}>Doctor Login</Link>
               </>
             )}
           </div>
@@ -132,7 +89,7 @@ export default function Navbar() {
           <div className="nav-actions">
             {/* Language Selector */}
             <div className="lang-selector-container notranslate" role="navigation" aria-label="Language selection">
-              <Globe className="w-4 h-4 lang-icon" aria-hidden="true" />
+              <span className="lang-icon" aria-hidden="true">🌐</span>
               <select
                 id="language-selector"
                 value={selectedLang}
@@ -153,141 +110,139 @@ export default function Navbar() {
                 <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
                 <option value="or">Odia (ଓଡ଼ିଆ)</option>
                 <option value="ar">Arabic (العربية)</option>
-                <option value="zh-CN">Chinese (简体)</option>
+                <option value="zh-CN">Chinese Simplified (简体中文)</option>
+                <option value="zh-TW">Chinese Traditional (繁體中文)</option>
+                <option value="nl">Dutch (Nederlands)</option>
                 <option value="fr">French (Français)</option>
                 <option value="de">German (Deutsch)</option>
+                <option value="el">Greek (Ελληνικά)</option>
+                <option value="id">Indonesian</option>
+                <option value="it">Italiano</option>
+                <option value="ja">Japanese (日本語)</option>
+                <option value="ko">Korean (한국어)</option>
+                <option value="fa">Persian (فارسی)</option>
+                <option value="pl">Polski</option>
+                <option value="pt">Português</option>
+                <option value="ru">Русский</option>
                 <option value="es">Español</option>
+                <option value="sv">Svenska</option>
+                <option value="th">Thai (ไทย)</option>
+                <option value="tr">Turkish (Türkçe)</option>
+                <option value="uk">Ukrainian (Українська)</option>
+                <option value="vi">Vietnamese (Tiếng Việt)</option>
               </select>
             </div>
 
-            {/* Emergency Call Button */}
+            {/* SOS Emergency */}
             <a href="tel:112" className="nav-sos-btn" id="nav-sos" aria-label="Emergency call 112">
-              <PhoneCall className="w-3.5 h-3.5 mr-1" />
-              <span className="notranslate">112 SOS</span>
+              <i className="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+              <span className="notranslate">SOS</span>
             </a>
 
-            {/* Logout Button */}
+            {/* Logout */}
             {user && (
-              <button onClick={logout} className="nav-logout-btn" id="nav-logout" aria-label="Logout">
-                <LogOut className="w-4 h-4 mr-1.5 inline-block" />
+              <button onClick={logout} className="nav-logout-btn" id="nav-logout" aria-label="Logout" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <i className="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
                 <span>Logout</span>
               </button>
             )}
 
-            {/* Mobile Hamburger */}
+            {/* Hamburger */}
             <button
               className="nav-hamburger"
               id="hamburger-btn"
-              aria-label="Toggle Navigation Menu"
+              aria-label="Open menu"
               aria-expanded={mobileOpen}
+              aria-controls="mobile-drawer"
               onClick={() => toggleMobileDrawer(!mobileOpen)}
             >
-              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Navigation Drawer */}
-      <div className={`nav-mobile-drawer ${mobileOpen ? 'open' : ''}`} id="mobile-drawer" role="navigation" aria-label="Mobile navigation">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-          <div className="flex items-center gap-2">
-            <Logo size={28} />
-            <span className="font-semibold text-slate-900 text-lg">Empathezee</span>
+      {/* Mobile Drawer */}
+      <div className={`nav-mobile-drawer ${mobileOpen ? 'open' : ''}`} id="mobile-drawer" role="navigation" aria-label="Mobile navigation" aria-hidden={!mobileOpen}>
+        <button className="nav-drawer-close" id="drawer-close" aria-label="Close menu" onClick={() => toggleMobileDrawer(false)}>
+          <i className="fa-solid fa-xmark"></i>
+        </button>
+
+        <div style={{ marginBottom: '12px' }}>
+          <div className="nav-logo" style={{ textDecoration: 'none', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Logo size="28" />
+            <span className="nav-logo-text" style={{ fontSize: '1rem' }}>Empathezee</span>
           </div>
-          <button className="p-2 text-slate-500 hover:text-slate-900" onClick={() => toggleMobileDrawer(false)}>
-            <X className="w-5 h-5" />
-          </button>
         </div>
 
-        <div className="flex flex-col gap-2 mt-4">
-          {user ? (
-            user.role === 'doctor' ? (
-              <>
-                <Link to="/doctor/dashboard" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <Stethoscope className="w-4 h-4" /> Doctor Dashboard
-                </Link>
-                <Link to="/medicine" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <Pill className="w-4 h-4" /> Medicines
-                </Link>
-                <Link to="/analytics" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <BarChart3 className="w-4 h-4" /> Analytics
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/dashboard" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <Home className="w-4 h-4" /> Dashboard
-                </Link>
-                <Link to="/communities" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <Users className="w-4 h-4" /> Communities
-                </Link>
-                <Link to="/doctor/search" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <UserCheck className="w-4 h-4" /> Find Doctors
-                </Link>
-                <Link to="/appointments-ui" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <Calendar className="w-4 h-4" /> Appointments
-                </Link>
-                <Link to="/medicine" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <Pill className="w-4 h-4" /> Medicines
-                </Link>
-                <Link to="/wellness" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <HeartPulse className="w-4 h-4" /> Mental Wellness
-                </Link>
-                <Link to="/analytics" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                  <BarChart3 className="w-4 h-4" /> Analytics
-                </Link>
-              </>
-            )
+        {user ? (
+          user.role === 'doctor' ? (
+            <>
+              <Link to="/doctor/dashboard" id="mob-nav-doctor-dashboard" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-stethoscope" style={{ width: '18px' }}></i> Doctor Dashboard</Link>
+              <Link to="/medicine" id="mob-nav-medicines-dr" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-pills" style={{ width: '18px' }}></i> Medicines</Link>
+              <Link to="/analytics" id="mob-nav-analytics-dr" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-chart-line" style={{ width: '18px' }}></i> Analytics</Link>
+            </>
           ) : (
             <>
-              <Link to="/login" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                <LogIn className="w-4 h-4" /> Login
-              </Link>
-              <Link to="/register" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                <UserPlus className="w-4 h-4" /> Register
-              </Link>
-              <Link to="/doctor/login" onClick={() => toggleMobileDrawer(false)} className="mob-drawer-link">
-                <Stethoscope className="w-4 h-4" /> Doctor Portal
-              </Link>
+              <Link to="/dashboard" id="mob-nav-dashboard" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-house" style={{ width: '18px' }}></i> Dashboard</Link>
+              <Link to="/communities" id="mob-nav-communities" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-people-group" style={{ width: '18px' }}></i> Communities</Link>
+              <Link to="/doctor/search" id="mob-nav-doctors" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-user-doctor" style={{ width: '18px' }}></i> Find Doctors</Link>
+              <Link to="/appointments-ui" id="mob-nav-appointments" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-calendar-check" style={{ width: '18px' }}></i> Appointments</Link>
+              <Link to="/medicine" id="mob-nav-medicines" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-pills" style={{ width: '18px' }}></i> Medicines</Link>
+              <Link to="/wellness" id="mob-nav-wellness" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-seedling" style={{ width: '18px' }}></i> Mental Wellness</Link>
+              <Link to="/analytics" id="mob-nav-analytics" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-chart-line" style={{ width: '18px' }}></i> Analytics</Link>
             </>
-          )}
+          )
+        ) : (
+          <>
+            <Link to="/login" id="mob-nav-login" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-arrow-right-to-bracket" style={{ width: '18px' }}></i> Login</Link>
+            <Link to="/register" id="mob-nav-register" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-user-plus" style={{ width: '18px' }}></i> Register</Link>
+            <Link to="/doctor/login" id="mob-nav-doctor-login" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-stethoscope" style={{ width: '18px' }}></i> Doctor Login</Link>
+          </>
+        )}
 
-          {user && (
-            <button onClick={() => { toggleMobileDrawer(false); logout(); }} className="mob-drawer-logout">
-              <LogOut className="w-4 h-4" /> Logout Account
+        {user && (
+          <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>
+            <button onClick={() => { toggleMobileDrawer(false); logout(); }} style={{ color: 'var(--danger)', background: 'var(--danger-bg)', width: '100%', border: 'none', textAlign: 'left', padding: '10px 14px', borderRadius: 'var(--radius)', cursor: 'pointer' }} id="mob-nav-logout">
+              <i className="fa-solid fa-right-from-bracket" style={{ width: '18px' }}></i> Logout
             </button>
-          )}
+          </div>
+        )}
+
+        <div style={{ marginTop: 'auto', paddingTop: '20px' }}>
+          <a href="tel:112" style={{ color: 'var(--danger)', background: 'var(--danger-bg)', border: '1px solid rgba(239,68,68,0.2)' }} id="mob-nav-sos">
+            <i className="fa-solid fa-circle-exclamation" style={{ width: '18px' }}></i> Emergency — Call 112
+          </a>
         </div>
       </div>
 
       {/* Mobile Drawer Overlay */}
-      {mobileOpen && (
-        <div className="nav-overlay open" onClick={() => toggleMobileDrawer(false)}></div>
-      )}
+      <div className={`nav-overlay ${mobileOpen ? 'open' : ''}`} id="nav-overlay" aria-hidden={!mobileOpen} onClick={() => toggleMobileDrawer(false)}></div>
 
       {/* Mobile Bottom Navigation */}
       {user && user.role !== 'doctor' && (
         <nav className="mobile-bottom-nav" aria-label="Bottom navigation">
           <Link to="/dashboard" className={`mobile-nav-item ${isActive('/dashboard') ? 'active' : ''}`} id="mob-bottom-dashboard">
-            <Home className="w-5 h-5" />
+            <span className="mobile-nav-icon"><i className="fa-solid fa-house"></i></span>
             <span>Home</span>
           </Link>
           <Link to="/communities" className={`mobile-nav-item ${isActive('/communities') ? 'active' : ''}`} id="mob-bottom-communities">
-            <Users className="w-5 h-5" />
+            <span className="mobile-nav-icon"><i className="fa-solid fa-people-group"></i></span>
             <span>Community</span>
           </Link>
           <Link to="/doctor/search" className={`mobile-nav-item ${isActive('/doctor/search') ? 'active' : ''}`} id="mob-bottom-doctors">
-            <UserCheck className="w-5 h-5" />
+            <span className="mobile-nav-icon"><i className="fa-solid fa-user-doctor"></i></span>
             <span>Doctors</span>
           </Link>
           <Link to="/medicine" className={`mobile-nav-item ${isActive('/medicine') ? 'active' : ''}`} id="mob-bottom-medicine">
-            <Pill className="w-5 h-5" />
+            <span className="mobile-nav-icon"><i className="fa-solid fa-pills"></i></span>
             <span>Medicines</span>
           </Link>
           <Link to="/appointments-ui" className={`mobile-nav-item ${isActive('/appointments-ui') ? 'active' : ''}`} id="mob-bottom-appts">
-            <Calendar className="w-5 h-5" />
-            <span>Appts</span>
+            <span className="mobile-nav-icon"><i className="fa-solid fa-calendar-check"></i></span>
+            <span>Appointments</span>
           </Link>
         </nav>
       )}
