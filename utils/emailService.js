@@ -1,6 +1,17 @@
 const nodemailer = require("nodemailer");
 const { Resend } = require("resend");
 const logger = require("./logger");
+const User = require("../models/User");
+
+/**
+ * Get Centralized Frontend URL dynamically from Environment Variables
+ * Works in Development (http://localhost:3000) and Production (https://your-domain.com)
+ */
+const getFrontendUrl = () => {
+    let url = process.env.FRONTEND_URL || process.env.APP_URL || process.env.BASE_URL || 'http://localhost:3000';
+    // Remove trailing slash if present
+    return url.replace(/\/$/, '');
+};
 
 /**
  * Get Email Transporter / Provider
@@ -9,7 +20,6 @@ const logger = require("./logger");
  * 3. Fallback: Console Dev Logger.
  */
 const getEmailProvider = () => {
-    // 1. Check Gmail / Custom SMTP
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
         const host = process.env.SMTP_HOST || "smtp.gmail.com";
         const port = Number(process.env.SMTP_PORT) || 587;
@@ -27,7 +37,6 @@ const getEmailProvider = () => {
         };
     }
 
-    // 2. Check Resend SDK
     if (process.env.RESEND_API_KEY) {
         return {
             type: "resend",
@@ -35,7 +44,6 @@ const getEmailProvider = () => {
         };
     }
 
-    // 3. Fallback Dev Mode
     return { type: "dev" };
 };
 
@@ -49,21 +57,50 @@ const getFromAddress = () => {
     return '"Empathezee" <onboarding@resend.dev>';
 };
 
+const getReplyToAddress = () => {
+    return process.env.REPLY_TO || getFromAddress();
+};
+
 /**
- * Core Mail Sender Engine
+ * Core Mail Sender Engine with Production Anti-Spam Headers & Plain-Text Fallback
  */
-const dispatchMail = async ({ to, subject, html }) => {
+const dispatchMail = async ({ to, subject, html, text }) => {
     const provider = getEmailProvider();
     const from = getFromAddress();
+    const replyTo = getReplyToAddress();
+    const frontendUrl = getFrontendUrl();
+
+    // Standard Production Anti-Spam & Deliverability Headers
+    const headers = {
+        'Reply-To': replyTo,
+        'List-Unsubscribe': `<${frontendUrl}/unsubscribe>`,
+        'X-Entity-Ref-ID': `empathezee-${Date.now()}`
+    };
 
     if (provider.type === "smtp") {
-        const info = await provider.transporter.sendMail({ from, to, subject, html });
+        const info = await provider.transporter.sendMail({
+            from,
+            to,
+            subject,
+            html,
+            text,
+            replyTo,
+            headers
+        });
         logger.info(`Email sent via SMTP (${process.env.SMTP_HOST || 'Gmail'}) to ${to}: ${info.messageId}`);
         return { success: true, messageId: info.messageId, provider: "smtp" };
     }
 
     if (provider.type === "resend") {
-        const response = await provider.client.emails.send({ from, to, subject, html });
+        const response = await provider.client.emails.send({
+            from,
+            to,
+            subject,
+            html,
+            text,
+            replyTo,
+            headers
+        });
         logger.info(`Email sent via Resend to ${to}: ${JSON.stringify(response)}`);
         return { success: true, data: response, provider: "resend" };
     }
@@ -74,10 +111,31 @@ const dispatchMail = async ({ to, subject, html }) => {
 };
 
 /**
- * Send Welcome Email to newly registered user/doctor
+ * Send Welcome Email - ONLY ON BRAND NEW SIGNUP (Guaranteed Idempotent)
  */
-const sendWelcomeEmail = async ({ email, username }) => {
+const sendWelcomeEmail = async ({ user, email, username }) => {
     try {
+        const targetEmail = user?.email || email;
+        const targetUsername = user?.username || username || 'Friend';
+
+        // Safeguard 1: If user object is passed, check if welcome email was already sent
+        if (user) {
+            if (user.welcomeEmailSent) {
+                logger.info(`[Welcome Email Skipped] Welcome email already sent to ${targetEmail}`);
+                return { success: true, skipped: true, reason: 'Already sent' };
+            }
+        } else {
+            // Find existing user in database to check flag
+            const dbUser = await User.findOne({ email: targetEmail.toLowerCase() });
+            if (dbUser && dbUser.welcomeEmailSent) {
+                logger.info(`[Welcome Email Skipped] Welcome email already sent to ${targetEmail}`);
+                return { success: true, skipped: true, reason: 'Already sent' };
+            }
+        }
+
+        const frontendUrl = getFrontendUrl();
+        const dashboardUrl = `${frontendUrl}/dashboard`;
+
         const html = `
             <!DOCTYPE html>
             <html>
@@ -106,7 +164,7 @@ const sendWelcomeEmail = async ({ email, username }) => {
                         <p>Compassionate Health & Supportive Community</p>
                     </div>
                     <div class="content">
-                        <div class="greeting">Welcome aboard, ${username || 'Friend'}! 👋</div>
+                        <div class="greeting">Welcome aboard, ${targetUsername}! 👋</div>
                         <p>Thank you for joining <strong>Empathezee</strong>. We are thrilled to have you as part of our health and wellness community.</p>
                         
                         <div class="feature-box">
@@ -118,7 +176,7 @@ const sendWelcomeEmail = async ({ email, username }) => {
                         <p>If you have any questions or need support, our team is always here to assist you.</p>
 
                         <div style="text-align: center;">
-                            <a href="${process.env.BASE_URL || 'http://localhost:3000'}/dashboard" class="btn">Explore Your Dashboard</a>
+                            <a href="${dashboardUrl}" class="btn">Explore Your Dashboard</a>
                         </div>
                     </div>
                     <div class="footer">
@@ -130,11 +188,39 @@ const sendWelcomeEmail = async ({ email, username }) => {
             </html>
         `;
 
-        return await dispatchMail({
-            to: email,
+        const text = `
+Welcome to Empathezee, ${targetUsername}!
+
+Thank you for joining Empathezee. We are thrilled to have you as part of our health and wellness community.
+
+What you can do on Empathezee:
+- Connect with Peer Communities
+- Consult Verified Doctors
+- Explore Medicine Resources
+
+Access your dashboard here: ${dashboardUrl}
+
+© ${new Date().getFullYear()} Empathezee. All rights reserved.
+        `.trim();
+
+        const result = await dispatchMail({
+            to: targetEmail,
             subject: "Welcome to Empathezee - Your Healthcare & Community Platform! 🎉",
-            html
+            html,
+            text
         });
+
+        // Safeguard 2: Mark welcomeEmailSent = true upon successful dispatch
+        if (result.success) {
+            if (user && typeof user.save === 'function') {
+                user.welcomeEmailSent = true;
+                await user.save();
+            } else {
+                await User.updateOne({ email: targetEmail.toLowerCase() }, { welcomeEmailSent: true });
+            }
+        }
+
+        return result;
     } catch (error) {
         logger.error(`Error sending welcome email to ${email}:`, error);
         return { success: false, error: error.message };
@@ -146,6 +232,8 @@ const sendWelcomeEmail = async ({ email, username }) => {
  */
 const sendSubscriptionEmail = async ({ email }) => {
     try {
+        const frontendUrl = getFrontendUrl();
+
         const html = `
             <!DOCTYPE html>
             <html>
@@ -183,17 +271,29 @@ const sendSubscriptionEmail = async ({ email }) => {
                     </div>
                     <div class="footer">
                         <p>© ${new Date().getFullYear()} Empathezee. All rights reserved.</p>
-                        <p>Sent to ${email}. If you did not request this subscription, you can safely ignore this email.</p>
+                        <p>Sent to ${email}. If you did not request this subscription, you can unsubscribe here: ${frontendUrl}/unsubscribe</p>
                     </div>
                 </div>
             </body>
             </html>
         `;
 
+        const text = `
+Thank You for Subscribing to Empathezee Updates!
+
+We are glad to have you in our loop. You will now receive periodic updates, wellness tips, and major announcements from the Empathezee platform.
+
+What to expect: We value your inbox and will only send meaningful, actionable health insights and community updates.
+
+© ${new Date().getFullYear()} Empathezee. All rights reserved.
+Sent to ${email}. Unsubscribe: ${frontendUrl}/unsubscribe
+        `.trim();
+
         return await dispatchMail({
             to: email,
             subject: "Thank You for Subscribing to Empathezee Updates! 📬",
-            html
+            html,
+            text
         });
     } catch (error) {
         logger.error(`Error sending subscription email to ${email}:`, error);
@@ -206,7 +306,9 @@ const sendSubscriptionEmail = async ({ email }) => {
  */
 const sendPasswordResetEmail = async ({ email, resetToken }) => {
     try {
-        const resetUrl = `${process.env.BASE_URL || 'http://localhost:3000'}/reset-password/${resetToken}`;
+        const frontendUrl = getFrontendUrl();
+        const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
+
         const html = `
             <!DOCTYPE html>
             <html>
@@ -249,10 +351,23 @@ const sendPasswordResetEmail = async ({ email, resetToken }) => {
             </html>
         `;
 
+        const text = `
+Password Reset Request - Empathezee
+
+You requested a password reset for your Empathezee account. Please use the link below to reset your password (valid for 15 minutes):
+
+${resetUrl}
+
+If you did not request a password reset, you can safely ignore this message.
+
+© ${new Date().getFullYear()} Empathezee. All rights reserved.
+        `.trim();
+
         return await dispatchMail({
             to: email,
             subject: "Reset Your Empathezee Password 🔐",
-            html
+            html,
+            text
         });
     } catch (error) {
         logger.error(`Error sending password reset email to ${email}:`, error);
@@ -261,6 +376,7 @@ const sendPasswordResetEmail = async ({ email, resetToken }) => {
 };
 
 module.exports = {
+    getFrontendUrl,
     sendWelcomeEmail,
     sendSubscriptionEmail,
     sendPasswordResetEmail

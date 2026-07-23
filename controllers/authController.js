@@ -92,8 +92,8 @@ const register = catchAsync(async (req, res, next) => {
         isVerified: true
     });
 
-    // Send welcome email asynchronously
-    sendWelcomeEmail({ email: user.email, username: user.username });
+    // Send welcome email asynchronously (ONLY ON BRAND NEW REGISTRATION)
+    sendWelcomeEmail({ user, email: user.email, username: user.username });
 
     await sendTokenResponse(user, 201, req, res);
 });

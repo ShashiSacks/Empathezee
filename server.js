@@ -53,7 +53,7 @@ app.use((req, res, next) => {
     res.locals.currentPath = req.path;
     res.locals.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
     res.locals.googleClientId = process.env.GOOGLE_CLIENT_ID || "";
-    res.locals.baseUrl = process.env.BASE_URL || "http://localhost:3000";
+    res.locals.baseUrl = process.env.FRONTEND_URL || process.env.BASE_URL || "http://localhost:3000";
     next();
 });
 
@@ -137,7 +137,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
                 });
 
                 const { sendWelcomeEmail } = require("./utils/emailService");
-                sendWelcomeEmail({ email: newUser.email, username: newUser.username });
+                sendWelcomeEmail({ user: newUser, email: newUser.email, username: newUser.username });
 
                 return done(null, newUser);
             } catch (err) {
