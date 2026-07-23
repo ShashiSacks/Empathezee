@@ -136,6 +136,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
                     role: "user"
                 });
 
+                const { sendWelcomeEmail } = require("./utils/emailService");
+                sendWelcomeEmail({ email: newUser.email, username: newUser.username });
+
                 return done(null, newUser);
             } catch (err) {
                 return done(err, null);

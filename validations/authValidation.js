@@ -46,10 +46,17 @@ const resetPasswordSchema = z.object({
     })
 });
 
+const subscribeSchema = z.object({
+    body: z.object({
+        email: z.string().email("Invalid email format")
+    })
+});
+
 module.exports = {
     registerSchema,
     loginSchema,
     verifyEmailSchema,
     forgotPasswordSchema,
-    resetPasswordSchema
+    resetPasswordSchema,
+    subscribeSchema
 };

@@ -3,8 +3,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const RefreshToken = require("../models/RefreshToken");
+const Subscriber = require("../models/Subscriber");
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const { sendWelcomeEmail, sendSubscriptionEmail, sendPasswordResetEmail } = require('../utils/emailService');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh_secret';
@@ -90,6 +92,9 @@ const register = catchAsync(async (req, res, next) => {
         isVerified: true
     });
 
+    // Send welcome email asynchronously
+    sendWelcomeEmail({ email: user.email, username: user.username });
+
     await sendTokenResponse(user, 201, req, res);
 });
 
@@ -148,13 +153,18 @@ const refreshToken = catchAsync(async (req, res, next) => {
 });
 
 const logout = catchAsync(async (req, res, next) => {
-    const token = req.cookies.refreshToken;
+    const token = req.cookies?.refreshToken;
     if (token) {
         await RefreshToken.findOneAndUpdate({ token }, { revoked: true });
     }
+    if (req.session) {
+        req.session.destroy();
+    }
+    res.clearCookie('refreshToken', { path: '/' });
     res.cookie('refreshToken', 'none', {
-        expires: new Date(Date.now() + 10 * 1000),
-        httpOnly: true
+        expires: new Date(0),
+        httpOnly: true,
+        path: '/'
     });
     res.status(200).json({ success: true, message: "Logged out successfully" });
 });
@@ -168,7 +178,8 @@ const forgotPassword = catchAsync(async (req, res, next) => {
     user.passwordResetExpires = Date.now() + 15 * 60 * 1000; // 15 mins
     await user.save();
 
-    // TODO: nodemailer send resetToken to user's email
+    // Send password reset email asynchronously
+    sendPasswordResetEmail({ email: user.email, resetToken });
 
     res.status(200).json({ success: true, message: "Token sent to email" });
 });
@@ -191,4 +202,34 @@ const resetPassword = catchAsync(async (req, res, next) => {
     await sendTokenResponse(user, 200, req, res);
 });
 
-module.exports = { register, verifyEmail, login, refreshToken, logout, forgotPassword, resetPassword };
+const subscribeNewsletter = catchAsync(async (req, res, next) => {
+    const { email } = req.body;
+    const cleanEmail = email.toLowerCase().trim();
+
+    let subscriber = await Subscriber.findOne({ email: cleanEmail });
+    if (!subscriber) {
+        subscriber = await Subscriber.create({ email: cleanEmail });
+    } else if (subscriber.status === 'unsubscribed') {
+        subscriber.status = 'active';
+        await subscriber.save();
+    }
+
+    // Trigger thank you email asynchronously
+    sendSubscriptionEmail({ email: cleanEmail });
+
+    res.status(200).json({
+        success: true,
+        message: "Thank you for subscribing! Check your email for confirmation."
+    });
+});
+
+module.exports = {
+    register,
+    verifyEmail,
+    login,
+    refreshToken,
+    logout,
+    forgotPassword,
+    resetPassword,
+    subscribeNewsletter
+};
