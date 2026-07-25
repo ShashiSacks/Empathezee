@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import LOCATION_DATA from '../utils/locationData';
@@ -7,6 +7,12 @@ import Logo from '../components/Logo';
 import { Button, Alert } from '../components/ui';
 
 export default function Register() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  if (searchParams.get('role') === 'doctor') {
+    return <Navigate to="/doctor/register" replace />;
+  }
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -134,8 +140,13 @@ export default function Register() {
       {/* left side (form) */}
       <div className="auth-left">
         <div className="auth-left-content">
-          <h1 className="title" style={{ marginBottom: '6px' }}>Create your account</h1>
-          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '24px' }}>Free forever — no credit card required</p>
+          <h1 className="title" style={{ marginBottom: '6px' }}>Join the Empathezee community</h1>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className="auth-trust-note">
+              <i className="fa-solid fa-shield-halved" />
+              <span>Privacy-first patient platform</span>
+            </div>
+          </div>
 
           {error && (
             <Alert type="error" onDismiss={() => setError('')} style={{ marginBottom: '20px' }}>
@@ -220,20 +231,20 @@ export default function Register() {
                 value={formData.gender}
                 onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
               >
-                <option value="" disabled>Select Gender</option>
+                <option value="" disabled>Select gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
-                <option value="other">Rather not to say</option>
+                <option value="other">Prefer not to say</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label htmlFor="reg-disease">Health condition / Disease <span className="optional-tag">(optional)</span></label>
+              <label htmlFor="reg-disease">Health condition / Interest <span className="optional-tag">(optional)</span></label>
               <input
                 id="reg-disease"
                 type="text"
                 name="disease"
-                placeholder="e.g. Diabetes, Lupus, MS…"
+                placeholder="e.g. Type 2 diabetes, Asthma…"
                 value={formData.disease}
                 onChange={(e) => setFormData({ ...formData, disease: e.target.value })}
               />
@@ -244,7 +255,7 @@ export default function Register() {
               <div className="form-group">
                 <label htmlFor="country">Country <span className="optional-tag">(optional)</span></label>
                 <select name="country" id="country" value={formData.country} onChange={handleCountryChange}>
-                  <option value="">Select Country</option>
+                  <option value="">Select country</option>
                   {countries.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
@@ -256,7 +267,7 @@ export default function Register() {
                   <div className="form-group" id="state-group" style={{ display: 'flex' }}>
                     <label htmlFor="state">State <span className="optional-tag">(optional)</span></label>
                     <select id="state" value={formData.state} onChange={handleStateChange}>
-                      <option value="">Select State</option>
+                      <option value="">Select state</option>
                       {states.map((s) => (
                         <option key={s} value={s}>{s}</option>
                       ))}
@@ -268,7 +279,7 @@ export default function Register() {
                     <input
                       type="text"
                       id="state-input"
-                      placeholder="Type State"
+                      placeholder="State name"
                       value={stateInput}
                       onChange={(e) => setStateInput(e.target.value)}
                     />
@@ -282,7 +293,7 @@ export default function Register() {
                     <div className="form-group" id="district-group" style={{ display: 'flex' }}>
                       <label htmlFor="district">District <span className="optional-tag">(optional)</span></label>
                       <select id="district" value={formData.district} onChange={handleDistrictChange}>
-                        <option value="">Select District</option>
+                        <option value="">Select district</option>
                         {districts.map((d) => (
                           <option key={d} value={d}>{d}</option>
                         ))}
@@ -295,7 +306,7 @@ export default function Register() {
                     <input
                       type="text"
                       id="district-input"
-                      placeholder="Type District"
+                      placeholder="District name"
                       value={districtInput}
                       onChange={(e) => setDistrictInput(e.target.value)}
                     />
@@ -309,7 +320,7 @@ export default function Register() {
                     <div className="form-group" id="city-group" style={{ display: 'flex' }}>
                       <label htmlFor="city">City / Place <span className="optional-tag">(optional)</span></label>
                       <select id="city" value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })}>
-                        <option value="">Select City</option>
+                        <option value="">Select city</option>
                         {cities.map((ct) => (
                           <option key={ct} value={ct}>{ct}</option>
                         ))}
@@ -322,7 +333,7 @@ export default function Register() {
                     <input
                       type="text"
                       id="city-input"
-                      placeholder="Type City / Place"
+                      placeholder="City or place"
                       value={cityInput}
                       onChange={(e) => setCityInput(e.target.value)}
                     />
@@ -339,18 +350,26 @@ export default function Register() {
               id="register-submit-btn"
               style={{ marginTop: '4px' }}
             >
-              {loading ? 'Creating account…' : 'Create Account'}
+              {loading ? 'Creating account…' : 'Create patient account'}
             </Button>
           </form>
 
-          <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <p>
-              Already have an account?{' '}
-              <Link to="/login" style={{ fontWeight: 700, color: 'var(--primary)' }}>Sign in</Link>
+          <div className="auth-footer-container">
+            <p className="auth-footer-text">
+              Already part of Empathezee?{' '}
+              <Link to="/login" className="auth-action-link">
+                Sign in to account <i className="fa-solid fa-arrow-right" style={{ fontSize: '0.75rem' }}></i>
+              </Link>
             </p>
-            <p>
-              Registering as a doctor?{' '}
-              <Link to="/doctor/register" style={{ fontWeight: 600, color: 'var(--accent)' }}>Doctor registration</Link>
+            <p className="auth-footer-text">
+              Medical Practitioner?{' '}
+              <Link to="/doctor/register" className="auth-action-link accent">
+                Doctor registration <i className="fa-solid fa-user-doctor" style={{ fontSize: '0.75rem' }}></i>
+              </Link>
+              {' · '}
+              <Link to="/doctor/login" className="auth-action-link accent">
+                Doctor sign in
+              </Link>
             </p>
           </div>
         </div>
@@ -363,14 +382,14 @@ export default function Register() {
             <Logo size="36" />
             <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: '700', color: 'white' }}>Empathezee</span>
           </div>
-          <h2 className="auth-right-title">You don't have to fight your illness alone.</h2>
-          <p className="auth-right-subtitle">Connect with patients who understand, share experiences, consult verified doctors, and access curated health tracking tools.</p>
+          <h2 className="auth-right-title">Compassionate healthcare support, built around you.</h2>
+          <p className="auth-right-subtitle">Exchange treatment insights with real patients, consult verified medical specialists, and access private wellness resources.</p>
 
           <div className="auth-feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '32px' }}>
             {[
-              { icon: 'fa-solid fa-people-group',  label: 'Disease-Based Support Communities' },
-              { icon: 'fa-solid fa-user-doctor',    label: 'Verified Medical Specialists' },
-              { icon: 'fa-solid fa-shield-halved',  label: 'Private & Secure Platform' },
+              { icon: 'fa-solid fa-people-group',  label: 'Condition-based support communities' },
+              { icon: 'fa-solid fa-user-doctor',    label: 'Verified medical specialist network' },
+              { icon: 'fa-solid fa-shield-halved',  label: 'Privacy-first patient platform' },
             ].map(({ icon, label }) => (
               <div
                 key={label}

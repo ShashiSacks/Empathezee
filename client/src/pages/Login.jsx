@@ -51,7 +51,7 @@ export default function Login() {
 
           <h1 className="title" style={{ marginBottom: '6px' }}>Welcome back</h1>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '28px' }}>
-            Sign in to your account to continue
+            Sign in to access your peer support communities & health tools
           </p>
 
           {error && (
@@ -113,18 +113,26 @@ export default function Login() {
               id="login-submit-btn"
               style={{ marginTop: '4px' }}
             >
-              {loading ? 'Signing in…' : 'Sign in'}
+              {loading ? 'Signing in…' : 'Sign in to account'}
             </Button>
           </form>
 
-          <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <p>
-              Don't have an account?{' '}
-              <Link to="/register" style={{ fontWeight: 700, color: 'var(--primary)' }}>Create one free</Link>
+          <div className="auth-footer-container">
+            <p className="auth-footer-text">
+              New to Empathezee?{' '}
+              <Link to="/register" className="auth-action-link">
+                Join community <i className="fa-solid fa-arrow-right" style={{ fontSize: '0.75rem' }}></i>
+              </Link>
             </p>
-            <p>
-              Doctor?{' '}
-              <Link to="/doctor/login" style={{ fontWeight: 600, color: 'var(--accent)' }}>Sign in to Doctor Portal</Link>
+            <p className="auth-footer-text">
+              Healthcare Specialist?{' '}
+              <Link to="/doctor/register" className="auth-action-link accent">
+                Doctor registration <i className="fa-solid fa-user-doctor" style={{ fontSize: '0.75rem' }}></i>
+              </Link>
+              {' · '}
+              <Link to="/doctor/login" className="auth-action-link accent">
+                Doctor sign in
+              </Link>
             </p>
           </div>
         </div>
@@ -137,15 +145,15 @@ export default function Login() {
             <Logo size="36" />
             <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white' }}>Empathezee</span>
           </div>
-          <h2 className="auth-right-title">You don't have to fight your illness alone.</h2>
-          <p className="auth-right-subtitle">Connect with patients who understand, share experiences, consult verified doctors, and access curated health tracking tools.</p>
+          <h2 className="auth-right-title">Compassionate healthcare support, built around you.</h2>
+          <p className="auth-right-subtitle">Exchange treatment insights with real patients, consult verified medical specialists, and access private wellness resources.</p>
 
           <div className="auth-feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '32px' }}>
             {[
-              { icon: 'fa-solid fa-people-group',   label: 'Disease-Based Communities' },
-              { icon: 'fa-solid fa-user-doctor',     label: 'Verified Medical Specialists' },
-              { icon: 'fa-solid fa-shield-halved',   label: 'Private & Secure Platform' },
-              { icon: 'fa-solid fa-pills',           label: 'Medicine Search & Tracking' },
+              { icon: 'fa-solid fa-people-group',   label: 'Condition-based support communities' },
+              { icon: 'fa-solid fa-user-doctor',     label: 'Verified medical specialist network' },
+              { icon: 'fa-solid fa-shield-halved',   label: 'Privacy-first patient platform' },
+              { icon: 'fa-solid fa-pills',           label: 'Medication search & tracking' },
             ].map(({ icon, label }) => (
               <div
                 key={label}

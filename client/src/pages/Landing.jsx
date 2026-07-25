@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Landing.css';
 
 export default function Landing() {
   return (
@@ -28,7 +29,7 @@ export default function Landing() {
             <Link to="/login" className="btn btn-outline btn-lg" style={{ borderRadius: '999px' }}>
               <i className="fa-solid fa-right-to-bracket"></i> Member Login
             </Link>
-            <Link to="/doctor/login" className="btn btn-ghost btn-lg" style={{ borderRadius: '999px' }}>
+            <Link to="/doctor/login" className="btn btn-outline btn-lg" style={{ borderRadius: '999px' }}>
               <i className="fa-solid fa-stethoscope"></i> Doctor Portal
             </Link>
           </div>
@@ -49,43 +50,37 @@ export default function Landing() {
         <div className="landing-features-grid">
           {/* Card 1: Peer Communities */}
           <div className="landing-feature-card animate-fade-up">
-            <div className="landing-feature-icon" style={{ background: '#eff6ff', border: '1.5px solid #dbeafe', color: '#2563eb' }}>
-              👥
-            </div>
-            <h3>Disease-Specific Communities</h3>
+            <div className="landing-feature-icon">👥</div>
+            <h3 style={{ color: 'var(--primary)' }}>Disease-Specific Communities</h3>
             <p>
               Share stories, exchange advice, and discuss treatment plans with peers who truly understand living with your condition.
             </p>
             <Link to="/register" className="btn btn-primary">
-              Explore Groups <i className="fa-solid fa-arrow-right" style={{ marginLeft: '6px' }}></i>
+              Explore Groups <i className="fa-solid fa-arrow-right"></i>
             </Link>
           </div>
 
           {/* Card 2: Verified Doctors */}
           <div className="landing-feature-card animate-fade-up" style={{ animationDelay: '0.1s' }}>
-            <div className="landing-feature-icon" style={{ background: '#f0fdf4', border: '1.5px solid #ccfbf1', color: '#0d9488' }}>
-              🩺
-            </div>
-            <h3>Verified Doctors Directory</h3>
+            <div className="landing-feature-icon">🩺</div>
+            <h3 style={{ color: 'var(--primary)' }}>Verified Doctors Directory</h3>
             <p>
               Find experienced specialists nearby by location and disease focus. Book instant virtual consultations.
             </p>
-            <Link to="/register" className="btn btn-teal">
-              Find Doctors <i className="fa-solid fa-magnifying-glass" style={{ marginLeft: '6px' }}></i>
+            <Link to="/register" className="btn btn-primary">
+              Find Doctors <i className="fa-solid fa-magnifying-glass"></i>
             </Link>
           </div>
 
           {/* Card 3: Mental Wellness */}
           <div className="landing-feature-card animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            <div className="landing-feature-icon" style={{ background: '#ecfdf5', border: '1.5px solid #a7f3d0', color: '#10b981' }}>
-              🧘
-            </div>
-            <h3>Mental Wellness & Tracking</h3>
+            <div className="landing-feature-icon">🧘</div>
+            <h3 style={{ color: 'var(--primary)' }}>Mental Wellness & Tracking</h3>
             <p>
               Access guided meditations, mood logs, medication reminders, and mental health tools tailored for chronic illness care.
             </p>
-            <Link to="/register" className="btn btn-success">
-              Start Wellness <i className="fa-solid fa-heart" style={{ marginLeft: '6px' }}></i>
+            <Link to="/register" className="btn btn-primary">
+              Start Wellness <i className="fa-solid fa-heart"></i>
             </Link>
           </div>
         </div>

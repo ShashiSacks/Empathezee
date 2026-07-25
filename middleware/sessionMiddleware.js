@@ -29,11 +29,19 @@ const sessionMiddleware = session({
 });
 
 
+const handleUnauthenticated = (req, res, defaultRedirect = "/login") => {
+    if (req.originalUrl?.startsWith("/api") || req.path?.startsWith("/api") || req.xhr) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
+    return res.redirect(defaultRedirect);
+};
+
+
 // protect any authenticated user
 const protect = (req, res, next) => {
     try {
         if (!req.session || !req.session.user) {
-            return res.redirect("/login");
+            return handleUnauthenticated(req, res, "/login");
         }
 
         req.user = {
@@ -45,7 +53,7 @@ const protect = (req, res, next) => {
         return next();
     } catch (error) {
         console.error(error);
-        return res.redirect("/login");
+        return handleUnauthenticated(req, res, "/login");
     }
 };
 
@@ -54,7 +62,7 @@ const protect = (req, res, next) => {
 const protectUser = (req, res, next) => {
     try {
         if (!req.session || !req.session.user) {
-            return res.redirect("/login");
+            return handleUnauthenticated(req, res, "/login");
         }
 
         req.user = {
@@ -64,6 +72,9 @@ const protectUser = (req, res, next) => {
         };
 
         if (req.user.role === "doctor") {
+            if (req.originalUrl?.startsWith("/api") || req.path?.startsWith("/api")) {
+                return res.status(403).json({ success: false, message: "Doctor role restricted" });
+            }
             return res.redirect("/doctor/dashboard");
         }
 
@@ -74,7 +85,7 @@ const protectUser = (req, res, next) => {
         return next();
     } catch (error) {
         console.error(error);
-        return res.redirect("/login");
+        return handleUnauthenticated(req, res, "/login");
     }
 };
 
@@ -83,7 +94,7 @@ const protectUser = (req, res, next) => {
 const authorizeRoles = (...roles) => {
     return (req, res, next) => {
         if (!req.session || !req.session.user) {
-            return res.redirect("/login");
+            return handleUnauthenticated(req, res, "/login");
         }
 
         const userRole = req.session.user.role;
@@ -102,7 +113,7 @@ const authorizeRoles = (...roles) => {
 // protect doctor role routes
 const protectDoctor = (req, res, next) => {
     if (!req.session || !req.session.user) {
-        return res.redirect("/doctor/login");
+        return handleUnauthenticated(req, res, "/doctor/login");
     }
 
     req.user = {
@@ -112,6 +123,9 @@ const protectDoctor = (req, res, next) => {
     };
 
     if (req.user.role !== "doctor") {
+        if (req.originalUrl?.startsWith("/api") || req.path?.startsWith("/api")) {
+            return res.status(403).json({ success: false, message: "User is not a doctor" });
+        }
         return res.redirect("/dashboard");
     }
 

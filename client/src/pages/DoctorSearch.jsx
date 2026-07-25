@@ -94,10 +94,10 @@ export default function DoctorSearch() {
   return (
     <main style={{ flex: 1 }}>
       <PageHeader
-        badge={<><i className="fa-solid fa-location-dot"></i> Location & Symptom Based Search</>}
+        badge={<><i className="fa-solid fa-location-dot"></i> Symptom and location search</>}
         title="Find a"
-        highlight="Trusted Doctor Near You"
-        subtitle="Search any symptom or health condition to find verified medical specialists in your city."
+        highlight="Verified Doctor Near You"
+        subtitle="Search symptoms or medical conditions to locate verified healthcare specialists in your area."
       />
 
       <Container size="md">
@@ -105,7 +105,7 @@ export default function DoctorSearch() {
         <Card padding="lg" style={{ marginBottom: 'var(--space-8)' }}>
           <form onSubmit={handleSearch}>
             <FormGroup
-              label="Type Your Symptom or Health Condition"
+              label="Symptom or medical condition"
               htmlFor="symptomInput"
               required
               icon={<i className="fa-solid fa-stethoscope"></i>}
@@ -113,7 +113,7 @@ export default function DoctorSearch() {
               <Input
                 type="text"
                 id="symptomInput"
-                placeholder="e.g. Headache, Migraine, Chest Pain, Diabetes, Acne, Fever, Back Pain..."
+                placeholder="e.g. Migraine, Chest discomfort, Type 2 diabetes, Asthma…"
                 value={symptom}
                 onChange={(e) => setSymptom(e.target.value)}
                 required
@@ -150,7 +150,7 @@ export default function DoctorSearch() {
             </div>
 
             <FormGroup
-              label="Your City / Location"
+              label="City or location"
               htmlFor="cityInput"
               required
               icon={<i className="fa-solid fa-location-dot"></i>}
@@ -158,7 +158,7 @@ export default function DoctorSearch() {
               <Input
                 type="text"
                 id="cityInput"
-                placeholder="e.g., Hyderabad, Bangalore, Mumbai, Delhi..."
+                placeholder="e.g. Hyderabad, Bangalore, Mumbai, New Delhi…"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 required
@@ -173,7 +173,7 @@ export default function DoctorSearch() {
               icon={<i className="fa-solid fa-magnifying-glass"></i>}
               style={{ marginTop: 'var(--space-3)' }}
             >
-              Search Specialists
+              Find medical specialists
             </Button>
           </form>
         </Card>

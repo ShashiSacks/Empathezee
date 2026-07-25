@@ -27,6 +27,13 @@ router.post("/verify-email", validate(verifyEmailSchema), verifyEmail);
 router.post("/login", validate(loginSchema), login);
 router.post("/doctor/login", validate(loginSchema), login);
 router.post("/refresh-token", refreshToken); // No complex body to validate
+router.get("/me", (req, res) => {
+    if (req.session && req.session.user) {
+        return res.json({ success: true, user: req.session.user });
+    }
+    return res.json({ success: true, user: null });
+});
+
 router.post("/logout", logout);
 router.get("/logout", logout);
 

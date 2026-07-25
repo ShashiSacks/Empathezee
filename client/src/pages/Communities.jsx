@@ -58,6 +58,20 @@ export default function Communities() {
     }
   };
 
+  const handleDelete = async (id, e) => {
+    if (e) e.stopPropagation();
+    if (!window.confirm('Are you sure you want to delete this community? All posts in this group will be deleted.')) {
+      return;
+    }
+    try {
+      await api.delete(`/api/communities/${id}`);
+      fetchCommunities();
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Failed to delete community');
+    }
+  };
+
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
@@ -82,16 +96,16 @@ export default function Communities() {
 
   const diseaseColors = {
     default: { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🏥' },
-    diabet: { bg: '#FEF3C7', color: '#D97706', icon: '🩸' },
-    cancer: { bg: '#FDF2F8', color: '#9D174D', icon: '🎗️' },
-    heart: { bg: '#FFF1F2', color: '#BE123C', icon: '❤️' },
-    kidney: { bg: '#F0FDF4', color: '#166534', icon: '🫘' },
-    pcos: { bg: '#FDF4FF', color: '#7E22CE', icon: '🌸' },
-    thyroid: { bg: '#FFFBEB', color: '#92400E', icon: '🦋' },
-    asthma: { bg: '#EFF6FF', color: '#1D4ED8', icon: '💨' },
-    mental: { bg: '#F5F3FF', color: '#5B21B6', icon: '🧠' },
-    arthrit: { bg: '#FFF7ED', color: '#C2410C', icon: '🦴' },
-    ms: { bg: '#F0F9FF', color: '#0369A1', icon: '🔵' },
+    diabet:  { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🩸' },
+    cancer:  { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🎗️' },
+    heart:   { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '❤️' },
+    kidney:  { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🫘' },
+    pcos:    { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🌸' },
+    thyroid: { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🦋' },
+    asthma:  { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '💨' },
+    mental:  { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🧠' },
+    arthrit: { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🦴' },
+    ms:      { bg: 'var(--primary-50)', color: 'var(--primary)', icon: '🔵' },
   };
 
   const getDc = (diseaseName) => {
@@ -188,6 +202,13 @@ export default function Communities() {
                 {filteredCommunities.map((c) => {
                   const dc = getDc(c.disease);
                   const isJoined = userCommunities.includes(c._id.toString());
+                  const isOwner = user && c.createdBy && (
+                    typeof c.createdBy === 'object'
+                      ? c.createdBy._id?.toString() === user._id?.toString()
+                      : c.createdBy.toString() === user._id?.toString()
+                  );
+                  const canDelete = Boolean(user) && (!c.createdBy || isOwner || user?.role === 'admin');
+
                   return (
                     <Card key={c._id} padding="md" hover>
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-4)', marginBottom: 'var(--space-3)' }}>
@@ -219,11 +240,16 @@ export default function Communities() {
                         ) : (
                           <span className="badge badge-green"><i className="fa-solid fa-circle-check"></i> Free</span>
                         )}
+                        {isOwner && (
+                          <span className="badge badge-purple" style={{ background: 'var(--primary-50)', color: 'var(--primary)', border: '1px solid var(--primary-100)' }}>
+                            <i className="fa-solid fa-user-check"></i> Created by You
+                          </span>
+                        )}
                       </div>
 
-                      <div style={{ paddingTop: 'var(--space-1)' }}>
+                      <div style={{ paddingTop: 'var(--space-1)', display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
                         {isJoined ? (
-                          <div style={{ display: 'flex', gap: 'var(--space-3)', width: '100%' }}>
+                          <div style={{ display: 'flex', gap: 'var(--space-3)', flex: 1 }}>
                             <Button onClick={() => handleLeave(c._id)} variant="danger" size="sm" style={{ flex: 1 }}>
                               Leave
                             </Button>
@@ -234,8 +260,21 @@ export default function Communities() {
                             </Link>
                           </div>
                         ) : (
-                          <Button onClick={() => handleJoin(c._id)} variant="secondary" size="sm" fullWidth icon={<i className="fa-solid fa-user-plus"></i>}>
+                          <Button onClick={() => handleJoin(c._id)} variant="secondary" size="sm" style={{ flex: 1 }} icon={<i className="fa-solid fa-user-plus"></i>}>
                             Join Community
+                          </Button>
+                        )}
+
+                        {canDelete && (
+                          <Button
+                            onClick={(e) => handleDelete(c._id, e)}
+                            variant="danger"
+                            size="sm"
+                            icon={<i className="fa-solid fa-trash"></i>}
+                            title="Delete Community (Creator Only)"
+                            style={{ padding: '6px 14px' }}
+                          >
+                            Delete
                           </Button>
                         )}
                       </div>

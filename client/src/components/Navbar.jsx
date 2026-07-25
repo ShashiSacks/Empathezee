@@ -20,14 +20,42 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    try {
+      const cookies = document.cookie.split(';');
+      for (let c of cookies) {
+        c = c.trim();
+        if (c.startsWith('googtrans=')) {
+          const val = decodeURIComponent(c.substring('googtrans='.length));
+          const parts = val.split('/');
+          const lang = parts[parts.length - 1];
+          if (lang) {
+            setSelectedLang(lang);
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   const changeLanguage = (lang) => {
     setSelectedLang(lang);
+    const domain = window.location.hostname;
     if (lang === 'en') {
-      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain}`;
+      document.cookie = `googtrans=/en/en; path=/;`;
+      document.cookie = `googtrans=/en/en; path=/; domain=${domain}`;
     } else {
       document.cookie = `googtrans=/en/${lang}; path=/;`;
-      document.cookie = `googtrans=/en/${lang}; path=/; domain=${window.location.hostname}`;
+      document.cookie = `googtrans=/en/${lang}; path=/; domain=${domain}`;
+    }
+
+    const selectElem = document.querySelector('.goog-te-combo');
+    if (selectElem) {
+      selectElem.value = lang;
+      selectElem.dispatchEvent(new Event('change'));
     }
     window.location.reload();
   };
@@ -133,7 +161,7 @@ export default function Navbar() {
                   <Link to="/doctor/login" id="nav-doctor-login" className={`nav-portal-link ${isActive('/doctor/login') ? 'active' : ''}`}>
                     <i className="fa-solid fa-stethoscope"></i> Login
                   </Link>
-                  <Link to="/register?role=doctor" id="nav-doctor-register" className={`nav-portal-link ${isActive('/register?role=doctor') ? 'active' : ''}`}>
+                  <Link to="/doctor/register" id="nav-doctor-register" className={`nav-portal-link ${isActive('/doctor/register') ? 'active' : ''}`}>
                     <i className="fa-solid fa-user-doctor"></i> Register
                   </Link>
                 </div>
@@ -145,7 +173,7 @@ export default function Navbar() {
           <div className="nav-actions">
             {/* Language Selector */}
             <div className="lang-selector-container notranslate" role="navigation" aria-label="Language selection">
-              <span className="lang-icon" aria-hidden="true">🌐</span>
+              <i className="fa-solid fa-globe" aria-hidden="true" style={{ color: 'var(--primary)', fontSize: '0.85rem' }}></i>
               <select
                 id="language-selector"
                 value={selectedLang}
@@ -268,7 +296,7 @@ export default function Navbar() {
               <Link to="/doctor/login" id="mob-nav-doctor-login" onClick={() => toggleMobileDrawer(false)}>
                 <i className="fa-solid fa-stethoscope" style={{ width: '18px' }}></i> Doctor Login
               </Link>
-              <Link to="/register?role=doctor" id="mob-nav-doctor-register" onClick={() => toggleMobileDrawer(false)}>
+              <Link to="/doctor/register" id="mob-nav-doctor-register" onClick={() => toggleMobileDrawer(false)}>
                 <i className="fa-solid fa-user-doctor" style={{ width: '18px' }}></i> Doctor Register
               </Link>
             </div>

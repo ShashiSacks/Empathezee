@@ -54,6 +54,11 @@ const communitySchema = new mongoose.Schema(
         price: {
             type: Number,
             default: 0
+        },
+
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
         }
     },
     {

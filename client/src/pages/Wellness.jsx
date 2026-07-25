@@ -53,7 +53,7 @@ export default function Wellness() {
 
       <Container size="lg">
         {/* Daily Affirmation Card */}
-        <div style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #2563EB 100%)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-10) var(--space-8)', textAlign: 'center', color: 'white', marginBottom: 'var(--space-10)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--grad-primary)', borderRadius: 'var(--radius-2xl)', padding: 'var(--space-10) var(--space-8)', textAlign: 'center', color: 'white', marginBottom: 'var(--space-10)', position: 'relative', overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
           <div style={{ position: 'relative', zIndex: 2 }}>
             <div style={{ fontSize: '2rem', marginBottom: 'var(--space-3)' }}>💫</div>
             <p style={{ fontSize: '0.78rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', opacity: 0.8, marginBottom: 'var(--space-3)' }}>Today's Affirmation</p>
@@ -75,8 +75,8 @@ export default function Wellness() {
         {/* Wellness Tools Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 'var(--space-6)', marginBottom: 'var(--space-12)' }}>
           {/* Box Breathing */}
-          <Card padding="lg" style={{ textAlign: 'center' }} accentBorder="purple">
-            <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', margin: '0 auto var(--space-4)' }}>🫁</div>
+          <Card padding="lg" style={{ textAlign: 'center' }} accentBorder="primary">
+            <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--primary-50)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', margin: '0 auto var(--space-4)' }}>🫁</div>
             <h3 style={{ fontWeight: 700, fontSize: '1.05rem', marginBottom: 'var(--space-2)', color: 'var(--text)', textAlign: 'center' }}>Box Breathing</h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.6, marginBottom: 'var(--space-5)' }}>A proven technique to reduce anxiety and calm your nervous system in just 2 minutes.</p>
 
@@ -85,7 +85,7 @@ export default function Wellness() {
                 width: '100px',
                 height: '100px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, #8B5CF6, #2563EB)',
+                background: 'var(--grad-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

@@ -23,7 +23,7 @@ export function Card({
       case 'danger':
         return 'var(--danger)';
       case 'purple':
-        return '#8B5CF6';
+        return 'var(--primary)';
       default:
         return null;
     }

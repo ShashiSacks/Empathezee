@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await api.get('/api/users/profile');
+      const res = await api.get('/api/auth/me');
       if (res.data && res.data.user) {
         setUser(res.data.user);
       } else {
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       }
     } finally {
       setUser(null);
-      window.location.href = '/login';
+      window.location.replace('/');
     }
   };
 

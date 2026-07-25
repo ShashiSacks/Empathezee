@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { Container, Card, FormGroup, Input, Button } from '../components/ui';
@@ -62,6 +62,28 @@ export default function CommunityDetail() {
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleDeleteCommunity = async () => {
+    if (!window.confirm('Are you sure you want to delete this community? All posts in this group will be deleted.')) {
+      return;
+    }
+    try {
+      await api.delete(`/api/communities/${id}`);
+      navigate('/communities');
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Failed to delete community');
+    }
+  };
+
+  const isOwner = user && community?.createdBy && (
+    typeof community.createdBy === 'object'
+      ? community.createdBy._id?.toString() === user._id?.toString()
+      : community.createdBy.toString() === user._id?.toString()
+  );
+  const canDelete = Boolean(user) && (!community?.createdBy || isOwner || user?.role === 'admin');
+
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
@@ -86,11 +108,24 @@ export default function CommunityDetail() {
       {/* Community Header Banner */}
       <div style={{ background: 'linear-gradient(145deg, var(--primary-50) 0%, var(--accent-50) 100%)', borderBottom: '1px solid var(--border)', padding: 'var(--space-8) var(--space-6)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
-          <Link to="/communities" style={{ textDecoration: 'none' }}>
-            <Button variant="outline" size="sm" icon={<i className="fa-solid fa-arrow-left"></i>} style={{ marginBottom: 'var(--space-4)' }}>
-              All Communities
-            </Button>
-          </Link>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-4)' }}>
+            <Link to="/communities" style={{ textDecoration: 'none' }}>
+              <Button variant="outline" size="sm" icon={<i className="fa-solid fa-arrow-left"></i>}>
+                All Communities
+              </Button>
+            </Link>
+
+            {canDelete && (
+              <Button
+                onClick={handleDeleteCommunity}
+                variant="danger"
+                size="sm"
+                icon={<i className="fa-solid fa-trash"></i>}
+              >
+                Delete Community
+              </Button>
+            )}
+          </div>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-5)', flexWrap: 'wrap' }}>
             <div style={{ width: '60px', height: '60px', borderRadius: 'var(--radius-xl)', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', flexShrink: 0, boxShadow: 'var(--shadow-blue)' }}>

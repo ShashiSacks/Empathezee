@@ -38,7 +38,8 @@ const createCommunity = async (req, res, next) => {
             meetingPlace: meetingPlace || "",
             paymentType: paymentType || "free",
             price: price ? parseFloat(price) : 0,
-            location: location ? location.trim() : ""
+            location: location ? location.trim() : "",
+            createdBy: req.user ? req.user._id : null
         });
 
         if (req.accepts("html")) {
@@ -264,6 +265,16 @@ const deleteCommunity = async (req, res) => {
         if (!community) {
             return res.status(404).json({
                 message: "Community not found"
+            });
+        }
+
+        // Ownership check: creator or admin
+        const isCreator = community.createdBy && req.user && community.createdBy.toString() === req.user._id.toString();
+        const isAdmin = req.user && req.user.role === 'admin';
+
+        if (community.createdBy && !isCreator && !isAdmin) {
+            return res.status(403).json({
+                message: "Not authorized to delete this community. Only the community creator can delete it."
             });
         }
 

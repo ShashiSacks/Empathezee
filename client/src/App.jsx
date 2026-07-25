@@ -21,7 +21,7 @@ import Analytics from './pages/Analytics';
 import Terms from './pages/Terms';
 
 // ProtectedRoute component to enforce authentication and role separation
-function ProtectedRoute({ children, allowedRole }) {
+function ProtectedRoute({ children, allowedRole, allowGuest = false }) {
   const { user, loading } = useAuth();
   
   if (loading) {
@@ -32,11 +32,11 @@ function ProtectedRoute({ children, allowedRole }) {
     );
   }
 
-  if (!user) {
+  if (!user && !allowGuest) {
     return <Navigate to={allowedRole === 'doctor' ? '/doctor/login' : '/login'} replace />;
   }
 
-  if (allowedRole && user.role !== allowedRole) {
+  if (allowedRole && user && user.role !== allowedRole) {
     return <Navigate to={user.role === 'doctor' ? '/doctor/dashboard' : '/dashboard'} replace />;
   }
 
@@ -109,14 +109,14 @@ function AppRoutes() {
           {/* Protected Routes */}
           <Route path="/dashboard" element={<ProtectedRoute allowedRole="user"><Dashboard /></ProtectedRoute>} />
           <Route path="/doctor/dashboard" element={<ProtectedRoute allowedRole="doctor"><DoctorDashboard /></ProtectedRoute>} />
-          <Route path="/communities" element={<ProtectedRoute><Communities /></ProtectedRoute>} />
-          <Route path="/community/:id" element={<ProtectedRoute><CommunityDetail /></ProtectedRoute>} />
-          <Route path="/doctor/search" element={<ProtectedRoute><DoctorSearch /></ProtectedRoute>} />
+          <Route path="/communities" element={<ProtectedRoute allowGuest={true}><Communities /></ProtectedRoute>} />
+          <Route path="/community/:id" element={<ProtectedRoute allowGuest={true}><CommunityDetail /></ProtectedRoute>} />
+          <Route path="/doctor/search" element={<ProtectedRoute allowGuest={true}><DoctorSearch /></ProtectedRoute>} />
           <Route path="/appointments-ui" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
-          <Route path="/medicine" element={<ProtectedRoute><Medicines /></ProtectedRoute>} />
-          <Route path="/wellness" element={<ProtectedRoute><Wellness /></ProtectedRoute>} />
+          <Route path="/medicine" element={<ProtectedRoute allowGuest={true}><Medicines /></ProtectedRoute>} />
+          <Route path="/wellness" element={<ProtectedRoute allowGuest={true}><Wellness /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+          <Route path="/analytics" element={<ProtectedRoute allowGuest={true}><Analytics /></ProtectedRoute>} />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />

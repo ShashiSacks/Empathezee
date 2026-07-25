@@ -387,10 +387,10 @@ const Medicine = () => {
           </div>
 
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '24px', padding: '16px', background: 'var(--bg-warm)', borderRadius: '12px', fontSize: '0.85rem', border: '1px solid var(--border)' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><ShieldCheck size={16} style={{ color: 'var(--primary)' }} /> <strong>100% Genuine</strong> Prescription Medicines</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Truck size={16} style={{ color: 'var(--primary)' }} /> <strong>Doorstep</strong> Delivery</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><CreditCard size={16} style={{ color: 'var(--primary)' }} /> UPI · Card · COD</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={16} style={{ color: 'var(--primary)' }} /> 2–4 Day Delivery</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><ShieldCheck size={16} style={{ color: 'var(--primary)' }} /> <strong>Verified pharmacy</strong> partner network</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Truck size={16} style={{ color: 'var(--primary)' }} /> <strong>Doorstep</strong> delivery</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><CreditCard size={16} style={{ color: 'var(--primary)' }} /> Secure digital payment</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={16} style={{ color: 'var(--primary)' }} /> Standard shipping available</span>
           </div>
         </div>
 
@@ -398,13 +398,13 @@ const Medicine = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: '20px', marginBottom: '40px' }}>
           <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--primary)' }}><Pill size={36} /></div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>10,000+ Medicines</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Verified drug database</p>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>Medication database</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Comprehensive pharmaceutical index</p>
           </div>
           <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--primary)' }}><ShieldCheck size={36} /></div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>100% Secure</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Stripe-secured payments</p>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>Encrypted checkout</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Secure payment processing</p>
           </div>
           <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--primary)' }}><Truck size={36} /></div>

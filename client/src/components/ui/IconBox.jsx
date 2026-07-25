@@ -1,11 +1,11 @@
 import React from 'react';
 
 const COLORS = {
-  primary:   { bg: 'var(--primary-50)',   color: 'var(--primary)',      shadow: 'rgba(37,99,235,0.12)' },
-  secondary: { bg: 'var(--secondary-50)', color: 'var(--secondary)',    shadow: 'rgba(13,148,136,0.12)' },
-  accent:    { bg: 'var(--accent-50)',    color: 'var(--accent)',       shadow: 'rgba(2,132,199,0.12)' },
-  success:   { bg: 'var(--success-bg)',   color: 'var(--secondary)',    shadow: 'rgba(16,185,129,0.12)' },
-  warning:   { bg: 'var(--warning-bg)',  color: 'var(--warning)',      shadow: 'rgba(245,158,11,0.12)' },
+  primary:   { bg: 'var(--primary-50)',   color: 'var(--primary)',      shadow: 'rgba(79,70,229,0.12)' },
+  secondary: { bg: 'var(--primary-50)',   color: 'var(--primary)',      shadow: 'rgba(79,70,229,0.12)' },
+  accent:    { bg: 'var(--primary-50)',   color: 'var(--primary)',      shadow: 'rgba(79,70,229,0.12)' },
+  success:   { bg: 'var(--success-bg)',   color: 'var(--success-dark)', shadow: 'rgba(22,163,74,0.12)' },
+  warning:   { bg: 'var(--warning-bg)',   color: 'var(--warning)',      shadow: 'rgba(245,158,11,0.12)' },
   danger:    { bg: 'var(--danger-bg)',    color: 'var(--danger)',       shadow: 'rgba(239,68,68,0.12)' },
   neutral:   { bg: 'var(--bg-warm)',      color: 'var(--text-muted)',   shadow: 'rgba(15,23,42,0.06)' },
 };

@@ -134,7 +134,20 @@ export default function DoctorRegister() {
       {/* left side (form area) */}
       <div className="auth-left">
         <div className="auth-left-content">
-          <h1 className="title">Doctor Register</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', justifyContent: 'center' }}>
+            <Logo size="32" />
+            <span style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '-0.03em', background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Doctor Portal</span>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className="auth-doctor-badge">
+              <i className="fa-solid fa-user-doctor" />
+              <span>Verified medical specialist registration</span>
+            </div>
+          </div>
+
+          <h1 className="title" style={{ marginBottom: '6px', fontSize: '1.6rem' }}>Register your practice</h1>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '24px' }}>Join our network of verified medical specialists and empower chronic illness care</p>
 
           {error && (
             <div style={{ padding: '10px 14px', borderRadius: 'var(--radius)', background: 'var(--danger-bg)', color: 'var(--danger)', marginBottom: '16px', fontSize: '0.88rem' }}>
@@ -143,56 +156,72 @@ export default function DoctorRegister() {
           )}
 
           <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="username"
-              placeholder="Full name"
-              required
-              autoComplete="name"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-            />
-
-            <input
-              type="email"
-              name="email"
-              placeholder="Doctor email"
-              required
-              autoComplete="username"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
-
-            <div style={{ position: 'relative', width: '100%' }}>
+            <div className="form-group">
+              <label htmlFor="doc-username">Full name</label>
               <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                placeholder="Password"
+                id="doc-username"
+                type="text"
+                name="username"
+                placeholder="Dr. Full Name"
                 required
-                autoComplete="new-password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                style={{ paddingRight: '44px' }}
+                autoComplete="name"
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               />
-              <button
-                type="button"
-                className="password-toggle-btn"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                onClick={() => setShowPassword((p) => !p)}
-              >
-                <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} />
-              </button>
             </div>
 
-            <input
-              type="number"
-              name="age"
-              placeholder="Age"
-              min="18"
-              max="120"
-              value={formData.age}
-              onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-            />
+            <div className="form-group">
+              <label htmlFor="doc-email">Doctor email address</label>
+              <input
+                id="doc-email"
+                type="email"
+                name="email"
+                placeholder="doctor@hospital.com"
+                required
+                autoComplete="username"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="doc-password">Password</label>
+              <div style={{ position: 'relative', width: '100%' }}>
+                <input
+                  id="doc-password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Min. 6 characters"
+                  required
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  style={{ paddingRight: '44px' }}
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowPassword((p) => !p)}
+                >
+                  <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} />
+                </button>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="doc-age">Age <span className="optional-tag">(optional)</span></label>
+              <input
+                id="doc-age"
+                type="number"
+                name="age"
+                placeholder="Age"
+                min="18"
+                max="120"
+                value={formData.age}
+                onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+              />
+            </div>
 
             <div className="form-group">
               <label htmlFor="gender">Gender</label>
@@ -203,27 +232,31 @@ export default function DoctorRegister() {
                 value={formData.gender}
                 onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
               >
-                <option value="" disabled>Select Gender</option>
+                <option value="" disabled>Select gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
-                <option value="other">Rather not to say</option>
+                <option value="other">Prefer not to say</option>
               </select>
             </div>
 
-            <input
-              type="text"
-              name="disease"
-              placeholder="Specialization"
-              value={formData.disease}
-              onChange={(e) => setFormData({ ...formData, disease: e.target.value })}
-            />
+            <div className="form-group">
+              <label htmlFor="doc-spec">Medical specialization</label>
+              <input
+                id="doc-spec"
+                type="text"
+                name="disease"
+                placeholder="e.g. Endocrinology, Rheumatology…"
+                value={formData.disease}
+                onChange={(e) => setFormData({ ...formData, disease: e.target.value })}
+              />
+            </div>
 
             {/* cascading location picker */}
             <div className="location-picker">
               <div className="form-group">
                 <label htmlFor="country">Country <span className="optional-tag">(optional)</span></label>
                 <select name="country" id="country" value={formData.country} onChange={handleCountryChange}>
-                  <option value="">Select Country</option>
+                  <option value="">Select country</option>
                   {countries.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
@@ -235,7 +268,7 @@ export default function DoctorRegister() {
                   <div className="form-group" id="state-group" style={{ display: 'flex' }}>
                     <label htmlFor="state">State <span className="optional-tag">(optional)</span></label>
                     <select id="state" value={formData.state} onChange={handleStateChange}>
-                      <option value="">Select State</option>
+                      <option value="">Select state</option>
                       {states.map((s) => (
                         <option key={s} value={s}>{s}</option>
                       ))}
@@ -247,7 +280,7 @@ export default function DoctorRegister() {
                     <input
                       type="text"
                       id="state-input"
-                      placeholder="Type State"
+                      placeholder="State name"
                       value={stateInput}
                       onChange={(e) => setStateInput(e.target.value)}
                     />
@@ -261,7 +294,7 @@ export default function DoctorRegister() {
                     <div className="form-group" id="district-group" style={{ display: 'flex' }}>
                       <label htmlFor="district">District <span className="optional-tag">(optional)</span></label>
                       <select id="district" value={formData.district} onChange={handleDistrictChange}>
-                        <option value="">Select District</option>
+                        <option value="">Select district</option>
                         {districts.map((d) => (
                           <option key={d} value={d}>{d}</option>
                         ))}
@@ -274,7 +307,7 @@ export default function DoctorRegister() {
                     <input
                       type="text"
                       id="district-input"
-                      placeholder="Type District"
+                      placeholder="District name"
                       value={districtInput}
                       onChange={(e) => setDistrictInput(e.target.value)}
                     />
@@ -288,7 +321,7 @@ export default function DoctorRegister() {
                     <div className="form-group" id="city-group" style={{ display: 'flex' }}>
                       <label htmlFor="city">City / Place <span className="optional-tag">(optional)</span></label>
                       <select id="city" value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })}>
-                        <option value="">Select City</option>
+                        <option value="">Select city</option>
                         {cities.map((ct) => (
                           <option key={ct} value={ct}>{ct}</option>
                         ))}
@@ -301,7 +334,7 @@ export default function DoctorRegister() {
                     <input
                       type="text"
                       id="city-input"
-                      placeholder="Type City / Place"
+                      placeholder="City or place"
                       value={cityInput}
                       onChange={(e) => setCityInput(e.target.value)}
                     />
@@ -310,27 +343,36 @@ export default function DoctorRegister() {
               )}
             </div>
 
-            <textarea
-              name="bio"
-              placeholder="Short professional bio"
-              value={formData.bio}
-              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-            ></textarea>
+            <div className="form-group">
+              <label htmlFor="doc-bio">Professional summary <span className="optional-tag">(optional)</span></label>
+              <textarea
+                id="doc-bio"
+                name="bio"
+                placeholder="Short bio covering clinical experience and medical focus"
+                value={formData.bio}
+                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+              ></textarea>
+            </div>
 
-            <button type="submit" disabled={loading}>
-              {loading ? 'Creating Doctor Account...' : 'Create Doctor Account'}
+            <button type="submit" disabled={loading} style={{ marginTop: '6px' }}>
+              {loading ? 'Submitting Application...' : 'Submit verification application'}
             </button>
           </form>
 
-          <p>
-            Already registered?{' '}
-            <Link to="/doctor/login">Doctor login</Link>
-          </p>
-
-          <p>
-            Patient account?{' '}
-            <Link to="/register">Patient registration</Link>
-          </p>
+          <div className="auth-footer-container">
+            <p className="auth-footer-text">
+              Already Verified?{' '}
+              <Link to="/doctor/login" className="auth-action-link accent">
+                Sign in to doctor portal <i className="fa-solid fa-arrow-right" style={{ fontSize: '0.75rem' }}></i>
+              </Link>
+            </p>
+            <p className="auth-footer-text">
+              Patient Account?{' '}
+              <Link to="/register" className="auth-action-link">
+                Create patient account <i className="fa-solid fa-user" style={{ fontSize: '0.75rem' }}></i>
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -339,10 +381,10 @@ export default function DoctorRegister() {
         <div className="auth-right-content-wrapper">
           <div className="auth-right-logo" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
             <Logo size="36" />
-            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: '700', color: 'white' }}>Empathezee Pro</span>
+            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: '700', color: 'white' }}>Empathezee</span>
           </div>
-          <h2 className="auth-right-title">Empower patients, guide support groups.</h2>
-          <p className="auth-right-subtitle">Join our verified network of medical specialists. Moderate discussions, host online consultations, and help patients manage chronic conditions.</p>
+          <h2 className="auth-right-title">Empower chronic illness patients with expert care.</h2>
+          <p className="auth-right-subtitle">Join a verified network of healthcare specialists. Guide disease support groups, conduct virtual consultations, and track patient health outcomes.</p>
 
           <div className="auth-feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '32px' }}>
             <div
@@ -354,7 +396,7 @@ export default function DoctorRegister() {
               <div style={{ background: 'rgba(255,255,255,0.15)', padding: '10px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <i className="fa-solid fa-users" style={{ fontSize: '1.1rem' }}></i>
               </div>
-              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Patient Interactions</span>
+              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Direct Patient & Community Guidance</span>
             </div>
 
             <div
@@ -366,7 +408,7 @@ export default function DoctorRegister() {
               <div style={{ background: 'rgba(255,255,255,0.15)', padding: '10px', borderRadius: '8px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <i className="fa-solid fa-video" style={{ fontSize: '1.1rem' }}></i>
               </div>
-              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Secure Telehealth</span>
+              <span style={{ fontWeight: '500', fontSize: '1.05rem', color: 'white' }}>Secure Telehealth Virtual Visits</span>
             </div>
 
             <div

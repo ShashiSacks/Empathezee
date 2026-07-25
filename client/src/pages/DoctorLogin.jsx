@@ -39,10 +39,10 @@ export default function DoctorLogin() {
   };
 
   const features = [
-    { icon: 'fa-solid fa-users',         label: 'Patient Interactions' },
-    { icon: 'fa-solid fa-video',          label: 'Secure Telehealth Sessions' },
-    { icon: 'fa-solid fa-calendar-check', label: 'Practice Management Tools' },
-    { icon: 'fa-solid fa-shield-halved',  label: 'Verified Doctor Badge' },
+    { icon: 'fa-solid fa-users',         label: 'Condition-based patient support' },
+    { icon: 'fa-solid fa-video',          label: 'Virtual consultation management' },
+    { icon: 'fa-solid fa-calendar-check', label: 'Appointment scheduling tools' },
+    { icon: 'fa-solid fa-shield-halved',  label: 'Verified medical specialist badge' },
   ];
 
   return (
@@ -56,14 +56,16 @@ export default function DoctorLogin() {
           </div>
 
           {/* Doctor portal banner */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 14px', background: 'var(--accent-50)', border: '1px solid rgba(2,132,199,0.2)', borderRadius: 'var(--radius-full)', marginBottom: '24px', justifyContent: 'center' }}>
-            <i className="fa-solid fa-stethoscope" style={{ color: 'var(--accent)', fontSize: '0.85rem' }} />
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-dark)', letterSpacing: '0.3px' }}>MEDICAL PROFESSIONAL ACCESS</span>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className="auth-doctor-badge">
+              <i className="fa-solid fa-user-doctor" />
+              <span>Verified Medical Specialist Access</span>
+            </div>
           </div>
 
-          <h1 className="title" style={{ marginBottom: '6px', fontSize: '1.6rem' }}>Doctor Sign In</h1>
+          <h1 className="title" style={{ marginBottom: '6px', fontSize: '1.6rem' }}>Doctor Portal Sign In</h1>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '28px' }}>
-            Access your doctor dashboard and patient management
+            Access your medical dashboard, appointments & patient consultations
           </p>
 
           {error && (
@@ -75,7 +77,7 @@ export default function DoctorLogin() {
           <form onSubmit={handleSubmit} style={{ gap: '18px' }}>
             <div className="form-group">
               <label htmlFor="doctor-login-email">
-                Doctor email
+                Professional email
               </label>
               <input
                 id="doctor-login-email"
@@ -122,18 +124,22 @@ export default function DoctorLogin() {
               id="doctor-login-submit-btn"
               style={{ marginTop: '4px' }}
             >
-              {loading ? 'Signing in…' : 'Sign in to Doctor Portal'}
+              {loading ? 'Signing in…' : 'Sign in to doctor portal'}
             </Button>
           </form>
 
-          <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <p>
-              New doctor?{' '}
-              <Link to="/doctor/register" style={{ fontWeight: 700, color: 'var(--accent)' }}>Register your practice</Link>
+          <div className="auth-footer-container">
+            <p className="auth-footer-text">
+              New Specialist?{' '}
+              <Link to="/doctor/register" className="auth-action-link accent">
+                Register medical practice <i className="fa-solid fa-arrow-right" style={{ fontSize: '0.75rem' }}></i>
+              </Link>
             </p>
-            <p>
-              Patient?{' '}
-              <Link to="/login" style={{ fontWeight: 600, color: 'var(--primary)' }}>Patient login</Link>
+            <p className="auth-footer-text">
+              Patient Account?{' '}
+              <Link to="/login" className="auth-action-link">
+                Sign in as patient <i className="fa-solid fa-user" style={{ fontSize: '0.75rem' }}></i>
+              </Link>
             </p>
           </div>
         </div>
@@ -144,10 +150,10 @@ export default function DoctorLogin() {
         <div className="auth-right-content-wrapper">
           <div className="auth-right-logo" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
             <Logo size="36" />
-            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white' }}>Empathezee Pro</span>
+            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white' }}>Empathezee</span>
           </div>
-          <h2 className="auth-right-title">Empower patients, guide support groups.</h2>
-          <p className="auth-right-subtitle">Join our verified network of medical specialists. Moderate discussions, host telehealth sessions, and help patients manage chronic conditions.</p>
+          <h2 className="auth-right-title">Empower chronic illness patients with expert care.</h2>
+          <p className="auth-right-subtitle">Join a verified network of healthcare specialists. Guide disease support groups, conduct virtual consultations, and track patient health outcomes.</p>
 
           <div className="auth-feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '32px' }}>
             {features.map(({ icon, label }) => (
