@@ -11,7 +11,14 @@ const sessionMiddleware = session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: getMongoUrl(),
+        clientPromise: new Promise((resolve) => {
+            if (mongoose.connection.readyState === 1) {
+                return resolve(mongoose.connection.getClient());
+            }
+            mongoose.connection.once("open", () => {
+                resolve(mongoose.connection.getClient());
+            });
+        }),
         ttl: 24 * 60 * 60
     }),
     cookie: {

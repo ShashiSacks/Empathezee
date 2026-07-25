@@ -2674,17 +2674,24 @@ body.auth-page .auth-right {
   body.auth-page .auth-container {
     display: flex;
     flex-direction: row;
+    width: 100%;
+    min-height: 100vh;
   }
   
   body.auth-page .auth-left {
-    flex: 1;
-    max-width: 520px;
-    box-shadow: 10px 0 30px rgba(15, 23, 42, 0.02);
+    flex: 0 0 500px;
+    width: 500px;
+    max-width: 500px;
+    padding: 40px 30px;
+    background: #ffffff;
+    border-right: 1px solid var(--border);
+    box-shadow: 4px 0 24px rgba(15, 23, 42, 0.04);
   }
   
   body.auth-page .auth-right {
     display: flex;
-    flex: 1.4;
+    flex: 1;
+    width: calc(100% - 500px);
     background: radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
                 linear-gradient(135deg, #0F172A 0%, #312E81 50%, #4F46E5 100%);
     position: relative;
@@ -2695,6 +2702,7 @@ body.auth-page .auth-right {
     padding: 80px 64px;
     color: white;
     z-index: 2;
+    min-height: 100vh;
   }
 
   body.auth-page .auth-right::before {
