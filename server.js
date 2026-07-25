@@ -169,6 +169,24 @@ const doctorSearchRoutes = require("./routes/doctorSearchRoutes");
 const { googleLogin } = require("./controllers/authController");
 
 
+// ensure db is connected before handling any request (vital for serverless environment)
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error("Database connection middleware error:", err.message);
+        if (req.path.startsWith("/api") || req.xhr) {
+            return res.status(500).json({
+                success: false,
+                message: "Database connection failed. Please ensure MONGO_URL is set in environment and MongoDB Atlas Network Access allows 0.0.0.0/0."
+            });
+        }
+        next(err);
+    }
+});
+
+
 // api routes
 
 app.use("/api/auth", authRoutes);
@@ -290,8 +308,11 @@ app.use(errorHandler);
 
 // start server
 
-const PORT = process.env.PORT || 3000;
+if (require.main === module || !process.env.VERCEL) {
+    const PORT = process.env.PORT || 3000;
+    server.listen(PORT, () => {
+        console.log("server running on port", PORT);
+    });
+}
 
-server.listen(PORT, () => {
-    console.log("server running on port", PORT);
-});
+module.exports = app;

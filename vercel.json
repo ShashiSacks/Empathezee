@@ -5,6 +5,10 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/auth/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/assets/(.*)",
       "destination": "/client/dist/assets/$1"
     },
