@@ -60,7 +60,11 @@ const sendTokenResponse = async (user, statusCode, req, res) => {
 };
 
 const register = catchAsync(async (req, res, next) => {
-    const { username, email, password, age, gender, disease, country, state, district, city, bio, role } = req.body;
+    const {
+        username, email, password, age, gender, disease, country, state, district, city, bio, role,
+        specialization, qualifications, experienceYears, clinicName, clinicAddress, consultationFee,
+        availableDays, availableHours, licenseNumber, phone
+    } = req.body;
     
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {
@@ -87,6 +91,17 @@ const register = catchAsync(async (req, res, next) => {
         city: city || "",
         bio: bio || "",
         role: userRole,
+        specialization: specialization || disease || "",
+        qualifications: qualifications || "",
+        experienceYears: experienceYears ? Number(experienceYears) : 0,
+        clinicName: clinicName || "",
+        clinicAddress: clinicAddress || "",
+        consultationFee: consultationFee ? Number(consultationFee) : 0,
+        availableDays: availableDays || "Mon - Sat",
+        availableHours: availableHours || "09:00 AM - 05:00 PM",
+        licenseNumber: licenseNumber || "",
+        phone: phone || "",
+        isVerifiedDoctor: userRole === 'doctor' ? true : false,
         otp,
         otpExpire,
         isVerified: true

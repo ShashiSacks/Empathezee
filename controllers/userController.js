@@ -22,7 +22,11 @@ const getProfile = async (req, res) => {
 // update profile
 const updateProfile = async (req, res, next) => {
     try {
-        const { username, email, age, gender, disease, bio, city, country, state, district, emailNotifications } = req.body;
+        const {
+            username, email, age, gender, disease, bio, city, country, state, district, emailNotifications,
+            specialization, qualifications, experienceYears, clinicName, clinicAddress, consultationFee,
+            availableDays, availableHours, licenseNumber, phone
+        } = req.body;
 
         let normalizedGender = undefined;
         if (typeof gender === "string") {
@@ -66,6 +70,18 @@ const updateProfile = async (req, res, next) => {
         if (city !== undefined) {
             updateData.city = city.trim();
         }
+
+        // doctor profile fields
+        if (specialization !== undefined) updateData.specialization = specialization.trim();
+        if (qualifications !== undefined) updateData.qualifications = qualifications.trim();
+        if (experienceYears !== undefined) updateData.experienceYears = Number(experienceYears) || 0;
+        if (clinicName !== undefined) updateData.clinicName = clinicName.trim();
+        if (clinicAddress !== undefined) updateData.clinicAddress = clinicAddress.trim();
+        if (consultationFee !== undefined) updateData.consultationFee = Number(consultationFee) || 0;
+        if (availableDays !== undefined) updateData.availableDays = availableDays.trim();
+        if (availableHours !== undefined) updateData.availableHours = availableHours.trim();
+        if (licenseNumber !== undefined) updateData.licenseNumber = licenseNumber.trim();
+        if (phone !== undefined) updateData.phone = phone.trim();
 
         const updatedUser = await User.findByIdAndUpdate(
             req.user.id,
@@ -114,8 +130,21 @@ const getUserCommunities = async (req, res) => {
 // get all doctors
 const getDoctors = async (req, res) => {
     try {
-        const doctors = await User.find({ role: "doctor" }).select("username email disease city");
+        const doctors = await User.find({ role: "doctor" }).select("-password");
         res.status(200).json(doctors);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// get single doctor by ID
+const getDoctorById = async (req, res) => {
+    try {
+        const doctor = await User.findOne({ _id: req.params.id, role: "doctor" }).select("-password");
+        if (!doctor) {
+            return res.status(404).json({ message: "Doctor profile not found" });
+        }
+        res.status(200).json(doctor);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -150,5 +179,6 @@ module.exports = {
     updateProfile,
     getUserCommunities,
     getDoctors,
+    getDoctorById,
     broadcastNotification
 };

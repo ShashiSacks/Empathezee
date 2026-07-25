@@ -13,6 +13,11 @@ export default function DoctorRegister() {
     age: '',
     gender: '',
     disease: '',
+    specialization: '',
+    qualifications: '',
+    licenseNumber: '',
+    clinicName: '',
+    consultationFee: '500',
     bio: '',
     country: '',
     state: '',
@@ -240,9 +245,57 @@ export default function DoctorRegister() {
                 id="doc-spec"
                 type="text"
                 name="disease"
-                placeholder="e.g. Endocrinology, Rheumatology…"
+                placeholder="e.g. Cardiology, Endocrinology, Pulmonology…"
                 value={formData.disease}
-                onChange={(e) => setFormData({ ...formData, disease: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, disease: e.target.value, specialization: e.target.value })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="doc-qual">Qualifications / Degrees <span className="optional-tag">(optional)</span></label>
+              <input
+                id="doc-qual"
+                type="text"
+                name="qualifications"
+                placeholder="e.g. MBBS, MD, DM"
+                value={formData.qualifications}
+                onChange={(e) => setFormData({ ...formData, qualifications: e.target.value })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="doc-license">Medical License / Reg Number <span className="optional-tag">(optional)</span></label>
+              <input
+                id="doc-license"
+                type="text"
+                name="licenseNumber"
+                placeholder="e.g. MCI-884920"
+                value={formData.licenseNumber}
+                onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="doc-clinic">Clinic / Hospital Name <span className="optional-tag">(optional)</span></label>
+              <input
+                id="doc-clinic"
+                type="text"
+                name="clinicName"
+                placeholder="e.g. Care Super Speciality Clinic"
+                value={formData.clinicName}
+                onChange={(e) => setFormData({ ...formData, clinicName: e.target.value })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="doc-fee">Consultation Fee (₹)</label>
+              <input
+                id="doc-fee"
+                type="number"
+                name="consultationFee"
+                placeholder="e.g. 500"
+                value={formData.consultationFee}
+                onChange={(e) => setFormData({ ...formData, consultationFee: e.target.value })}
               />
             </div>
 

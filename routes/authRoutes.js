@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const User = require("../models/User");
 const validate = require('../middleware/validate');
 const {
     registerSchema,
@@ -27,8 +28,16 @@ router.post("/verify-email", validate(verifyEmailSchema), verifyEmail);
 router.post("/login", validate(loginSchema), login);
 router.post("/doctor/login", validate(loginSchema), login);
 router.post("/refresh-token", refreshToken); // No complex body to validate
-router.get("/me", (req, res) => {
+router.get("/me", async (req, res) => {
     if (req.session && req.session.user) {
+        try {
+            const dbUser = await User.findById(req.session.user.id).select("-password").populate("communities");
+            if (dbUser) {
+                return res.json({ success: true, user: dbUser });
+            }
+        } catch (err) {
+            console.error("Fetch me error:", err);
+        }
         return res.json({ success: true, user: req.session.user });
     }
     return res.json({ success: true, user: null });

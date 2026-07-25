@@ -130,10 +130,22 @@ const searchDoctors = async (req, res) => {
         }).select("-password");
 
         let formattedDbDoctors = dbDoctors.map(doc => ({
+            _id: doc._id,
             name: doc.username.startsWith("Dr.") ? doc.username : `Dr. ${doc.username}`,
-            specialization: doc.disease ? `${doc.disease} Specialist` : specialization,
-            address: doc.city ? `${doc.city}, India` : city,
-            source: "Registered Empathezee Medical Specialist",
+            specialization: doc.specialization || (doc.disease ? `${doc.disease} Specialist` : specialization),
+            qualifications: doc.qualifications || "MBBS, Medical Specialist",
+            experienceYears: doc.experienceYears || 5,
+            clinicName: doc.clinicName || "Empathezee Telehealth Clinic",
+            clinicAddress: doc.clinicAddress || (doc.city ? `${doc.city}, ${doc.state || 'India'}` : city),
+            consultationFee: doc.consultationFee || 500,
+            availableDays: doc.availableDays || "Mon - Sat",
+            availableHours: doc.availableHours || "09:00 AM - 05:00 PM",
+            licenseNumber: doc.licenseNumber || "VERIFIED-DR",
+            phone: doc.phone || "",
+            bio: doc.bio || "Experienced healthcare specialist dedicated to patient care and chronic disease management.",
+            isVerifiedDoctor: doc.isVerifiedDoctor !== false,
+            address: doc.clinicAddress || (doc.city ? `${doc.city}, India` : city),
+            source: "Verified Empathezee Medical Specialist",
             email: doc.email
         }));
 

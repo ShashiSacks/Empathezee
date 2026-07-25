@@ -93,6 +93,10 @@ export default function Navbar() {
                     <i className="fa-solid fa-stethoscope" aria-hidden="true"></i>
                     <span>Doctor Dashboard</span>
                   </Link>
+                  <Link to="/profile" id="nav-doctor-profile" className={isActive('/profile') ? 'active' : ''}>
+                    <i className="fa-solid fa-user-doctor" aria-hidden="true"></i>
+                    <span>My Profile</span>
+                  </Link>
                   <Link to="/medicine" id="nav-medicines-dr" className={isActive('/medicine') ? 'active' : ''}>
                     <i className="fa-solid fa-pills" aria-hidden="true"></i>
                     <span>Medicines</span>
@@ -127,6 +131,10 @@ export default function Navbar() {
                   <Link to="/wellness" id="nav-wellness" className={isActive('/wellness') ? 'active' : ''}>
                     <i className="fa-solid fa-heart-pulse" aria-hidden="true"></i>
                     <span>Wellness</span>
+                  </Link>
+                  <Link to="/profile" id="nav-user-profile" className={isActive('/profile') ? 'active' : ''}>
+                    <i className="fa-solid fa-user-gear" aria-hidden="true"></i>
+                    <span>My Profile</span>
                   </Link>
                   <Link to="/analytics" id="nav-analytics" className={isActive('/analytics') ? 'active' : ''}>
                     <i className="fa-solid fa-chart-line" aria-hidden="true"></i>
@@ -265,6 +273,7 @@ export default function Navbar() {
           user.role === 'doctor' ? (
             <>
               <Link to="/doctor/dashboard" id="mob-nav-doctor-dashboard" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-stethoscope" style={{ width: '18px' }}></i> Doctor Dashboard</Link>
+              <Link to="/profile" id="mob-nav-doctor-profile" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-user-doctor" style={{ width: '18px' }}></i> My Profile</Link>
               <Link to="/medicine" id="mob-nav-medicines-dr" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-pills" style={{ width: '18px' }}></i> Medicines</Link>
               <Link to="/analytics" id="mob-nav-analytics-dr" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-chart-line" style={{ width: '18px' }}></i> Analytics</Link>
             </>
@@ -276,6 +285,7 @@ export default function Navbar() {
               <Link to="/appointments-ui" id="mob-nav-appointments" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-calendar-check" style={{ width: '18px' }}></i> Appointments</Link>
               <Link to="/medicine" id="mob-nav-medicines" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-pills" style={{ width: '18px' }}></i> Medicines</Link>
               <Link to="/wellness" id="mob-nav-wellness" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-seedling" style={{ width: '18px' }}></i> Mental Wellness</Link>
+              <Link to="/profile" id="mob-nav-profile" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-user-gear" style={{ width: '18px' }}></i> My Profile</Link>
               <Link to="/analytics" id="mob-nav-analytics" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-chart-line" style={{ width: '18px' }}></i> Analytics</Link>
             </>
           )

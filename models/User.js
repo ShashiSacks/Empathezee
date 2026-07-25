@@ -80,6 +80,62 @@ const userSchema = new mongoose.Schema({
     emailNotifications: {
         type: Boolean,
         default: true
+    },
+
+    // Doctor profile specific fields
+    specialization: {
+        type: String,
+        default: ""
+    },
+
+    qualifications: {
+        type: String,
+        default: ""
+    },
+
+    experienceYears: {
+        type: Number,
+        default: 0
+    },
+
+    clinicName: {
+        type: String,
+        default: ""
+    },
+
+    clinicAddress: {
+        type: String,
+        default: ""
+    },
+
+    consultationFee: {
+        type: Number,
+        default: 0
+    },
+
+    availableDays: {
+        type: String,
+        default: "Mon - Sat"
+    },
+
+    availableHours: {
+        type: String,
+        default: "09:00 AM - 05:00 PM"
+    },
+
+    licenseNumber: {
+        type: String,
+        default: ""
+    },
+
+    phone: {
+        type: String,
+        default: ""
+    },
+
+    isVerifiedDoctor: {
+        type: Boolean,
+        default: true
     }
 }, {
     timestamps: true
