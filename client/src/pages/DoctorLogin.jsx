@@ -55,13 +55,7 @@ export default function DoctorLogin() {
             <span style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '-0.03em', background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Doctor Portal</span>
           </div>
 
-          {/* Doctor portal banner */}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div className="auth-doctor-badge">
-              <i className="fa-solid fa-user-doctor" />
-              <span>Verified Medical Specialist Access</span>
-            </div>
-          </div>
+
 
           <h1 className="title" style={{ marginBottom: '6px', fontSize: '1.6rem' }}>Doctor Portal Sign In</h1>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '28px' }}>

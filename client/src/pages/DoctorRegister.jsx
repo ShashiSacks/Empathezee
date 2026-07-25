@@ -139,12 +139,7 @@ export default function DoctorRegister() {
             <span style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '-0.03em', background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Doctor Portal</span>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div className="auth-doctor-badge">
-              <i className="fa-solid fa-user-doctor" />
-              <span>Verified medical specialist registration</span>
-            </div>
-          </div>
+
 
           <h1 className="title" style={{ marginBottom: '6px', fontSize: '1.6rem' }}>Register your practice</h1>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '24px' }}>Join our network of verified medical specialists and empower chronic illness care</p>

@@ -140,13 +140,7 @@ export default function Register() {
       {/* left side (form) */}
       <div className="auth-left">
         <div className="auth-left-content">
-          <h1 className="title" style={{ marginBottom: '6px' }}>Join the Empathezee community</h1>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div className="auth-trust-note">
-              <i className="fa-solid fa-shield-halved" />
-              <span>Privacy-first patient platform</span>
-            </div>
-          </div>
+          <h1 className="title" style={{ marginBottom: '24px' }}>Join the Empathezee community</h1>
 
           {error && (
             <Alert type="error" onDismiss={() => setError('')} style={{ marginBottom: '20px' }}>
