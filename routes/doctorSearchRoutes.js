@@ -5,7 +5,8 @@ const { protectUser } = require("../middleware/sessionMiddleware");
 const { searchDoctors } = require("../controllers/doctorSearchController");
 
 
-// render the search page or execute nominatim osm search
-router.get("/doctor/search", protectUser, searchDoctors);
+// API endpoint for doctor search by symptom & location
+router.get("/doctor-search", searchDoctors);
+router.get("/doctor/search", searchDoctors);
 
 module.exports = router;

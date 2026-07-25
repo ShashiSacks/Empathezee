@@ -22,7 +22,7 @@ const getProfile = async (req, res) => {
 // update profile
 const updateProfile = async (req, res, next) => {
     try {
-        const { username, email, age, gender, disease, bio, city, country, state, district } = req.body;
+        const { username, email, age, gender, disease, bio, city, country, state, district, emailNotifications } = req.body;
 
         let normalizedGender = undefined;
         if (typeof gender === "string") {
@@ -35,6 +35,9 @@ const updateProfile = async (req, res, next) => {
         const updateData = {};
         if (username) updateData.username = username.trim();
         if (email) updateData.email = email.trim().toLowerCase();
+        if (emailNotifications !== undefined) {
+            updateData.emailNotifications = Boolean(emailNotifications);
+        }
         
         // handle age casting
         if (age !== undefined) {
@@ -118,9 +121,34 @@ const getDoctors = async (req, res) => {
     }
 };
 
+// broadcast notification to all subscribers & users with notifications enabled
+const broadcastNotification = async (req, res) => {
+    try {
+        const { notifyAllSubscribersAndUsers } = require("../utils/emailService");
+        const { subject, title, message, actionUrl, actionText } = req.body;
+
+        if (!message) {
+            return res.status(400).json({ message: "Message content is required" });
+        }
+
+        const result = await notifyAllSubscribersAndUsers({
+            subject,
+            title,
+            message,
+            actionUrl,
+            actionText
+        });
+
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getProfile,
     updateProfile,
     getUserCommunities,
-    getDoctors
+    getDoctors,
+    broadcastNotification
 };

@@ -185,7 +185,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/communities", communityRoutes);
 app.use("/", chatRoutes);
 app.use("/", searchRoutes);
-app.use("/", doctorSearchRoutes);
+app.use("/api", doctorSearchRoutes);
 
 
 // google auth routes

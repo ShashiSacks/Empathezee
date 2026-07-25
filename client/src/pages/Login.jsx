@@ -43,10 +43,10 @@ export default function Login() {
       {/* left side (form area) */}
       <div className="auth-left">
         <div className="auth-left-content">
-          {/* Logo for mobile */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '28px', justifyContent: 'center' }}>
+          {/* Logo for auth page */}
+          <div className="auth-header-brand">
             <Logo size="32" />
-            <span style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '-0.03em', background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Empathezee</span>
+            <span className="auth-header-brand-title">Empathezee</span>
           </div>
 
           <h1 className="title" style={{ marginBottom: '6px' }}>Welcome back</h1>
@@ -82,7 +82,7 @@ export default function Login() {
                 <span>Password</span>
                 <a href="#" style={{ fontSize: '0.78rem', fontWeight: 600, letterSpacing: 0 }}>Forgot password?</a>
               </label>
-              <div style={{ position: 'relative', width: '100%' }}>
+              <div className="password-input-wrapper">
                 <input
                   id="login-password"
                   type={showPassword ? 'text' : 'password'}
@@ -120,11 +120,11 @@ export default function Login() {
           <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <p>
               Don't have an account?{' '}
-              <Link to="/register" style={{ fontWeight: 700, color: 'var(--primary)' }}>Create one free</Link>
+              <Link to="/register" style={{ fontWeight: 600, color: 'var(--primary)' }}>Sign up</Link>
             </p>
             <p>
-              Doctor?{' '}
-              <Link to="/doctor/login" style={{ fontWeight: 600, color: 'var(--accent)' }}>Sign in to Doctor Portal</Link>
+              Are you a doctor?{' '}
+              <Link to="/doctor/login" style={{ fontWeight: 600, color: 'var(--primary)' }}>Sign in to Doctor Portal</Link>
             </p>
           </div>
         </div>

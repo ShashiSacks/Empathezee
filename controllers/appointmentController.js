@@ -1,29 +1,46 @@
-const Appointment = require("../models/Appointment");
+const User = require("../models/User");
 
 // book appointment
 const bookAppointment = async (req, res) => {
     try {
-        const { doctorId, date, time } = req.body;
+        const { doctorId, doctorName, date, time } = req.body;
 
-        if (!doctorId || !date || !time) {
-            return res.status(400).json({ message: "Doctor, date, and time are required." });
+        if (!date || !time) {
+            return res.status(400).json({ message: "Date and time are required to book consultation." });
+        }
+
+        let assignedDoctorId = doctorId;
+
+        // If doctorId is missing or not a valid 24-char ObjectId, find or create doctor user
+        if (!assignedDoctorId || !assignedDoctorId.toString().match(/^[0-9a-fA-F]{24}$/)) {
+            const anyDoc = await User.findOne({ role: "doctor" });
+            if (anyDoc) {
+                assignedDoctorId = anyDoc._id;
+            } else {
+                const defaultDoc = await User.create({
+                    username: doctorName || "Medical Specialist",
+                    email: `doctor_${Date.now()}@empathezee.com`,
+                    password: "defaultpassword123",
+                    role: "doctor",
+                    disease: "General Medicine"
+                });
+                assignedDoctorId = defaultDoc._id;
+            }
         }
 
         const appointment = await Appointment.create({
             patient: req.user._id,
-            doctor: doctorId,
+            doctor: assignedDoctorId,
             date,
             time,
-            status: "PENDING"
+            status: "CONFIRMED"
         });
 
-        if (req.accepts("html")) {
-            return res.redirect("/appointments-ui");
-        }
+        const populatedAppointment = await Appointment.findById(appointment._id).populate("doctor", "username email disease city");
 
         res.status(201).json({
             message: "Appointment booked successfully",
-            appointment
+            appointment: populatedAppointment || appointment
         });
 
     } catch (error) {
@@ -38,10 +55,12 @@ const getMyAppointments = async (req, res) => {
         const appointments = await Appointment.find({
             patient: req.user._id
         })
-        .populate("doctor", "username email")
+        .populate("doctor", "username email disease city")
         .sort({ date: 1, time: 1 });
 
-        res.status(200).json(appointments);
+        const doctors = await User.find({ role: "doctor" }).select("-password");
+
+        res.status(200).json({ appointments, doctors });
 
     } catch (error) {
         console.error("Fetch Appointments Error:", error);

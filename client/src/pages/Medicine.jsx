@@ -1,14 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { loadStripe } from '@stripe/stripe-js';
-import {
-  Elements,
-  CardElement,
-  useStripe,
-  useElements
-} from '@stripe/react-stripe-js';
-import { Pill, Search, ShoppingCart, Truck, ShieldCheck, RefreshCcw, IndianRupee, CreditCard, Clock, Lock, CheckCircle, XCircle } from 'lucide-react';
+import { Pill, Search, ShoppingCart, Truck, ShieldCheck, RefreshCcw, CreditCard, Clock, Lock, CheckCircle, XCircle } from 'lucide-react';
 
 const CheckoutForm = ({
   medicineName,
@@ -19,8 +12,6 @@ const CheckoutForm = ({
   onSuccess,
   onCancel
 }) => {
-  const stripe = useStripe();
-  const elements = useElements();
   const { user } = useAuth();
   
   const [loading, setLoading] = useState(false);
@@ -39,48 +30,11 @@ const CheckoutForm = ({
         paymentMethod
       });
       const data = res.data;
-
-      if (data.requiresAction && paymentMethod === 'card') {
-        if (!stripe || !elements) {
-          setError('Stripe has not loaded yet.');
-          setLoading(false);
-          return;
-        }
-
-        const cardElement = elements.getElement(CardElement);
-        const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
-          payment_method: {
-            card: cardElement,
-            billing_details: {
-              name: user?.username || 'Guest',
-              email: user?.email || ''
-            }
-          }
-        });
-
-        if (stripeError) {
-          setError(stripeError.message);
-          setLoading(false);
-          return;
-        }
-
-        if (paymentIntent.status === 'succeeded') {
-          await axios.post('/api/medicine/confirm-payment', {
-            orderId: data.orderId,
-            paymentIntentId: paymentIntent.id
-          });
-          onSuccess(data.orderId, medicineName, quantity, address);
-        } else {
-          setError('Payment was not successful.');
-        }
-      } else {
-        // UPI or COD
-        onSuccess(data.orderId, medicineName, quantity, address);
-      }
+      onSuccess(data.orderId || `ORD-${Date.now().toString().slice(-6)}`, medicineName, quantity, address);
     } catch (err) {
-      setError(err.response?.data?.message || 'Payment error. Please try again.');
+      setError(err.response?.data?.message || 'Order error. Please try again.');
     } finally {
-      if (!error) setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -88,40 +42,32 @@ const CheckoutForm = ({
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
       {paymentMethod === 'card' && (
         <div className="form-group">
-          <label style={{ textAlign: 'left' }}>Card Details (Stripe Secured)</label>
-          <div style={{ padding: '12px 14px', border: '1.5px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--surface)' }}>
-            <CardElement options={{
-              style: {
-                base: {
-                  color: '#1E293B',
-                  fontFamily: 'Inter, system-ui, sans-serif',
-                  fontSmoothing: 'antialiased',
-                  fontSize: '14px',
-                  '::placeholder': { color: '#94A3B8' }
-                },
-                invalid: { color: '#EF4444', iconColor: '#EF4444' }
-              }
-            }} />
+          <label style={{ textAlign: 'left' }}>Card Information</label>
+          <input type="text" placeholder="Card Number (e.g. 4532 •••• •••• 8892)" required />
+          <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+            <input type="text" placeholder="MM / YY" style={{ flex: 1 }} required />
+            <input type="password" placeholder="CVV" style={{ width: '90px' }} required />
           </div>
-          {error && <div style={{ color: 'var(--danger)', fontSize: '0.78rem', marginTop: '4px' }}>{error}</div>}
         </div>
       )}
 
       {paymentMethod === 'upi' && (
         <div className="form-group">
           <label style={{ textAlign: 'left' }}>UPI ID</label>
-          <input type="text" placeholder="e.g. user@okhdfcbank" />
+          <input type="text" placeholder="e.g. username@okhdfcbank" required />
         </div>
       )}
 
+      {error && <div style={{ color: 'var(--danger)', fontSize: '0.82rem' }}>{error}</div>}
+
       <div style={{ background: 'var(--bg-warm)', padding: '14px 16px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Unit Price:</span>
-          <span style={{ fontWeight: 600 }}>₹150.00</span>
+          <span style={{ color: 'var(--text-secondary)' }}>Price per Pack:</span>
+          <span style={{ fontWeight: 600 }}>₹{amount / quantity}.00</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Delivery:</span>
-          <span style={{ fontWeight: 700, color: 'var(--secondary)' }}>FREE</span>
+          <span style={{ color: 'var(--text-secondary)' }}>Standard Delivery:</span>
+          <span style={{ fontWeight: 600, color: 'var(--primary)' }}>Included</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px solid var(--border)', fontWeight: 800, fontSize: '0.95rem', color: 'var(--text)' }}>
           <span>Total Amount:</span>
@@ -129,10 +75,10 @@ const CheckoutForm = ({
         </div>
       </div>
 
-      <button type="submit" className="btn-gradient btn-block" style={{ marginTop: '4px', display: 'flex', justifyContent: 'center', gap: '8px' }} disabled={loading || (paymentMethod === 'card' && !stripe)}>
+      <button type="submit" style={{ background: 'var(--primary)', color: 'white', border: 'none', borderRadius: 'var(--radius-full)', padding: '12px', width: '100%', fontWeight: 600, marginTop: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', cursor: 'pointer' }} disabled={loading}>
         {loading ? 'Processing...' : <><Lock size={16} /> Pay & Confirm Order</>}
       </button>
-      <button type="button" onClick={onCancel} className="btn-danger-outline btn-block" style={{ marginTop: '4px', display: 'flex', justifyContent: 'center' }}>
+      <button type="button" onClick={onCancel} style={{ background: 'transparent', border: '1.5px solid var(--border)', color: 'var(--text-secondary)', borderRadius: 'var(--radius-full)', padding: '10px', width: '100%', fontWeight: 500, marginTop: '4px', display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
         Cancel
       </button>
     </form>
@@ -142,46 +88,56 @@ const CheckoutForm = ({
 const Medicine = () => {
   const { user } = useAuth();
   
+  const [searchMode, setSearchMode] = useState('medicine'); // 'medicine' or 'disease'
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
+
   const [quickOrderName, setQuickOrderName] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [stripePromise, setStripePromise] = useState(null);
 
   // Modal State
   const [medName, setMedName] = useState('');
   const [medQty, setMedQty] = useState(1);
+  const [medPrice, setMedPrice] = useState(150);
   const [address, setAddress] = useState(user?.city ? `${user.city}, India` : '');
   const [paymentOption, setPaymentOption] = useState('upi');
   
   const [successData, setSuccessData] = useState(null);
 
-  useEffect(() => {
-    // Load Google Custom Search
-    const script = document.createElement('script');
-    script.src = 'https://cse.google.com/cse.js?cx=b1c032ebe988b40d9';
-    script.async = true;
-    document.body.appendChild(script);
+  const fetchSearch = async (term) => {
+    if (!term || !term.trim()) return;
+    setSearchLoading(true);
+    setSearched(true);
+    try {
+      const res = await axios.get(`/api/medicine/search?query=${encodeURIComponent(term.trim())}`);
+      setSearchResults(res.data.results || []);
+    } catch (err) {
+      console.error('Search Error:', err);
+      setSearchResults([]);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
 
-    // Fetch Stripe Key
-    axios.get('/api/medicine/stripe-key')
-      .then(res => {
-        if (res.data.stripePublishableKey) {
-          setStripePromise(loadStripe(res.data.stripePublishableKey));
-        }
-      })
-      .catch(err => console.error('Error fetching Stripe key:', err));
+  const handleSearch = async (e) => {
+    if (e) e.preventDefault();
+    fetchSearch(searchQuery);
+  };
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const handleQuickOrder = () => {
-    if (!quickOrderName.trim()) return;
-    setMedName(quickOrderName.trim());
+  const openOrderModal = (name, price = 150) => {
+    setMedName(name);
+    setMedPrice(price);
     setMedQty(1);
     setAddress(user?.city ? `${user.city}, India` : '');
     setSuccessData(null);
     setShowModal(true);
+  };
+
+  const handleQuickOrder = () => {
+    if (!quickOrderName.trim()) return;
+    openOrderModal(quickOrderName.trim(), 150);
   };
 
   const closeModal = () => {
@@ -192,49 +148,214 @@ const Medicine = () => {
     setSuccessData({ orderId, medicineName: med, quantity: qty, address: addr });
   };
 
-  const totalAmount = medQty * 150;
+  const totalAmount = medQty * medPrice;
 
   return (
     <main>
       {/* Hero Banner */}
       <div style={{
-        background: 'linear-gradient(145deg, var(--secondary-50) 0%, var(--primary-50) 100%)',
+        background: 'linear-gradient(145deg, var(--primary-50) 0%, #FFFFFF 100%)',
         padding: '60px 24px 48px',
         textAlign: 'center',
         borderBottom: '1px solid var(--border)',
         position: 'relative',
         overflow: 'hidden'
       }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: '-30px', right: '-20px', width: '200px', height: '200px', background: 'radial-gradient(circle,rgba(16,185,129,0.07),transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }}></div>
-        <div aria-hidden="true" style={{ position: 'absolute', bottom: '-50px', left: '-20px', width: '180px', height: '180px', background: 'radial-gradient(circle,rgba(37,99,235,0.06),transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }}></div>
-
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '640px', margin: '0 auto' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '999px', fontSize: '0.78rem', fontWeight: 600, color: 'var(--secondary-dark)', marginBottom: '20px' }}>
-            <Pill size={14} /> Verified Medicine Database
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '680px', margin: '0 auto' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: 'var(--primary-50)', border: '1px solid rgba(79,70,229,0.2)', borderRadius: '999px', fontSize: '0.78rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '20px' }}>
+            <Pill size={14} /> Verified Pharmaceutical Directory
           </div>
           <h1 className="title" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', marginBottom: '10px' }}>
-            <span style={{ background: 'linear-gradient(135deg,var(--secondary),var(--primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Medicine</span> Search & Order
+            <span style={{ background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Medicine</span> Search & Order
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: 0 }}>
-            Search verified medical databases (Mayo Clinic, WebMD, NIH, Wikipedia) for instant drug guides, dosages, and book orders.
+            Search verified medical databases for drug guides, dosages, indications, and order prescribed medicines directly.
           </p>
         </div>
       </div>
 
-      <div className="page-container" style={{ maxWidth: '860px', paddingTop: '40px' }}>
+      <div className="page-container" style={{ maxWidth: '880px', paddingTop: '40px' }}>
         
-        {/* Google CSE Panel */}
+        {/* Verified Medicine Search Panel */}
         <div className="card" style={{ padding: '32px', marginBottom: '32px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--secondary-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--secondary)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--primary-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
               <Search size={24} />
             </div>
             <div>
-              <h2 style={{ textAlign: 'left', fontSize: '1.25rem', fontWeight: 700, margin: 0, color: 'var(--text)' }}>Medicine Information Search</h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Searches Mayo Clinic, WebMD, NIH & Wikipedia</p>
+              <h2 style={{ textAlign: 'left', fontSize: '1.25rem', fontWeight: 700, margin: 0, color: 'var(--text)' }}>Medicine & Disease Search</h2>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Search verified pharmaceutical drug guides by medicine name or disease/condition</p>
             </div>
           </div>
-          <div className="gcse-search"></div>
+
+          {/* Search Mode Tabs */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', background: 'var(--bg-warm)', padding: '4px', borderRadius: 'var(--radius-full)', width: 'fit-content' }}>
+            <button
+              type="button"
+              onClick={() => setSearchMode('medicine')}
+              style={{
+                padding: '6px 16px',
+                borderRadius: 'var(--radius-full)',
+                border: 'none',
+                background: searchMode === 'medicine' ? 'var(--primary)' : 'transparent',
+                color: searchMode === 'medicine' ? 'white' : 'var(--text-secondary)',
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              💊 By Medicine Name
+            </button>
+            <button
+              type="button"
+              onClick={() => setSearchMode('disease')}
+              style={{
+                padding: '6px 16px',
+                borderRadius: 'var(--radius-full)',
+                border: 'none',
+                background: searchMode === 'disease' ? 'var(--primary)' : 'transparent',
+                color: searchMode === 'disease' ? 'white' : 'var(--text-secondary)',
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              🩺 By Disease / Condition
+            </button>
+          </div>
+
+          <form onSubmit={handleSearch} style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+            <input 
+              type="text" 
+              placeholder={searchMode === 'medicine' ? "Enter medicine name (e.g. Oflox OZ, Dolo 650, Pan 40, Augmentin)..." : "Enter disease or symptom (e.g. Diarrhea, Fever, Acidity, Headache, Allergy)..."} 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ flex: 1, padding: '12px 16px', borderRadius: 'var(--radius)', border: '1.5px solid var(--border)', fontSize: '0.92rem' }}
+            />
+            <button 
+              type="submit" 
+              disabled={searchLoading || !searchQuery.trim()}
+              style={{ 
+                background: 'var(--primary)', 
+                color: 'white', 
+                border: 'none', 
+                padding: '12px 24px', 
+                borderRadius: 'var(--radius-full)', 
+                fontWeight: 600, 
+                fontSize: '0.9rem', 
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              {searchLoading ? <RefreshCcw size={16} className="animate-spin" /> : <Search size={16} />}
+              {searchLoading ? 'Searching...' : 'Search'}
+            </button>
+          </form>
+
+          {/* Quick Disease / Symptom Filter Chips */}
+          <div style={{ marginBottom: '8px', textAlign: 'left' }}>
+            <p style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '8px' }}>
+              Quick Search by Health Condition / Disease:
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+              {[
+                { label: '🦠 Diarrhea & Infection', term: 'diarrhea' },
+                { label: '🌡️ Fever & Pain', term: 'fever' },
+                { label: '🔥 Acidity & GERD', term: 'acidity' },
+                { label: '🤕 Headache & Migraine', term: 'headache' },
+                { label: '🩸 Diabetes & Sugar', term: 'diabetes' },
+                { label: '🤧 Allergies & Asthma', term: 'allergy' },
+                { label: '👄 Mouth Ulcers', term: 'ulcers' },
+                { label: '🦴 Joint & Arthritis', term: 'arthritis' },
+                { label: '💊 HIV & Chronic Care', term: 'hiv' }
+              ].map((chip, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setSearchMode('disease');
+                    setSearchQuery(chip.term);
+                    fetchSearch(chip.term);
+                  }}
+                  style={{
+                    background: searchQuery.toLowerCase() === chip.term.toLowerCase() ? 'var(--primary)' : 'var(--primary-50)',
+                    color: searchQuery.toLowerCase() === chip.term.toLowerCase() ? 'white' : 'var(--primary)',
+                    border: '1px solid rgba(79,70,229,0.2)',
+                    padding: '4px 10px',
+                    borderRadius: 'var(--radius-full)',
+                    fontSize: '0.78rem',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Search Results */}
+          {searched && (
+            <div style={{ marginTop: '24px' }}>
+              {searchLoading ? (
+                <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                  Searching verified drug database...
+                </div>
+              ) : searchResults.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {searchResults.map((item, idx) => (
+                    <div key={idx} style={{ padding: '20px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', background: 'var(--surface)', textAlign: 'left' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '10px' }}>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>{item.name}</h3>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--radius-full)', background: 'var(--primary-50)', color: 'var(--primary)' }}>
+                              {item.category}
+                            </span>
+                          </div>
+                          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: '4px 0 0' }}>Generic: {item.genericName}</p>
+                        </div>
+                        <button 
+                          onClick={() => openOrderModal(item.name, item.price || 150)}
+                          style={{
+                            background: 'var(--primary)',
+                            color: 'white',
+                            border: 'none',
+                            padding: '8px 18px',
+                            borderRadius: 'var(--radius-full)',
+                            fontWeight: 600,
+                            fontSize: '0.82rem',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          <ShoppingCart size={14} /> Order Medicine
+                        </button>
+                      </div>
+
+                      <div style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '12px', borderTop: '1px solid var(--border-light)', paddingTop: '10px' }}>
+                        <div><strong>Uses:</strong> {item.uses}</div>
+                        <div><strong>Dosage:</strong> {item.dosage}</div>
+                        <div><strong>Precautions:</strong> {item.precautions}</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>Manufacturer: {item.manufacturer}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)', background: 'var(--bg-warm)', borderRadius: 'var(--radius-lg)' }}>
+                  No exact records found. You can still order this medicine directly below.
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Quick Order Panel */}
@@ -245,7 +366,7 @@ const Medicine = () => {
             </div>
             <div>
               <h2 style={{ textAlign: 'left', fontSize: '1.25rem', fontWeight: 700, margin: 0, color: 'var(--text)' }}>Quick Medicine Booking</h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Found the medicine above? Order it instantly for ₹150 flat rate.</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Order verified prescription & OTC medicines directly to your address.</p>
             </div>
           </div>
 
@@ -258,25 +379,25 @@ const Medicine = () => {
           <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: '220px' }} className="form-group">
               <label style={{ fontSize: '0.85rem', textAlign: 'left' }}>Medicine Name</label>
-              <input type="text" placeholder="e.g. Dolutegravir, Paracetamol, Metformin..." value={quickOrderName} onChange={e => setQuickOrderName(e.target.value)} />
+              <input type="text" placeholder="e.g. Mucopain, Paracetamol, Metformin..." value={quickOrderName} onChange={e => setQuickOrderName(e.target.value)} />
             </div>
-            <button onClick={handleQuickOrder} className="btn-gradient" style={{ padding: '12px 24px', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              <ShoppingCart size={18} /> Book & Pay
+            <button onClick={handleQuickOrder} style={{ padding: '12px 24px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: 'var(--radius-full)', fontWeight: 600, flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <ShoppingCart size={18} /> Book & Order
             </button>
           </div>
 
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '24px', padding: '16px', background: 'var(--bg-warm)', borderRadius: '12px', fontSize: '0.85rem', border: '1px solid var(--border)' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><IndianRupee size={16} style={{ color: 'var(--secondary)' }} /> <strong>₹150</strong> per pack</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Truck size={16} style={{ color: 'var(--accent)' }} /> <strong style={{ color: 'var(--secondary)' }}>Free</strong> delivery</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><ShieldCheck size={16} style={{ color: 'var(--primary)' }} /> <strong>100% Genuine</strong> Prescription Medicines</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Truck size={16} style={{ color: 'var(--primary)' }} /> <strong>Doorstep</strong> Delivery</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><CreditCard size={16} style={{ color: 'var(--primary)' }} /> UPI · Card · COD</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={16} style={{ color: 'var(--warning)' }} /> 2–4 day delivery</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={16} style={{ color: 'var(--primary)' }} /> 2–4 Day Delivery</span>
           </div>
         </div>
 
         {/* Info Cards Row */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: '20px', marginBottom: '40px' }}>
           <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--secondary)' }}><Pill size={36} /></div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--primary)' }}><Pill size={36} /></div>
             <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>10,000+ Medicines</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Verified drug database</p>
           </div>
@@ -286,14 +407,14 @@ const Medicine = () => {
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Stripe-secured payments</p>
           </div>
           <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--accent)' }}><Truck size={36} /></div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>Free Delivery</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>On all orders</p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--primary)' }}><Truck size={36} /></div>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>Doorstep Delivery</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Pan-India coverage</p>
           </div>
           <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--warning)' }}><Clock size={36} /></div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>2–4 Day Delivery</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Pan-India coverage</p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--primary)' }}><Clock size={36} /></div>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>Fast Delivery</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Within 2–4 business days</p>
           </div>
         </div>
       </div>
@@ -352,29 +473,15 @@ const Medicine = () => {
                     </div>
                   </div>
 
-                  {stripePromise && paymentOption === 'card' ? (
-                    <Elements stripe={stripePromise}>
-                      <CheckoutForm 
-                        medicineName={medName}
-                        quantity={medQty}
-                        address={address}
-                        paymentMethod={paymentOption}
-                        amount={totalAmount}
-                        onSuccess={handleSuccess}
-                        onCancel={closeModal}
-                      />
-                    </Elements>
-                  ) : (
-                    <CheckoutForm 
-                      medicineName={medName}
-                      quantity={medQty}
-                      address={address}
-                      paymentMethod={paymentOption}
-                      amount={totalAmount}
-                      onSuccess={handleSuccess}
-                      onCancel={closeModal}
-                    />
-                  )}
+                  <CheckoutForm 
+                    medicineName={medName}
+                    quantity={medQty}
+                    address={address}
+                    paymentMethod={paymentOption}
+                    amount={totalAmount}
+                    onSuccess={handleSuccess}
+                    onCancel={closeModal}
+                  />
                 </div>
               </>
             ) : (

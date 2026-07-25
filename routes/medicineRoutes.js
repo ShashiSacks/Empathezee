@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const { orderMedicine, confirmPayment, getStripeKey } = require("../controllers/medicineController");
+const { orderMedicine, confirmPayment, searchMedicine, getStripeKey } = require("../controllers/medicineController");
 const { protect } = require("../middleware/sessionMiddleware");
 
+// search medicine database
+router.get("/search", protect, searchMedicine);
 
 // book medicine order
 router.post("/order", protect, orderMedicine);

@@ -134,8 +134,14 @@ export default function Register() {
       {/* left side (form) */}
       <div className="auth-left">
         <div className="auth-left-content">
+          {/* Centered Brand Header */}
+          <div className="auth-header-brand">
+            <Logo size="32" />
+            <span className="auth-header-brand-title">Empathezee</span>
+          </div>
+
           <h1 className="title" style={{ marginBottom: '6px' }}>Create your account</h1>
-          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '24px' }}>Free forever — no credit card required</p>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '24px' }}>Join our supportive healthcare community</p>
 
           {error && (
             <Alert type="error" onDismiss={() => setError('')} style={{ marginBottom: '20px' }}>
@@ -174,7 +180,7 @@ export default function Register() {
 
             <div className="form-group">
               <label htmlFor="reg-password">Password</label>
-              <div style={{ position: 'relative', width: '100%' }}>
+              <div className="password-input-wrapper">
                 <input
                   id="reg-password"
                   type={showPassword ? 'text' : 'password'}
@@ -346,11 +352,11 @@ export default function Register() {
           <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <p>
               Already have an account?{' '}
-              <Link to="/login" style={{ fontWeight: 700, color: 'var(--primary)' }}>Sign in</Link>
+              <Link to="/login" style={{ fontWeight: 600, color: 'var(--primary)' }}>Sign in</Link>
             </p>
             <p>
-              Registering as a doctor?{' '}
-              <Link to="/doctor/register" style={{ fontWeight: 600, color: 'var(--accent)' }}>Doctor registration</Link>
+              Are you a doctor?{' '}
+              <Link to="/doctor/register" style={{ fontWeight: 600, color: 'var(--primary)' }}>Register your practice</Link>
             </p>
           </div>
         </div>

@@ -53,17 +53,17 @@ export default function Dashboard() {
           </Card>
           <Card padding="md" style={{ textAlign: 'center' }} hover>
             <div style={{ fontSize: '1.8rem', marginBottom: 'var(--space-1)' }}>🩺</div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-dark)', letterSpacing: '-0.02em' }}>Book Doctor</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '-0.02em' }}>Book Doctor</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Expert guidance</div>
           </Card>
           <Card padding="md" style={{ textAlign: 'center' }} hover>
             <div style={{ fontSize: '1.8rem', marginBottom: 'var(--space-1)' }}>💊</div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--secondary-dark)', letterSpacing: '-0.02em' }}>Order Medicines</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '-0.02em' }}>Order Medicines</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Fast delivery</div>
           </Card>
           <Card padding="md" style={{ textAlign: 'center' }} hover>
             <div style={{ fontSize: '1.8rem', marginBottom: 'var(--space-1)' }}>🧘</div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--warning)', letterSpacing: '-0.02em' }}>Mental Wellness</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '-0.02em' }}>Mental Wellness</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Mind & body</div>
           </Card>
         </div>
@@ -92,7 +92,7 @@ export default function Dashboard() {
               <p>Locate verified medical specialists nearby using symptom-based location search. Book consultations in seconds.</p>
             </div>
             <Link to="/doctor/search" style={{ textDecoration: 'none', alignSelf: 'flex-start' }}>
-              <Button variant="accent" size="sm" icon={<i className="fa-solid fa-magnifying-glass"></i>} id="dash-btn-doctors">
+              <Button variant="primary" size="sm" icon={<i className="fa-solid fa-magnifying-glass"></i>} id="dash-btn-doctors">
                 Search Directory
               </Button>
             </Link>
@@ -106,7 +106,7 @@ export default function Dashboard() {
               <p>Schedule virtual consultations and direct chat sessions with verified doctors at your convenience.</p>
             </div>
             <Link to="/appointments-ui" style={{ textDecoration: 'none', alignSelf: 'flex-start' }}>
-              <Button variant="secondary" size="sm" icon={<i className="fa-solid fa-calendar-plus"></i>} id="dash-btn-appointments">
+              <Button variant="primary" size="sm" icon={<i className="fa-solid fa-calendar-plus"></i>} id="dash-btn-appointments">
                 Book Consultation
               </Button>
             </Link>
@@ -120,7 +120,7 @@ export default function Dashboard() {
               <p>Search prescribed medications, compare dosages, and order medicines from verified online pharmacy partners.</p>
             </div>
             <Link to="/medicine" style={{ textDecoration: 'none', alignSelf: 'flex-start' }}>
-              <Button variant="accent" size="sm" icon={<i className="fa-solid fa-pills"></i>} id="dash-btn-medicines">
+              <Button variant="primary" size="sm" icon={<i className="fa-solid fa-pills"></i>} id="dash-btn-medicines">
                 Search Medicines
               </Button>
             </Link>
@@ -134,7 +134,7 @@ export default function Dashboard() {
               <p>Access meditation guides, mood trackers, stress management tools, and professional wellness advice.</p>
             </div>
             <Link to="/wellness" style={{ textDecoration: 'none', alignSelf: 'flex-start' }}>
-              <Button variant="warning" size="sm" icon={<i className="fa-solid fa-seedling"></i>} id="dash-btn-wellness">
+              <Button variant="primary" size="sm" icon={<i className="fa-solid fa-seedling"></i>} id="dash-btn-wellness">
                 Explore Tools
               </Button>
             </Link>
@@ -148,7 +148,7 @@ export default function Dashboard() {
               <p>View real-time safety stats, verified discussion metrics, disease prevalence insights, and medical trust scores.</p>
             </div>
             <Link to="/analytics" style={{ textDecoration: 'none', alignSelf: 'flex-start' }}>
-              <Button variant="danger" size="sm" icon={<i className="fa-solid fa-chart-line"></i>} id="dash-btn-analytics">
+              <Button variant="primary" size="sm" icon={<i className="fa-solid fa-chart-line"></i>} id="dash-btn-analytics">
                 View Platform Stats
               </Button>
             </Link>

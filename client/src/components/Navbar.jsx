@@ -61,27 +61,83 @@ export default function Navbar() {
             {user ? (
               user.role === 'doctor' ? (
                 <>
-                  <Link to="/doctor/dashboard" id="nav-doctor-dashboard" className={isActive('/doctor/dashboard') ? 'active' : ''}>Doctor Dashboard</Link>
-                  <Link to="/medicine" id="nav-medicines-dr" className={isActive('/medicine') ? 'active' : ''}>Medicines</Link>
-                  <Link to="/analytics" id="nav-analytics-dr" className={isActive('/analytics') ? 'active' : ''}>Analytics</Link>
+                  <Link to="/doctor/dashboard" id="nav-doctor-dashboard" className={isActive('/doctor/dashboard') ? 'active' : ''}>
+                    <i className="fa-solid fa-stethoscope" aria-hidden="true"></i>
+                    <span>Doctor Dashboard</span>
+                  </Link>
+                  <Link to="/medicine" id="nav-medicines-dr" className={isActive('/medicine') ? 'active' : ''}>
+                    <i className="fa-solid fa-pills" aria-hidden="true"></i>
+                    <span>Medicines</span>
+                  </Link>
+                  <Link to="/analytics" id="nav-analytics-dr" className={isActive('/analytics') ? 'active' : ''}>
+                    <i className="fa-solid fa-chart-line" aria-hidden="true"></i>
+                    <span>Analytics</span>
+                  </Link>
                 </>
               ) : (
                 <>
-                  <Link to="/dashboard" id="nav-dashboard" className={isActive('/dashboard') ? 'active' : ''}>Dashboard</Link>
-                  <Link to="/communities" id="nav-communities" className={isActive('/communities') ? 'active' : ''}>Communities</Link>
-                  <Link to="/doctor/search" id="nav-doctors" className={isActive('/doctor/search') ? 'active' : ''}>Find Doctors</Link>
-                  <Link to="/appointments-ui" id="nav-appointments" className={isActive('/appointments-ui') ? 'active' : ''}>Appointments</Link>
-                  <Link to="/medicine" id="nav-medicines" className={isActive('/medicine') ? 'active' : ''}>Medicines</Link>
-                  <Link to="/wellness" id="nav-wellness" className={isActive('/wellness') ? 'active' : ''}>Wellness</Link>
-                  <Link to="/analytics" id="nav-analytics" className={isActive('/analytics') ? 'active' : ''}>Analytics</Link>
+                  <Link to="/dashboard" id="nav-dashboard" className={isActive('/dashboard') ? 'active' : ''}>
+                    <i className="fa-solid fa-house" aria-hidden="true"></i>
+                    <span>Dashboard</span>
+                  </Link>
+                  <Link to="/communities" id="nav-communities" className={isActive('/communities') ? 'active' : ''}>
+                    <i className="fa-solid fa-people-group" aria-hidden="true"></i>
+                    <span>Communities</span>
+                  </Link>
+                  <Link to="/doctor/search" id="nav-doctors" className={isActive('/doctor/search') ? 'active' : ''}>
+                    <i className="fa-solid fa-user-doctor" aria-hidden="true"></i>
+                    <span>Find Doctors</span>
+                  </Link>
+                  <Link to="/appointments-ui" id="nav-appointments" className={isActive('/appointments-ui') ? 'active' : ''}>
+                    <i className="fa-solid fa-calendar-check" aria-hidden="true"></i>
+                    <span>Appointments</span>
+                  </Link>
+                  <Link to="/medicine" id="nav-medicines" className={isActive('/medicine') ? 'active' : ''}>
+                    <i className="fa-solid fa-pills" aria-hidden="true"></i>
+                    <span>Medicines</span>
+                  </Link>
+                  <Link to="/wellness" id="nav-wellness" className={isActive('/wellness') ? 'active' : ''}>
+                    <i className="fa-solid fa-heart-pulse" aria-hidden="true"></i>
+                    <span>Wellness</span>
+                  </Link>
+                  <Link to="/analytics" id="nav-analytics" className={isActive('/analytics') ? 'active' : ''}>
+                    <i className="fa-solid fa-chart-line" aria-hidden="true"></i>
+                    <span>Analytics</span>
+                  </Link>
                 </>
               )
             ) : (
-              <>
-                <Link to="/login" id="nav-login" className={isActive('/login') ? 'active' : ''}>Login</Link>
-                <Link to="/register" id="nav-register" className={isActive('/register') ? 'active' : ''}>Register</Link>
-                <Link to="/doctor/login" id="nav-doctor-login" className={isActive('/doctor/login') ? 'active' : ''}>Doctor Login</Link>
-              </>
+              <div className="nav-links-auth-group">
+                {/* Patient Portal Link Group */}
+                <div className="nav-portal-group">
+                  <span className="portal-badge">
+                    <i className="fa-solid fa-user" aria-hidden="true" style={{ fontSize: '0.72rem' }}></i>
+                    <span>Patient</span>
+                  </span>
+                  <Link to="/login" id="nav-login" className={`nav-portal-link ${isActive('/login') ? 'active' : ''}`}>
+                    <i className="fa-solid fa-right-to-bracket"></i> Login
+                  </Link>
+                  <Link to="/register" id="nav-register" className={`nav-portal-link ${isActive('/register') ? 'active' : ''}`}>
+                    <i className="fa-solid fa-user-plus"></i> Register
+                  </Link>
+                </div>
+
+                <span className="nav-group-divider">|</span>
+
+                {/* Doctor Portal Link Group */}
+                <div className="nav-portal-group">
+                  <span className="portal-badge">
+                    <i className="fa-solid fa-stethoscope" aria-hidden="true" style={{ fontSize: '0.78rem' }}></i>
+                    <span>Doctor</span>
+                  </span>
+                  <Link to="/doctor/login" id="nav-doctor-login" className={`nav-portal-link ${isActive('/doctor/login') ? 'active' : ''}`}>
+                    <i className="fa-solid fa-stethoscope"></i> Login
+                  </Link>
+                  <Link to="/register?role=doctor" id="nav-doctor-register" className={`nav-portal-link ${isActive('/register?role=doctor') ? 'active' : ''}`}>
+                    <i className="fa-solid fa-user-doctor"></i> Register
+                  </Link>
+                </div>
+              </div>
             )}
           </div>
 
@@ -196,11 +252,27 @@ export default function Navbar() {
             </>
           )
         ) : (
-          <>
-            <Link to="/login" id="mob-nav-login" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-arrow-right-to-bracket" style={{ width: '18px' }}></i> Login</Link>
-            <Link to="/register" id="mob-nav-register" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-user-plus" style={{ width: '18px' }}></i> Register</Link>
-            <Link to="/doctor/login" id="mob-nav-doctor-login" onClick={() => toggleMobileDrawer(false)}><i className="fa-solid fa-stethoscope" style={{ width: '18px' }}></i> Doctor Login</Link>
-          </>
+          <div className="mobile-auth-sections">
+            <div className="mobile-section-block">
+              <div className="mobile-section-title">👤 Patient Portal</div>
+              <Link to="/login" id="mob-nav-login" onClick={() => toggleMobileDrawer(false)}>
+                <i className="fa-solid fa-arrow-right-to-bracket" style={{ width: '18px' }}></i> Patient Login
+              </Link>
+              <Link to="/register" id="mob-nav-register" onClick={() => toggleMobileDrawer(false)}>
+                <i className="fa-solid fa-user-plus" style={{ width: '18px' }}></i> Patient Register
+              </Link>
+            </div>
+
+            <div className="mobile-section-block" style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px dashed var(--border)' }}>
+              <div className="mobile-section-title doctor-title">🩺 Doctor Portal</div>
+              <Link to="/doctor/login" id="mob-nav-doctor-login" onClick={() => toggleMobileDrawer(false)}>
+                <i className="fa-solid fa-stethoscope" style={{ width: '18px' }}></i> Doctor Login
+              </Link>
+              <Link to="/register?role=doctor" id="mob-nav-doctor-register" onClick={() => toggleMobileDrawer(false)}>
+                <i className="fa-solid fa-user-doctor" style={{ width: '18px' }}></i> Doctor Register
+              </Link>
+            </div>
+          </div>
         )}
 
         {user && (

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { protect } = require("../middleware/sessionMiddleware");
-const { getProfile, updateProfile, getUserCommunities, getDoctors } = require("../controllers/userController");
+const { getProfile, updateProfile, getUserCommunities, getDoctors, broadcastNotification } = require("../controllers/userController");
 
 
 // profile routes
@@ -16,5 +16,8 @@ router.get("/communities", protect, getUserCommunities);
 
 // get all doctors
 router.get("/doctors", protect, getDoctors);
+
+// broadcast notification to active subscribers and users
+router.post("/broadcast-notification", protect, broadcastNotification);
 
 module.exports = router;

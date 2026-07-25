@@ -14,7 +14,7 @@ import Communities from './pages/Communities';
 import CommunityDetail from './pages/CommunityDetail';
 import DoctorSearch from './pages/DoctorSearch';
 import Appointments from './pages/Appointments';
-import Medicines from './pages/Medicines';
+import Medicine from './pages/Medicine';
 import Wellness from './pages/Wellness';
 import Profile from './pages/Profile';
 import Analytics from './pages/Analytics';
@@ -112,8 +112,9 @@ function AppRoutes() {
           <Route path="/communities" element={<ProtectedRoute><Communities /></ProtectedRoute>} />
           <Route path="/community/:id" element={<ProtectedRoute><CommunityDetail /></ProtectedRoute>} />
           <Route path="/doctor/search" element={<ProtectedRoute><DoctorSearch /></ProtectedRoute>} />
+          <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
           <Route path="/appointments-ui" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
-          <Route path="/medicine" element={<ProtectedRoute><Medicines /></ProtectedRoute>} />
+          <Route path="/medicine" element={<ProtectedRoute><Medicine /></ProtectedRoute>} />
           <Route path="/wellness" element={<ProtectedRoute><Wellness /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />

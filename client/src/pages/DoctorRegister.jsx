@@ -134,7 +134,12 @@ export default function DoctorRegister() {
       {/* left side (form area) */}
       <div className="auth-left">
         <div className="auth-left-content">
-          <h1 className="title">Doctor Register</h1>
+          <div className="auth-header-brand">
+            <Logo size="32" />
+            <span className="auth-header-brand-title">Empathezee</span>
+          </div>
+          <h1 className="title" style={{ marginBottom: '6px' }}>Doctor Registration</h1>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '24px' }}>Register your credentials to join our verified network</p>
 
           {error && (
             <div style={{ padding: '10px 14px', borderRadius: 'var(--radius)', background: 'var(--danger-bg)', color: 'var(--danger)', marginBottom: '16px', fontSize: '0.88rem' }}>
@@ -163,7 +168,7 @@ export default function DoctorRegister() {
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
 
-            <div style={{ position: 'relative', width: '100%' }}>
+            <div className="password-input-wrapper">
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
@@ -322,15 +327,16 @@ export default function DoctorRegister() {
             </button>
           </form>
 
-          <p>
-            Already registered?{' '}
-            <Link to="/doctor/login">Doctor login</Link>
-          </p>
-
-          <p>
-            Patient account?{' '}
-            <Link to="/register">Patient registration</Link>
-          </p>
+          <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <p>
+              Already registered?{' '}
+              <Link to="/doctor/login" style={{ fontWeight: 600, color: 'var(--primary)' }}>Sign in</Link>
+            </p>
+            <p>
+              Are you a patient?{' '}
+              <Link to="/register" style={{ fontWeight: 600, color: 'var(--primary)' }}>Create a patient account</Link>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -339,7 +345,7 @@ export default function DoctorRegister() {
         <div className="auth-right-content-wrapper">
           <div className="auth-right-logo" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
             <Logo size="36" />
-            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: '700', color: 'white' }}>Empathezee Pro</span>
+            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: '700', color: 'white' }}>Empathezee</span>
           </div>
           <h2 className="auth-right-title">Empower patients, guide support groups.</h2>
           <p className="auth-right-subtitle">Join our verified network of medical specialists. Moderate discussions, host online consultations, and help patients manage chronic conditions.</p>
