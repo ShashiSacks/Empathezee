@@ -9,4 +9,5 @@ yarn-debug.log*
 yarn-error.log*
 .system_generated/
 client_backup_before_brand_refinement/
+client_backup_before_redesign/
 *.pdf

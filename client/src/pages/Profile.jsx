@@ -17,7 +17,6 @@ export default function Profile() {
     state: '',
     district: '',
     city: '',
-    emailNotifications: true,
   });
 
   const [countries, setCountries] = useState([]);
@@ -40,7 +39,6 @@ export default function Profile() {
         state: user.state || '',
         district: user.district || '',
         city: user.city || '',
-        emailNotifications: user.emailNotifications !== false,
       });
       if (user.country && LOCATION_DATA.hasDetailedData(user.country)) {
         setStates(LOCATION_DATA.getStates(user.country));
@@ -138,7 +136,6 @@ export default function Profile() {
               <p style={{ margin: 0, fontSize: '0.9rem', textTransform: 'capitalize' }}><b>Gender:</b> {user?.gender || 'Not set'}</p>
               <p style={{ margin: 0, fontSize: '0.9rem' }}><b>Location:</b> {locationParts.length > 0 ? locationParts.join(', ') : 'Not set'}</p>
               <p style={{ margin: 0, fontSize: '0.9rem' }}><b>Target Disease:</b> {user?.disease || 'Not set'}</p>
-              <p style={{ margin: 0, fontSize: '0.9rem' }}><b>Email Notifications:</b> {user?.emailNotifications !== false ? '🔔 Enabled' : '🔕 Disabled'}</p>
             </div>
           </Card>
 
@@ -156,19 +153,6 @@ export default function Profile() {
               <FormGroup label="Email Address" htmlFor="email" required>
                 <Input type="email" id="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
               </FormGroup>
-
-              <div style={{ marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)', background: 'var(--slate-50)', padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius)' }}>
-                <input
-                  type="checkbox"
-                  id="emailNotifications"
-                  checked={formData.emailNotifications}
-                  onChange={(e) => setFormData({ ...formData, emailNotifications: e.target.checked })}
-                  style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--primary)' }}
-                />
-                <label htmlFor="emailNotifications" style={{ cursor: 'pointer', fontSize: '0.92rem', fontWeight: 600, color: 'var(--text)' }}>
-                  Receive Email Notifications & Updates
-                </label>
-              </div>
 
               <FormGroup label="Age" htmlFor="age">
                 <Input type="number" id="age" value={formData.age} onChange={(e) => setFormData({ ...formData, age: e.target.value })} placeholder="e.g. 25" />

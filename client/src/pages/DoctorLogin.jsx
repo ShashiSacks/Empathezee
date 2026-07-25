@@ -50,14 +50,20 @@ export default function DoctorLogin() {
       {/* left side (form area) */}
       <div className="auth-left">
         <div className="auth-left-content">
-          <div className="auth-header-brand">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '28px', justifyContent: 'center' }}>
             <Logo size="32" />
-            <span className="auth-header-brand-title">Empathezee</span>
+            <span style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '-0.03em', background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Doctor Portal</span>
           </div>
 
-          <h1 className="title" style={{ marginBottom: '6px', fontSize: '1.6rem' }}>Doctor Portal</h1>
+          {/* Doctor portal banner */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 14px', background: 'var(--accent-50)', border: '1px solid rgba(2,132,199,0.2)', borderRadius: 'var(--radius-full)', marginBottom: '24px', justifyContent: 'center' }}>
+            <i className="fa-solid fa-stethoscope" style={{ color: 'var(--accent)', fontSize: '0.85rem' }} />
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-dark)', letterSpacing: '0.3px' }}>MEDICAL PROFESSIONAL ACCESS</span>
+          </div>
+
+          <h1 className="title" style={{ marginBottom: '6px', fontSize: '1.6rem' }}>Doctor Sign In</h1>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '28px' }}>
-            Sign in with your verified medical credentials
+            Access your doctor dashboard and patient management
           </p>
 
           {error && (
@@ -85,7 +91,7 @@ export default function DoctorLogin() {
 
             <div className="form-group">
               <label htmlFor="doctor-login-password">Password</label>
-              <div className="password-input-wrapper">
+              <div style={{ position: 'relative', width: '100%' }}>
                 <input
                   id="doctor-login-password"
                   type={showPassword ? 'text' : 'password'}
@@ -110,7 +116,7 @@ export default function DoctorLogin() {
 
             <Button
               type="submit"
-              variant="primary"
+              variant="accent"
               fullWidth
               loading={loading}
               id="doctor-login-submit-btn"
@@ -122,12 +128,12 @@ export default function DoctorLogin() {
 
           <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <p>
-              Don't have a doctor account?{' '}
-              <Link to="/doctor/register" style={{ fontWeight: 600, color: 'var(--primary)' }}>Register here</Link>
+              New doctor?{' '}
+              <Link to="/doctor/register" style={{ fontWeight: 700, color: 'var(--accent)' }}>Register your practice</Link>
             </p>
             <p>
-              Are you a patient?{' '}
-              <Link to="/login" style={{ fontWeight: 600, color: 'var(--primary)' }}>Sign in to Patient Portal</Link>
+              Patient?{' '}
+              <Link to="/login" style={{ fontWeight: 600, color: 'var(--primary)' }}>Patient login</Link>
             </p>
           </div>
         </div>
@@ -138,7 +144,7 @@ export default function DoctorLogin() {
         <div className="auth-right-content-wrapper">
           <div className="auth-right-logo" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
             <Logo size="36" />
-            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white' }}>Empathezee</span>
+            <span className="auth-logo-text" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white' }}>Empathezee Pro</span>
           </div>
           <h2 className="auth-right-title">Empower patients, guide support groups.</h2>
           <p className="auth-right-subtitle">Join our verified network of medical specialists. Moderate discussions, host telehealth sessions, and help patients manage chronic conditions.</p>
