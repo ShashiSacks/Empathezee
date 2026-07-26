@@ -545,13 +545,7 @@ h6 {
   justify-content: center;
   margin: 0;
   min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-}
-
-.nav-links::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  overflow: visible;
 }
 
 .nav-links a {
@@ -3193,6 +3187,37 @@ body.auth-page .auth-left { animation: fadeInUp 0.5s var(--ease) both; }
 /* ─────────────────────────────────────────────
    RESPONSIVE — MOBILE
    ───────────────────────────────────────────── */
+@media (max-width: 1400px) {
+  .nav-container {
+    padding: 0 14px;
+    gap: 8px;
+  }
+  .nav-links {
+    gap: 2px;
+  }
+  .nav-links a {
+    padding: 4px 6px;
+    font-size: 0.78rem;
+    gap: 4px;
+  }
+  .lang-selector-container {
+    padding: 4px 10px;
+  }
+  .lang-select {
+    font-size: 0.78rem;
+  }
+  .nav-sos-btn, .nav-logout-btn {
+    padding: 4px 10px;
+    font-size: 0.76rem;
+  }
+}
+
+@media (max-width: 1180px) {
+  .nav-links { display: none !important; }
+  .nav-hamburger { display: flex !important; }
+  .nav-mobile-drawer { display: flex !important; }
+}
+
 @media (max-width: 768px) {
   .main-navbar {
     padding: 0 16px;

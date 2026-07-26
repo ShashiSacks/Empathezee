@@ -134,11 +134,12 @@ const userSchema = new mongoose.Schema({
     },
 
     isVerifiedDoctor: {
-        type: Boolean,
-        default: true
-    }
 }, {
     timestamps: true
 });
+
+userSchema.index({ role: 1, specialization: 1 });
+userSchema.index({ role: 1, isVerifiedDoctor: 1 });
+userSchema.index({ email: 1 });
 
 module.exports = mongoose.model("User", userSchema);
