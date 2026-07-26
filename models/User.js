@@ -134,6 +134,9 @@ const userSchema = new mongoose.Schema({
     },
 
     isVerifiedDoctor: {
+        type: Boolean,
+        default: true
+    }
 }, {
     timestamps: true
 });
