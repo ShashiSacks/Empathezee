@@ -489,13 +489,13 @@ h6 {
 .nav-container {
   max-width: 1440px;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 16px;
   margin: 0 auto;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: nowrap !important;
 }
 
@@ -506,7 +506,8 @@ h6 {
   gap: 8px;
   text-decoration: none;
   flex-shrink: 0;
-  margin-right: 12px;
+  white-space: nowrap;
+  z-index: 2;
 }
 
 .nav-logo-icon {
@@ -520,6 +521,7 @@ h6 {
   font-size: 1rem;
   box-shadow: var(--shadow-blue);
   transition: transform var(--duration) var(--ease-spring);
+  flex-shrink: 0;
 }
 
 .nav-logo:hover .nav-logo-icon {
@@ -527,46 +529,48 @@ h6 {
 }
 
 .nav-logo-text {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: -0.04em;
   background: var(--grad-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Nav links */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   flex: 1;
   justify-content: center;
-  margin: 0;
+  margin: 0 6px;
   min-width: 0;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .nav-links a {
   position: relative;
   color: var(--text-secondary);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   font-weight: 500;
   text-decoration: none;
-  padding: 5px 8px;
+  padding: 4px 6px;
   border-radius: var(--radius-full);
   transition: all var(--duration) var(--ease);
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   line-height: 1.2;
   flex-shrink: 0;
 }
 
 .nav-links a i {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: inherit;
   opacity: 0.75;
   transition: opacity var(--duration) var(--ease), color var(--duration) var(--ease);
@@ -601,8 +605,10 @@ h6 {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
+  white-space: nowrap;
+  z-index: 2;
 }
 
 /* SOS emergency button */
@@ -3187,32 +3193,33 @@ body.auth-page .auth-left { animation: fadeInUp 0.5s var(--ease) both; }
 /* ─────────────────────────────────────────────
    RESPONSIVE — MOBILE
    ───────────────────────────────────────────── */
-@media (max-width: 1400px) {
+@media (max-width: 1450px) {
   .nav-container {
-    padding: 0 14px;
-    gap: 8px;
+    padding: 0 12px;
+    gap: 6px;
   }
   .nav-links {
-    gap: 2px;
+    gap: 1px;
+    margin: 0 4px;
   }
   .nav-links a {
-    padding: 4px 6px;
-    font-size: 0.78rem;
-    gap: 4px;
+    padding: 3px 5px;
+    font-size: 0.74rem;
+    gap: 3px;
   }
   .lang-selector-container {
-    padding: 4px 10px;
+    padding: 4px 8px;
   }
   .lang-select {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
   }
   .nav-sos-btn, .nav-logout-btn {
-    padding: 4px 10px;
-    font-size: 0.76rem;
+    padding: 4px 8px;
+    font-size: 0.74rem;
   }
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1280px) {
   .nav-links { display: none !important; }
   .nav-hamburger { display: flex !important; }
   .nav-mobile-drawer { display: flex !important; }
